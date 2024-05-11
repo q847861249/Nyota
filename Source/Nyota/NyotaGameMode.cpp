@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "NyotaGameMode.h"
-#include "NyotaCharacter.h"
+#include "./Character/NyotaCharacters.h"
 #include "UObject/ConstructorHelpers.h"
 
 ANyotaGameMode::ANyotaGameMode()
