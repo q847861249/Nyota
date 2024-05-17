@@ -86,7 +86,9 @@ private:
 
 
 public:
-
+	//法术场通知标识
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FGameplayTag EffectNotifyTag;
 
 	USphereComponent* CollisionComponent;
 
