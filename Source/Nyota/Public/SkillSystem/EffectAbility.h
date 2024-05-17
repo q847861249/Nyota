@@ -9,7 +9,7 @@
 #include "EffectAbility.generated.h"
 
 class APawnBase;
-//typedef void (UEffectAbility::* MontageAnimNotifyDelagateFunPtr)(FString&);
+
 
 // 定义日志类别
 DECLARE_LOG_CATEGORY_EXTERN(SkillSystemLog, Log, All)
@@ -86,8 +86,7 @@ private:
 
 
 public:
-	UPROPERTY(BlueprintReadWrite)
-	TSubclassOf<AActor> MoveActor;
+
 
 	USphereComponent* CollisionComponent;
 
@@ -95,7 +94,10 @@ public:
 	APawnBase* GetOwnerPawnBase();
 public:
 
-	UFUNCTION()
-	void BeginOverlap(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	/*
+	* @note 反射调用方法，在子类实现
+	*/
+	
+	//virtual void BeginOverlap(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 };

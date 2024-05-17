@@ -5,6 +5,7 @@
 #include "Animation/AnimMontage.h"  
 #include "Animation/AnimInstance.h"
 //#include "SkillSystem/EffectAbility.h"
+DEFINE_LOG_CATEGORY(MmoFrameLog)
 
 UAbilitySystemComponent* APawnBase::GetAbilitySystemComponent() const
 {
@@ -20,14 +21,17 @@ APawnBase::APawnBase()
 	// 修改：实例化ASC
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	
-	this->EventTrigger = NewObject<UEventTrigger>();
+	
 }
 
 // Called when the game starts or when spawned
 void APawnBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//将事件管理器初始化放到BeginPlay,避免在加载蓝图时构造崩溃
+	this->EventTrigger = NewObject<UEventTrigger>();
+
 	if (nullptr != AbilitySystem)
 	{
 		// 修改：给ASC赋予技能
@@ -81,7 +85,11 @@ void APawnBase::Tick(float DeltaTime)
 	//		}
 	//	}
 	//}
-
+	if (this->EventTrigger)
+	{
+		this->EventTrigger->Tick(DeltaTime);
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -90,7 +98,6 @@ void APawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	//Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-//D:\Program Files(x86)\UE_5.4\Engine\Source\Runtime\Core\Public\Delegates\DelegateInstanceInterface.h
 
 template<typename ReturnType, typename ClassType, typename... Args>
 void APawnBase::BindMontageAnimNotify(UObject* BindObj, FString& AnimName, FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* AnimNotifyDelagateInfo)
@@ -107,29 +114,32 @@ void APawnBase::BindMontageAnimNotify(UObject* BindObj, FString& AnimName, FAnim
 		TArray<FAnimNotifyDelagateInfo<void, UObject, FString&>*>* AnimNotifyDelagateInfoArray1 = StaticCast<TArray<FAnimNotifyDelagateInfo<void, UObject, FString&>*>*>(FMemory::Malloc(sizeof(TArray<FAnimNotifyDelagateInfo<void, UObject, FString&>*>)));
 		AnimNotifyDelagateInfoArray1->Add(AnimNotifyDelagateInfo1);
 
-		//AnimNotifyDelagateInfoArray->Add(AnimNotifyDelagateInfo);
+		//先注释有错误
+		AnimNotifyDelagateInfo1->MontageAnimNotifyDelagate->AddLambda(
+			[&](FString& NotifyName) {
+				//(*AnimNotifyDelagateInfo.MontageAnimNotifyFunPtr)(AnimNotifyDelagateInfo->NotifyName);
+				//MontageAnimNotifyDelagateFunPtr MontageAnimNotifyFunPtr;
+				((ClassType*)BindObj->*AnimNotifyDelagateInfo->MontageAnimNotifyFunPtr)(NotifyName);
+			}
+		);
+
 		this->MontAnmNotifyDelMap.Add(AnimName, *AnimNotifyDelagateInfoArray1);
 		
 	}
 	else
 	{
 		//然后还要判断动画，同一时间是否还要通知数组,如果有多播
-		FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* AnimNotifyDelagateInfo1 = this->FindFAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>(AnimName, AnimNotifyDelagateInfo->NotifyName);
+		FAnimNotifyDelagateInfo<void, UObject, FString&>* AnimNotifyDelagateInfo1 = this->FindFAnimNotifyDelagateInfo(AnimName, AnimNotifyDelagateInfo->NotifyName);
 		//存在无需重复添加
 		if (AnimNotifyDelagateInfo1)
 		{
-			//FMontageAnimNotifyDelagate MontageAnimNotifyDelagate12;
-			//MontageAnimNotifyDelagate12.AddRaw(this, &APawnBase::OnAnimNotifyOneParam);
-			//MontageAnimNotifyDelagateFunPtr sd = &APawnBase::OnAnimNotifyOneParam;TMemFunPtrType<false, void, FString&>
-			
-			AnimNotifyDelagateInfo1->MontageAnimNotifyDelagate->AddLambda(
-				[&]() {
+				AnimNotifyDelagateInfo1->MontageAnimNotifyDelagate->AddLambda(
+				[&](FString& NotifyName) {
 					//(*AnimNotifyDelagateInfo.MontageAnimNotifyFunPtr)(AnimNotifyDelagateInfo->NotifyName);
 					//MontageAnimNotifyDelagateFunPtr MontageAnimNotifyFunPtr;
-					((ClassType*)BindObj->*AnimNotifyDelagateInfo->MontageAnimNotifyFunPtr)(AnimNotifyDelagateInfo->NotifyName);
+					((ClassType*)BindObj->*AnimNotifyDelagateInfo->MontageAnimNotifyFunPtr)(NotifyName);
 				}
 			);
-
 			return;
 		}
 		
@@ -137,23 +147,7 @@ void APawnBase::BindMontageAnimNotify(UObject* BindObj, FString& AnimName, FAnim
 			
 }
 
-//template<typename ReturnType, typename ClassType, typename... Args>
-//FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* APawnBase::FindFAnimNotifyDelagateInfo(FString& AnimName, FString& NotifyName)
-//{
-//	TArray<FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>*>* AnimNotifyDelagateInfoArray = this->MontAnmNotifyDelMap.Find(AnimName);
-//
-//	for (TArray<FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>*>::TIterator AnimNotifyDelagateInfoIterator(*AnimNotifyDelagateInfoArray); AnimNotifyDelagateInfoIterator; ++AnimNotifyDelagateInfoIterator)
-//	{
-//		if ((*AnimNotifyDelagateInfoIterator)->NotifyName == NotifyName)
-//		{
-//			return *AnimNotifyDelagateInfoIterator;
-//		}
-//	}
-//	return nullptr;
-//}
-
-template<typename ReturnType, typename ClassType, typename... Args>
-FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* APawnBase::FindFAnimNotifyDelagateInfo(FString& AnimName, FString& NotifyName)
+FAnimNotifyDelagateInfo<void, UObject, FString&>* APawnBase::FindFAnimNotifyDelagateInfo(FString& AnimName, FString& NotifyName)
 {
 	// 假设 MontAnimNotifyDelMap 是一个 TMap<FString, TArray<FAnimNotifyDelagateInfo<...>*>*>  
 	auto* AnimNotifyDelagateInfoArrayPtr = this->MontAnmNotifyDelMap.Find(AnimName);
@@ -165,7 +159,7 @@ FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* APawnBase::FindFAnimNot
 		{
 			if (AnimNotifyDelagateInfo->NotifyName == NotifyName)
 			{
-				return /*(FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>*)*/AnimNotifyDelagateInfo;
+				return &(*AnimNotifyDelagateInfo);
 			}
 		}
 	}
@@ -174,14 +168,7 @@ FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* APawnBase::FindFAnimNot
 
 void APawnBase::OnAnimNotifyOneParam(FString& NotifyName)
 {
-	//TArray<FAnimNotifyDelagateInfo*>*AnimNotifyDelagateInfoArray = this->MontAnmNotifyDelMap.Find(AnimName);
-	//for (TArray<FAnimNotifyDelagateInfo*>::TIterator AnimNotifyDelagateInfoIterator(*AnimNotifyDelagateInfoArray); AnimNotifyDelagateInfoIterator; ++AnimNotifyDelagateInfoIterator)
-	//{
-	//	if ((*AnimNotifyDelagateInfoIterator)->NotifyName == NotifyName)
-	//	{
-	//		(*AnimNotifyDelagateInfoIterator)->MontageAnimNotifyFunPtr(NotifyName);
-	//	}
-	//}
+	UE_LOG(LogTemp, Log, TEXT("NotifyName:%s"), *NotifyName);
 }
 
 template<typename ReturnType, typename ClassType, typename... Args>
@@ -200,11 +187,11 @@ void APawnBase::PlayMontageAnim(USkeletalMeshComponent* AnimSkeletal, FString& A
 	if (Montage)
 	{
 		// 播放蒙太奇  
-		AnimInstance->PlaySlotAnimationAsDynamicMontage_WithBlendArgs(Montage, FName("DefaultSlot"),
+		AnimInstance->PlaySlotAnimationAsDynamicMontage_WithBlendArgs(Montage, FName("Attack"),
 			0,0 );
 		UEventTrigger* EventTrigger1 = this->EventTrigger;
 
-		FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* AnimNotifyDelagateInfo = FindFAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>(AnimName, NotifyName);
+		FAnimNotifyDelagateInfo<void, UObject, FString&>* AnimNotifyDelagateInfo = this->FindFAnimNotifyDelagateInfo(AnimName, NotifyName);
 		if (!AnimNotifyDelagateInfo)
 		{
 			// 如果没有找到蒙太奇，输出错误或进行其他处理  
@@ -212,11 +199,20 @@ void APawnBase::PlayMontageAnim(USkeletalMeshComponent* AnimSkeletal, FString& A
 
 		}
 		//@Note 这里可能要释放掉Map对应AnimNotify的TArray,这里因该根据动画的帧率进行时间计算
-		EventTrigger1->AddTimerTrigger(
-			[&]() {
+
+		auto b = MakeShared<TFunction<void()>>(
+			// Lambda表达式，它捕获对AnimNotifyDelagateInfo的引用  
+			[&]()
+			{
+				// 调用MontageAnimNotifyDelagate的Broadcast方法，并传递NotifyName  
 				AnimNotifyDelagateInfo->MontageAnimNotifyDelagate->Broadcast(NotifyName);
-			},
-			AnimNotifyDelagateInfo->NotifyTime
+			}
+		);
+
+		TSharedPtr<TFunction<void()>> lambda_Montage = b.ToSharedPtr();
+		EventTrigger1->AddTimerTrigger(
+			lambda_Montage.Get(),
+			this->GetWorld(), AnimNotifyDelagateInfo->NotifyTime
 		);
 		//AnimInstance->Montage_Play(&AnimMontage, 1.0f, EMontagePlayReturnType::MontageLength);
 	}
@@ -245,15 +241,16 @@ bool APawnBase::PlayMontageAnim(UObject* PlayAnimAblyObj, MemberFunctionPtr<Retu
 		return false;
 	}
 
-	FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>* AnimNotifyDelagateInfo = StaticCast<FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>*>(FMemory::Malloc(sizeof(FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>)));
+	auto* AnimNotifyDelagateInfo = StaticCast<FAnimNotifyDelagateInfo<void, UObject, FString&>*>(FMemory::Malloc(sizeof(FAnimNotifyDelagateInfo<void, UObject, FString&>)));
 	AnimNotifyDelagateInfo->NotifyName = NotifyName;
 	AnimNotifyDelagateInfo->NotifyTime = NotifyTime;
-	AnimNotifyDelagateInfo->MontageAnimNotifyFunPtr = MontageAimnNotifyDelaFunPtr;
-	FMontageAnimNotifyDelagate* MontageAnimNotifyDelagate = StaticCast<FMontageAnimNotifyDelagate*>(FMemory::Malloc(sizeof(FMontageAnimNotifyDelagate)));
+	
+	AnimNotifyDelagateInfo->MontageAnimNotifyFunPtr = StaticCast<MemberFunctionPtr<void, UObject, FString&>>(MontageAimnNotifyDelaFunPtr);
+	FMontageAnimNotifyDelagate * MontageAnimNotifyDelagate = StaticCast<FMontageAnimNotifyDelagate*>(FMemory::Malloc(sizeof(FMontageAnimNotifyDelagate)));
 	AnimNotifyDelagateInfo->MontageAnimNotifyDelagate = MontageAnimNotifyDelagate;
 
 	//PlayAnimAblyObj绑定动画通知
-	this->BindMontageAnimNotify<ReturnType, ClassType, Args...>(PlayAnimAblyObj, AnimName, AnimNotifyDelagateInfo);
+	this->BindMontageAnimNotify<void, UObject, FString&>(PlayAnimAblyObj, AnimName, AnimNotifyDelagateInfo);
 	this->PlayMontageAnim<ReturnType, ClassType, Args...>(SkeletalMeshComponent1, AnimName, NotifyName);
 
 	return true;
@@ -261,11 +258,15 @@ bool APawnBase::PlayMontageAnim(UObject* PlayAnimAblyObj, MemberFunctionPtr<Retu
 
 void APawnBase::BeginOverlap(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	FString AnimName = FString("asd");
+	FString AnimName = FString("/Script/Engine.AnimMontage'/Game/Demo/CharacterAsset/Character_Attack_Montage.Character_Attack_Montage'");
 	FString NotifyName = FString("USkillAbility001");
 	float NotifyTime = 1.f;
 	this->PlayMontageAnim<void, APawnBase, FString&>(this, &APawnBase::OnAnimNotifyOneParam, AnimName, NotifyName, NotifyTime);
 
-
 }
 
+//bool APawnBase::AttachToSocket(USceneComponent* SceneComponent, FString& SocketName, FVector& Offset)
+//{
+//	UE_LOG(MmoFrameLog, Error, TEXT("APawnBase::AttachToSocket Have Not Implement Must Implement In BluePrint"));
+//	return false;
+//}

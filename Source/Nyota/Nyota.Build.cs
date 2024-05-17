@@ -1,5 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+using System;
 using UnrealBuildTool;
 
 public class Nyota : ModuleRules
@@ -21,6 +22,6 @@ public class Nyota : ModuleRules
             "GameplayTags",
             "InputCore",
             "AnimGraphRuntime",
-            "MotionWarping",});
+        });
 	}
 }
