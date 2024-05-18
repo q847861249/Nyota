@@ -4,14 +4,18 @@
 #include "SkillSystem/SkillAbility001.h"
 #include "SkillSystem/Effect/Damage001EffectAbility.h"
 
-//DEFINE_LOG_CATEGORY(SkillSystemLog)
-
 USkillAbility001::USkillAbility001()
 {
 }
 USkillAbility001* USkillAbility001::OnAnimNotifyOneParam(FString& NotifyName)
 {
 	return nullptr;
+}
+
+void USkillAbility001::OnTimerNotify(FString* NotifyName)
+{
+	APawnBase* OwnerPawnBase1 = this->GetOwnerPawnBase();
+	OwnerPawnBase1->AbilitySystem->TryActivateAbilityByClass(OwnerPawnBase1->MyAbilities[1]);
 }
 
 bool USkillAbility001::PreCall(FSkillParam* SklParam1)
@@ -42,15 +46,19 @@ bool USkillAbility001::Invoke(FSkillCallParam* SklCallParam1)
 				/*AActor* EmiterActor = World->SpawnActor();*/
 				//释放法术场
 				APawnBase* OwnerPawnBase1 = this->GetOwnerPawnBase();
-				OwnerPawnBase1->AbilitySystem->TryActivateAbilityByClass(OwnerPawnBase1->MyAbilities[1]);//(UDamage001EffectAbility::StaticClass());//
+				OwnerPawnBase1->AbilitySystem->TryActivateAbilityByClass(OwnerPawnBase1->MyAbilities[1]);
 			})
 
 	);
-
+	
 	APawnBase* OwnerPawnBase1 = this->GetOwnerPawnBase();
-	OwnerPawnBase1->lambda_a = b.ToSharedPtr();//@note 这里要修改,不能把共享指针放栈中
-	OwnerPawnBase1->EventTrigger->AddTimerTrigger(OwnerPawnBase1->lambda_a.Get()
-	, OwnerPawnBase1->GetWorld(), 1.f);
+
+	//事件触发器
+	TMulticastDelegate<void(FString*)> as;
+	TMulticastDelegate<void(FString*)>* NotifyDel = new TMulticastDelegate<void(FString*)>(); //StaticCast<TMulticastDelegate<void(FString*)>*>(FMemory::Malloc(sizeof(as.GetAllocatedSize())));
+	NotifyDel->AddUObject(this, &USkillAbility001::OnTimerNotify);
+	OwnerPawnBase1->EventTriggerObj->AddTimerTrigger(NotifyDel
+	, OwnerPawnBase1->GetWorld(), 0.5f);
 
 	//绑定动画通知
 	return true;

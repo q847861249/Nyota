@@ -38,5 +38,5 @@ public:
 
 	USkillAbility001* OnAnimNotifyOneParam(FString& NotifyName);
 
-	
+	void OnTimerNotify(FString* NotifyName);
 };

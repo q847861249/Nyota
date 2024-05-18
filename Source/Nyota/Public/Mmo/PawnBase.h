@@ -16,7 +16,7 @@
 // 定义日志类别
 DECLARE_LOG_CATEGORY_EXTERN(MmoFrameLog, Log, All)
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FMontageAnimNotifyDelagate, FString&)
+DECLARE_MULTICAST_DELEGATE_OneParam(FMontageAnimNotifyDelagate, FString)
 
 // 定义一个通用的成员函数指针模板
 template<typename ReturnType, typename ClassType, typename... Args>
@@ -32,15 +32,6 @@ public:
 	MemberFunctionPtr<ReturnType, ClassType, Args...> MontageAnimNotifyFunPtr;
 	FMontageAnimNotifyDelagate* MontageAnimNotifyDelagate;
 };
-
-//template<typename ReturnType, typename ClassType, typename... Args>
-//class TMapAnimNotifyDelagateInfo
-//{
-//
-//private:
-//	TMap<FString, TArray<FAnimNotifyDelagateInfo<ReturnType, ClassType, Args...>*>>
-//};
-
 
 UCLASS()
 class NYOTA_API APawnBase : public APawn,
@@ -69,7 +60,13 @@ public:
 	TArray<TSubclassOf<UGameplayAbility>> MyAbilities;
 
 	//事件触发器
-	UEventTrigger* EventTrigger;
+	EventTrigger<FString>* EventTriggerObj;
+
+	//UFUNCTION()
+	void OnTimerNotify(FString NotifyName);
+
+	//UFUNCTION()
+	void OnStatusNotify(FString NotifyName);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -79,9 +76,12 @@ public:
 
 	//动画通知委托数组,动画播放完释放掉对应元素内存,1动画->n通知
 
-	TMap<FString, TArray<FAnimNotifyDelagateInfo<void, UObject, FString&>*>> MontAnmNotifyDelMap;
+	TMap<FString, TArray<FAnimNotifyDelagateInfo<void, UObject, FString*>*>> MontAnmNotifyDelMap;
 
-	FAnimNotifyDelagateInfo<void, UObject, FString&>* FindFAnimNotifyDelagateInfo(FString& AnimName, FString& NotifyName);
+	/*
+	* @ note 1个NotifyName-> 1个动画 ,NotifyName= AnimName_NotifyName
+	*/
+	FAnimNotifyDelagateInfo<void, UObject, FString*>* FindFAnimNotifyDelagateInfo(FString& MontaqeAnimNotifyName);
 
 	template<typename ReturnType, typename ClassType, typename... Args>
 	void PlayMontageAnim(USkeletalMeshComponent* AnimSkeletal, FString& AnimName, FString& NotifyName);
@@ -116,10 +116,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	//AttachToSocket(CollisionComponent, SocketName, Offset)
 	bool AttachToSocket(USceneComponent* SceneComponent, FString SocketName, FVector Offset);
-	TSharedPtr<TFunction<void()>> lambda_a;
 	
 public:
 
 	UFUNCTION()
 	void OnAnimNotifyOneParam(FString& NotifyName);
+
 };
