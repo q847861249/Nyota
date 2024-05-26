@@ -7,8 +7,10 @@
 
 #include "InputAction.h"
 #include "GameplayTagContainer.h"
+#include "EnhancedInputSubsystemInterface.h"
 
 #include "NyotaInputConfig.generated.h"
+
 
 
 USTRUCT(Blueprintable)
@@ -34,6 +36,9 @@ class NYOTA_API UNyotaInputConfig : public UDataAsset
 public:
 
 	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InputTag) const;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FInput> PlayerInput;

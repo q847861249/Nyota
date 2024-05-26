@@ -9,9 +9,13 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 
+#include "InputActionValue.h"
+#include "DataAsset/NyotaCharacterConfig.h"
+
 #include "NyotaCharacters.generated.h"
 
 
+class UNyotaAttributeSet;
 
 UCLASS()
 class NYOTA_API ANyotaCharacters : public ACharacter,
@@ -23,9 +27,13 @@ public:
 	// Sets default values for this character's properties
 	ANyotaCharacters();
 
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 public:
 
@@ -33,27 +41,53 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameplayAbilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = NyotaCharacterBaseSetting, meta = (AllowPrivateAccess = "true"))
+	class UNyotaComponent* NyotaComponent;
+
+	UPROPERTY()
+	TObjectPtr<UNyotaAttributeSet>AttributeSet;
+
+	UFUNCTION(BlueprintCallable)
+	bool ApplyGameplayEffectToself(TSubclassOf<UGameplayEffect> Effect, FGameplayEffectContextHandle inEffectHandle);
+
+	UNyotaAttributeSet* getAttributeSet() const { return AttributeSet; }
+
 	// 修改：实现接口方法
 	UAbilitySystemComponent* GetAbilitySystemComponent()const override;
 
-	// 修改：声明Ability数组
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	TArray<TSubclassOf<UGameplayAbility>> MyAbilities;
+	/** Default NetWork override function */
+	virtual void PossessedBy(AController* NewController) override;
+
+	/** Default GAS Start Effect Setup */
+	void ApplyStartUpEffect();
 
 	/** 修改：给Ability数组 */
 	void GiveAbility();
 
-	/** Default NetWork override function */
-	virtual void PossessedBy(AController* NewController) override;
+	/** 修改：激活预载的Ability 以标签的形式 */
+	UFUNCTION(BlueprintCallable)
+	bool TryActiveAbilityByTag(FGameplayTag Tag);
+
+
+
+
 
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
+public:
+	UFUNCTION(BlueprintCallable, reliable,Server)
+	void EnableRagDoll();
 
+
+	UFUNCTION(reliable, NetMulticast)
+	void Rep_EanbleRagdoll_Multicast();
+
+private:
+
+	friend class NyotaPlayer;
 };

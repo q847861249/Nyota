@@ -23,6 +23,13 @@ public:
 	FGameplayTag InputTag_Move;
 	FGameplayTag InputTag_Look_Mouse;
 	FGameplayTag InputTag_Jump;
+	FGameplayTag InputTag_Attack;
+
+
+	//**×´Ì¬±êÇ©**//
+	FGameplayTag State_OnHit;
+	FGameplayTag State_Attack;
+	FGameplayTag State_Dead;
 
 
 

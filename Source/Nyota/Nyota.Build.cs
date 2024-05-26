@@ -21,6 +21,8 @@ public class Nyota : ModuleRules
             "GameplayTags",
             "InputCore",
             "AnimGraphRuntime",
-            "MotionWarping",});
+            "MotionWarping",
+            "Niagara",
+        });
 	}
 }
