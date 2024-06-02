@@ -116,7 +116,7 @@ void AProjectileBase::ProjectileOnHit(UPrimitiveComponent* HitComponent, AActor*
 {
 	if (OtherActor != GetInstigator()) {
 	
-		//if (HasAuthority()) PlayEffect_Multicast();
+		if (HasAuthority()) PlayEffect_Multicast();
 	}
 
 }

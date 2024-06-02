@@ -29,8 +29,9 @@ public:
 	//**×´Ì¬±êÇ©**//
 	FGameplayTag State_OnHit;
 	FGameplayTag State_Attack;
+	FGameplayTag State_Shooting;
 	FGameplayTag State_Dead;
-
+	FGameplayTag State_ZeroHealth;
 
 
 protected:

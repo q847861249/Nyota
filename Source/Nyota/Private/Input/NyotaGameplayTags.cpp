@@ -29,6 +29,8 @@ void FNyotaGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(State_Attack, "State.Attack", "State Attack.");
 	AddTag(State_OnHit, "State.OnHit", "State OnHit.");
 	AddTag(State_Dead, "State.Dead", "State Dead.");
+	AddTag(State_Shooting, "State.Shooting", "State Shooting.");
+	AddTag(State_ZeroHealth, "State.ZeroHealth", "State ZeroHealth.");
 
 }
 

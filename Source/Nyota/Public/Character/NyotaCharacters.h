@@ -11,6 +11,7 @@
 
 #include "InputActionValue.h"
 #include "DataAsset/NyotaCharacterConfig.h"
+#include "Character/NyotaPlayerController.h"
 
 #include "NyotaCharacters.generated.h"
 
@@ -27,8 +28,7 @@ public:
 	// Sets default values for this character's properties
 	ANyotaCharacters();
 
-
-
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,6 +36,8 @@ protected:
 
 
 public:
+	UPROPERTY(BlueprintReadWrite)
+	ANyotaPlayerController* NyotaPlayerController;
 
 	// 修改：申明ASC
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameplayAbilities, meta = (AllowPrivateAccess = "true"))
@@ -60,6 +62,10 @@ public:
 
 	/** Default GAS Start Effect Setup */
 	void ApplyStartUpEffect();
+
+	/** Send GameplayEvent To Self */
+	void SendGameEventByTag(FGameplayTag Tag);
+
 
 	/** 修改：给Ability数组 */
 	void GiveAbility();

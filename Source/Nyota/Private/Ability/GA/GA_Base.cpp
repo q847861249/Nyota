@@ -15,6 +15,12 @@ bool UGA_Base::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 
 void UGA_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
+	if (!K2_CommitAbilityCooldown()) {
+
+		K2_EndAbility();
+		return;
+	}
+
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	if (UAbilitySystemComponent* AbilitySystemComponent = ActorInfo->AbilitySystemComponent.Get())

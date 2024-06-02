@@ -26,6 +26,9 @@ public:
 	UPROPERTY(Replicated)
 	TSubclassOf<AProjectileBase> CurrentProjectile;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* AttackAnimMontage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,11 +48,17 @@ public:
 	UFUNCTION(Reliable, NetMulticast)
 	void LaunchProjectile_Multicast(FName SocketName);
 
+	UFUNCTION(BlueprintCallable)
+	void LaunchProjectile(FName SocketName);
+
 	// switching weapon, the function will check projectile array from the config file, otherwise it would not changed
 	UFUNCTION(BlueprintCallable,Reliable, NetMulticast)
 	void SwitchingProjectile_Server(TSubclassOf<AProjectileBase> projectile);
 
 	UFUNCTION(Reliable, NetMulticast)
 	void SwitchingProjectile_Multicast(TSubclassOf<AProjectileBase> projectile);
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchingProjectile(TSubclassOf<AProjectileBase> projectile);
 
 };

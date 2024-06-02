@@ -23,7 +23,20 @@ void UGA_OnHit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	//Κά»χ¶―»­
+	if (UAnimMontage* OnHit_AnimMontage = getAvatarNyotaActor()->NyotaComponent->CharacterConfig->CharacterCombatConfig->OnHit.AnimMontage) {
 
+		MontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, OnHit_AnimMontage);
+		MontageTask->ReadyForActivation();
+
+		MontageTask->OnBlendOut.AddDynamic(this, &UGA_OnHit::K2_EndAbility);
+		MontageTask->OnCompleted.AddDynamic(this, &UGA_OnHit::K2_EndAbility);
+		MontageTask->OnInterrupted.AddDynamic(this, &UGA_OnHit::K2_EndAbility);
+		MontageTask->OnCancelled.AddDynamic(this, &UGA_OnHit::K2_EndAbility);
+	}
+	else {
+		K2_EndAbility();
+	}
 }
 
 void UGA_OnHit::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)

@@ -6,8 +6,10 @@
 #include "Ability/GA/GA_Base.h"
 #include "DataAsset/DamgeConfig.h"
 #include "DataAsset/ProjectileConfig.h"
+#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 
 #include "GA_OnHit.generated.h"
+
 
 
 /**
@@ -40,5 +42,8 @@ public:
 	FProjectileCFG CurrentActivateProjectileInfo;
 
 	TSubclassOf<UGameplayEffect> DamageEffect;
+
+	// Montage Task On Hit
+	UAbilityTask_PlayMontageAndWait* MontageTask;
 
 };

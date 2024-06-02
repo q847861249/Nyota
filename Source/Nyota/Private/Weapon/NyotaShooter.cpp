@@ -34,6 +34,38 @@ void ANyotaShooter::InitilizeProjectile()
 	}
 }
 
+void ANyotaShooter::LaunchProjectile(FName SocketName)
+{
+	if (CurrentProjectile) {
+
+		// check the instigator is NyotaCharacter
+		if (ANyotaCharacters* Character = Cast<ANyotaCharacters>(GetInstigator())) {
+
+			FActorSpawnParameters SpawnInfo;
+			SpawnInfo.Instigator = GetInstigator();
+			SpawnInfo.Owner = this;
+
+			//Launch Rotation, might need to change to spring arm component
+			FRotator SpawnTransformRotation = Character->GetRootComponent()->GetRelativeRotation();
+			FVector SpawnTransformLocation = GetActorLocation();
+
+			GetWorld()->SpawnActor<AProjectileBase>(CurrentProjectile, SpawnTransformLocation, SpawnTransformRotation, SpawnInfo);
+		}
+	}
+
+}
+
+void ANyotaShooter::SwitchingProjectile(TSubclassOf<AProjectileBase> projectile)
+{
+	for (auto& projectile_copy : Projectiles) {
+
+		if (projectile_copy == projectile) {
+
+			CurrentProjectile = projectile_copy;
+		}
+	}
+}
+
 void ANyotaShooter::SwitchingProjectile_Server_Implementation(TSubclassOf<AProjectileBase> projectile)
 {
 	SwitchingProjectile_Multicast(projectile);

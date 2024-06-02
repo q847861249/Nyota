@@ -10,7 +10,7 @@
 #include "Component/NyotaComponent.h"
 #include "Input/NyotaGameplayTags.h"
 #include "Ability/NyotaAttributeSet.h"
-
+#include "AbilitySystemBlueprintLibrary.h"
 
 #include "Debug/Debug.h"
 
@@ -19,6 +19,8 @@ ANyotaCharacters::ANyotaCharacters()
 {
  	// Set this character to call Tick() every frame. 
 	PrimaryActorTick.bCanEverTick = true;
+
+	NyotaPlayerController = Cast<ANyotaPlayerController>(GetController());
 
 	//ActorÍ¬²½
 	bReplicates = true;
@@ -70,6 +72,7 @@ void ANyotaCharacters::GiveAbility()
 
 void ANyotaCharacters::PossessedBy(AController* NewController)
 {
+
 	Super::PossessedBy(NewController);
 
 	AbilitySystem->InitAbilityActorInfo(this,this);
@@ -89,6 +92,8 @@ bool ANyotaCharacters::ApplyGameplayEffectToself(TSubclassOf<UGameplayEffect> Ef
 		FActiveGameplayEffectHandle ActiveGEHandle = AbilitySystem->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 
 		return ActiveGEHandle.WasSuccessfullyApplied();
+
+
 
 	}
 
@@ -111,6 +116,14 @@ void ANyotaCharacters::ApplyStartUpEffect()
 	}
 }
 
+void ANyotaCharacters::SendGameEventByTag(FGameplayTag Tag)
+{
+	FGameplayEventData Payload;
+	Payload.Instigator = this;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Tag, Payload);
+
+}
+
 bool ANyotaCharacters::TryActiveAbilityByTag(FGameplayTag Tag)
 {
 	FGameplayTagContainer contatiner;
@@ -124,6 +137,7 @@ bool ANyotaCharacters::TryActiveAbilityByTag(FGameplayTag Tag)
 	else {	
 		return false;
 	}
+	
 	
 }
 

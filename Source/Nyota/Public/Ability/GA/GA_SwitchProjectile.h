@@ -4,41 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Ability/GA/GA_Base.h"
-#include "DataAsset/DamgeConfig.h"
-#include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "GA_Attack.generated.h"
-
+#include "GA_SwitchProjectile.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class NYOTA_API UGA_Attack : public UGA_Base
+class NYOTA_API UGA_SwitchProjectile : public UGA_Base
 {
 	GENERATED_BODY()
 	
 public:
 
-	UGA_Attack();
 
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
-	
-	UFUNCTION()
-	void shooting(FGameplayEventData Payload);
-
-public:
 
 	UPROPERTY(EditDefaultsOnly)
-	UDamgeConfig* DamageConfig;
+	TSubclassOf<AProjectileBase> projectile;
 
-	// Montage Task For Attack
-	UAbilityTask_PlayMontageAndWait* MontageTask;
-
-	//Event Task for spawn projectile
-	UAbilityTask_WaitGameplayEvent* EventTask;
 };
