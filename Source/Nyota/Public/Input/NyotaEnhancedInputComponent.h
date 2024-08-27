@@ -18,13 +18,14 @@ class NYOTA_API UNyotaEnhancedInputComponent : public UEnhancedInputComponent
 	
 public:
 	template<class UserCalss, typename FunType>
-	void BindNativeActionWithTag(const UNyotaInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserCalss* Object, FunType Func);
+	void BindNativeAction(const UNyotaInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserCalss* Object, FunType Func);
 
+	
 
 };
 
 template<class UserCalss, typename FunType>
-void UNyotaEnhancedInputComponent::BindNativeActionWithTag(const UNyotaInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserCalss* Object, FunType Func)
+void UNyotaEnhancedInputComponent::BindNativeAction(const UNyotaInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent, UserCalss* Object, FunType Func)
 {
 	check(InputConfig);
 	if (const UInputAction* IA = InputConfig->FindNativeInputActionForTag(InputTag))
@@ -32,3 +33,4 @@ void UNyotaEnhancedInputComponent::BindNativeActionWithTag(const UNyotaInputConf
 		BindAction(IA, TriggerEvent, Object, Func);
 	}
 }
+

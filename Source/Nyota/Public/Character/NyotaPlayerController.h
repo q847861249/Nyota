@@ -17,6 +17,7 @@ class NYOTA_API ANyotaPlayerController : public APlayerController
 	
 
 public:
+	UFUNCTION()
 	void ResartPlayerin(float InTime);
 
 protected:
@@ -30,6 +31,5 @@ protected:
 	void RestartPlayer();
 
 	FTimerHandle RestartPlayerTimerHandle;
-
 	FDelegateHandle DeathStateTagDelegate;
 };

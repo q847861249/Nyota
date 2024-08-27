@@ -10,6 +10,8 @@
 #include "GA_Attack.generated.h"
 
 
+
+class UNyotaComponent;
 /**
  * 
  */
@@ -28,17 +30,52 @@ public:
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
 	
+	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr);
+
+
+
 	UFUNCTION()
 	void shooting(FGameplayEventData Payload);
 
+
+
 public:
 
-	UPROPERTY(EditDefaultsOnly)
-	UDamgeConfig* DamageConfig;
 
 	// Montage Task For Attack
 	UAbilityTask_PlayMontageAndWait* MontageTask;
 
 	//Event Task for spawn projectile
 	UAbilityTask_WaitGameplayEvent* EventTask;
+
+
+protected:
+	UPROPERTY()
+	TObjectPtr<UNyotaComponent> NyotaComponent;
+
+	/** List of animation montages you want to cycle through when activating this ability */
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	TArray<TObjectPtr<UAnimMontage>> Montages;
+
+	/** Change to play the montage faster or slower */
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	float Rate = 1.f;
+
+	/** Any gameplay events matching this tag will activate the OnEventReceived callback and apply the gameplay effect containers for this ability */
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	FGameplayTagContainer WaitForEventTag;
+
+	UFUNCTION(BlueprintPure, Category = "GAS Companion|Ability|Melee")
+	UAnimMontage* GetNextComboMontage();
+
+
+	UFUNCTION()
+	void OnMontageCancelled(FGameplayTag EventTag, FGameplayEventData EventData);
+
+	UFUNCTION()
+	void OnMontageCompleted(FGameplayTag EventTag, FGameplayEventData EventData);
+
+	UFUNCTION()
+	void OnEventReceived(FGameplayTag EventTag, FGameplayEventData EventData);
+
 };

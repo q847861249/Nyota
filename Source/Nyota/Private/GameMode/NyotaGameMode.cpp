@@ -4,6 +4,7 @@
 #include "GameMode/NyotaGameMode.h"
 #include "Character/NyotaPlayerController.h"
 #include "Character/NyotaPlayerController.h"
+#include "Debug/Debug.h"
 
 ANyotaGameMode::ANyotaGameMode()
 {

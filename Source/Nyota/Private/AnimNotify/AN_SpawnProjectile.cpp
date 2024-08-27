@@ -19,6 +19,7 @@ void UAN_SpawnProjectile::Notify(USkeletalMeshComponent* MeshComp, UAnimSequence
 			
 			character->SendGameEventByTag(FNyotaGameplayTags::Get().State_Shooting);
 
+
 		}
 	}
 }

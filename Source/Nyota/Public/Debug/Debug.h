@@ -15,7 +15,7 @@ public:
 	//** 在世界中打印 **//
 	static void SLOG(const FString& DebugMessage)  {
 
-		GEngine->AddOnScreenDebugMessage(-1, -1.f, FColor::Yellow, DebugMessage);
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Yellow, DebugMessage);
 	};
 
 	//** Draw point in the world **// 

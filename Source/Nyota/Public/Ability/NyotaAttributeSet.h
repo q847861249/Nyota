@@ -49,6 +49,11 @@ public:
 	ATTRIBUTE_ACCESSORS(UNyotaAttributeSet, MaxMovementSpeed)
 
 
+	UPROPERTY(BlueprintReadOnly, Category = "ComboIndex", ReplicatedUsing = OnRep_ComboIndex)
+	FGameplayAttributeData ComboIndex;
+	ATTRIBUTE_ACCESSORS(UNyotaAttributeSet, ComboIndex)
+
+
 
 
 
@@ -68,7 +73,8 @@ public:
 	UFUNCTION()
 	virtual void OnRep_MaxMovementSpeed(const FGameplayAttributeData& OldMaxMovementSpeed);
 
-
+	UFUNCTION()
+	virtual void OnRep_ComboIndex(const FGameplayAttributeData& OldMaxMovementSpeed);
 
 
 };

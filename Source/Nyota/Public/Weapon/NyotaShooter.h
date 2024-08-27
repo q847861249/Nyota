@@ -26,8 +26,7 @@ public:
 	UPROPERTY(Replicated)
 	TSubclassOf<AProjectileBase> CurrentProjectile;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UAnimMontage* AttackAnimMontage;
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -3,6 +3,8 @@
 
 #include "Ability/GA/GA_Base.h"
 #include "Character/NyotaCharacters.h"
+#include "Debug/Debug.h"
+#include <AbilitySystemGlobals.h>
 
 bool UGA_Base::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
@@ -15,12 +17,13 @@ bool UGA_Base::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 
 void UGA_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
-	if (!K2_CommitAbilityCooldown()) {
-
+	if (!K2_CommitAbilityCooldown()) 
+	{
 		K2_EndAbility();
 		return;
 	}
 
+		
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	if (UAbilitySystemComponent* AbilitySystemComponent = ActorInfo->AbilitySystemComponent.Get())
@@ -31,7 +34,7 @@ void UGA_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 			if (!effect.Get()) continue;
 
-			FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(effect, 1, EffectContext);
+			FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, effect, 1);
 
 			if (SpecHandle.IsValid()) {
 
@@ -50,7 +53,7 @@ void UGA_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 				if (!effect.Get()) continue;
 
-				FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec(effect, 1, EffectContext);
+				FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(Handle, ActorInfo, ActivationInfo, effect, 1);
 
 				if (SpecHandle.IsValid()) {
 
@@ -89,7 +92,68 @@ void UGA_Base::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGamepl
 
 }
 
-ANyotaCharacters* UGA_Base::getAvatarNyotaActor()
+ ANyotaCharacters* UGA_Base::getAvatarNyotaActor() 
 {
 	return 	Cast<ANyotaCharacters>(GetAvatarActorFromActorInfo());
 }
+
+ TArray<FActiveGameplayEffectHandle> UGA_Base::ApplyEffectContainerSpec(const FGSCGameplayEffectContainerSpec& ContainerSpec)
+ {
+	 TArray<FActiveGameplayEffectHandle> AllEffects;
+
+	 // Iterate list of effect specs and apply them to their target data
+	 for (const FGameplayEffectSpecHandle& SpecHandle : ContainerSpec.TargetGameplayEffectSpecs)
+	 {
+		 AllEffects.Append(K2_ApplyGameplayEffectSpecToTarget(SpecHandle, ContainerSpec.TargetData));
+	 }
+	 return AllEffects;
+ }
+
+ TArray<FActiveGameplayEffectHandle> UGA_Base::ApplyEffectContainer(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
+ {
+	 const FGSCGameplayEffectContainerSpec Spec = MakeEffectContainerSpec(ContainerTag, EventData, OverrideGameplayLevel);
+	 return ApplyEffectContainerSpec(Spec);
+ }
+
+ FGSCGameplayEffectContainerSpec UGA_Base::MakeEffectContainerSpec(FGameplayTag ContainerTag, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
+ {
+	 FGSCGameplayEffectContainer* FoundContainer = EffectContainerMap.Find(ContainerTag);
+
+	 if (FoundContainer)
+	 {
+		 return MakeEffectContainerSpecFromContainer(*FoundContainer, EventData, OverrideGameplayLevel);
+	 }
+	 return FGSCGameplayEffectContainerSpec();
+ }
+
+ FGSCGameplayEffectContainerSpec UGA_Base::MakeEffectContainerSpecFromContainer(const FGSCGameplayEffectContainer& Container, const FGameplayEventData& EventData, int32 OverrideGameplayLevel)
+ {
+	 // First figure out our actor info
+	 FGSCGameplayEffectContainerSpec ReturnSpec;
+	 const AActor* OwningActor = GetOwningActorFromActorInfo();
+	 UAbilitySystemComponent* OwningASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor);
+
+	 if (OwningASC)
+	 {
+
+		 // If we don't have an override level, use the default on the ability itself
+		 if (OverrideGameplayLevel == INDEX_NONE)
+		 {
+			 OverrideGameplayLevel = GetAbilityLevel();
+		 }
+
+		 // Build GameplayEffectSpecs for each applied effect
+		 for (const TSubclassOf<UGameplayEffect>& EffectClass : Container.TargetGameplayEffectClasses)
+		 {
+			 FGameplayEffectSpecHandle SpecHandle = MakeOutgoingGameplayEffectSpec(EffectClass, OverrideGameplayLevel);
+
+			 FGameplayEffectSpec* Spec = SpecHandle.Data.Get();
+			 if (Spec && Container.bUseSetByCallerMagnitude)
+			 {
+				 Spec->SetSetByCallerMagnitude(Container.SetByCallerDataTag, Container.SetByCallerMagnitude);
+			 }
+			 ReturnSpec.TargetGameplayEffectSpecs.Add(SpecHandle);
+		 }
+	 }
+	 return ReturnSpec;
+ }

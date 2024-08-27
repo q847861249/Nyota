@@ -13,10 +13,14 @@
 #include "DataAsset/NyotaCharacterConfig.h"
 #include "Character/NyotaPlayerController.h"
 
+#include "GameplayEffectExtension.h"
+
 #include "NyotaCharacters.generated.h"
 
 
+
 class UNyotaAttributeSet;
+class UNyotaMovementComponent;
 
 UCLASS()
 class NYOTA_API ANyotaCharacters : public ACharacter,
@@ -26,9 +30,11 @@ class NYOTA_API ANyotaCharacters : public ACharacter,
 
 public:
 	// Sets default values for this character's properties
-	ANyotaCharacters();
 
-	
+	ANyotaCharacters(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+	UNyotaMovementComponent* CharacterMovementComponent;
 
 protected:
 	// Called when the game starts or when spawned
@@ -75,10 +81,6 @@ public:
 	bool TryActiveAbilityByTag(FGameplayTag Tag);
 
 
-
-
-
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -92,6 +94,25 @@ public:
 
 	UFUNCTION(reliable, NetMulticast)
 	void Rep_EanbleRagdoll_Multicast();
+
+
+	void StartRagDoll();
+
+
+	void OnHealthAttributeChanged(const FOnAttributeChangeData& Data);
+
+	
+protected:
+
+	UFUNCTION()
+	void OnRagdollStateChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void PrintString(const FString& string, FLinearColor TextColor = FLinearColor(0.0f, 0.66f, 1.0f), float duration = 0.2f);
+
+
 
 private:
 

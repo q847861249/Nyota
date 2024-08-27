@@ -31,8 +31,23 @@ public:
 	FGameplayTag State_Attack;
 	FGameplayTag State_Shooting;
 	FGameplayTag State_Dead;
+	FGameplayTag State_RagDoll;
 	FGameplayTag State_ZeroHealth;
 
+	//**---Attack---**
+	FGameplayTag State_ComboWindowStart;
+	FGameplayTag State_ComboWindowEnd;
+
+	//Projectle
+	FGameplayTag State_Attack_First_Projectile;
+	FGameplayTag State_Attack_Second_Projectile;
+	FGameplayTag State_Attack_Third_Projectile;
+	FGameplayTag State_Attack_Fourth_Projectile;
+
+	//Close
+	FGameplayTag State_Attack_First_Close;
+	FGameplayTag State_Attack_Second_Close;
+	FGameplayTag State_Attack_Third_Close;
 
 protected:
 

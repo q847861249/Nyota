@@ -46,6 +46,11 @@ void UNyotaAttributeSet::OnRep_MaxMovementSpeed(const FGameplayAttributeData& Ol
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNyotaAttributeSet, MaxMovementSpeed, OldMaxMovementSpeed);
 }
 
+void UNyotaAttributeSet::OnRep_ComboIndex(const FGameplayAttributeData& OldComboIndex)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNyotaAttributeSet, ComboIndex, OldComboIndex);
+}
+
 void UNyotaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -59,5 +64,7 @@ void UNyotaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, MaxMovementSpeed, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, ComboIndex, COND_None, REPNOTIFY_Always);
 
 }

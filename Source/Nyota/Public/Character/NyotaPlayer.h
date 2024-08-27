@@ -16,7 +16,7 @@ class NYOTA_API ANyotaPlayer : public ANyotaCharacters
 	
 
 public:
-	ANyotaPlayer();
+	ANyotaPlayer(const FObjectInitializer& ObjectInitializer);
 
 
 
@@ -53,6 +53,9 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

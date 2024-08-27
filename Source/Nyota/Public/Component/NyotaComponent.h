@@ -7,8 +7,10 @@
 
 #include "DataAsset/NyotaCharacterConfig.h"
 #include "Projectile/ProjectileBase.h"
+#include "Ability/GA/GA_Base.h"
 
 #include "NyotaComponent.generated.h"
+
 
 
 
@@ -19,11 +21,7 @@ class NYOTA_API UNyotaComponent : public UActorComponent
 
 public:	
 
-
-	// Sets default values for this component's properties
 	UNyotaComponent();
-
-
 
 //*****************************//
 //** 预设的GA 和 GE 必须要填 **//
@@ -39,6 +37,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ANyotaWeapon* GetWeaponInstance();
 
+
+
+	UPROPERTY()
+	TObjectPtr<AActor> OwnerActor;
+
+	UPROPERTY()
+	TObjectPtr<APawn> OwnerPawn;
+
+	UPROPERTY()
+	TObjectPtr<ACharacter> OwnerCharacter;
+
+
+
+
+
+
 public:
 
 	//get character onhit projectile information
@@ -50,6 +64,9 @@ protected:
 	UPROPERTY(Replicated)
 	ANyotaWeapon* CurrentWeapon;
 
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> OwnerAbilitySystemComponent;
+
 private:
 	// read the config file and initilize the weapon
 	bool InitializeWeapon();
@@ -58,9 +75,86 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void SetupOwner();
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	bool ActivateAbilityByClass(const TSubclassOf<UGameplayAbility> AbilityClass, UGA_Base*& ActivatedAbility, const bool bAllowRemoteActivation = true);
+
+	UFUNCTION(BlueprintCallable, Category = "GAS Companion|Abilities")
+	TArray<UGameplayAbility*> GetActiveAbilitiesByClass(TSubclassOf<UGameplayAbility> AbilityToSearch) const;
+
+#pragma region CharacterCombo
+
+
+private:
+
+	friend class UAN_CombStart;
+	friend class UAN_CombEnd;
+	friend class UGA_Attack;
+
+
+#pragma region MeleeAttack
+public:
+
+public:
+
+	/** The combo index for the currently active combo */
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = "GAS Companion|Combo")
+	int32 ComboIndex = 0;
+
+	/** Whether or not the combo window is opened (eg. player can queue next combo within this window) */
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = "GAS Companion|Combo")
+	bool bComboWindowOpened = false;
+
+	/** Should we queue the next combo montage for the currently active combo */
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = "GAS Companion|Combo")
+	bool bShouldTriggerCombo = false;
+
+	/** Should we trigger the next combo montage */
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = "GAS Companion|Combo")
+	bool bRequestTriggerCombo = false;
+
+	/** Should we trigger the next combo montage */
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = "GAS Companion|Combo")
+	bool bNextComboAbilityActivated = false;
+
+	/** Reference to GA_GSC_Melee_Base */
+	TSubclassOf<UGA_Base> MeleeBaseAbility;
+
+
+
+	UFUNCTION(BlueprintCallable)
+
+	void DoMeleeAttack(TSubclassOf<UGameplayAbility> AttackAbility);
+
+	UAnimMontage* GetCurrentCombSequence();
+
+public:
+
+	/** Get the currently active combo ability */
+	UGameplayAbility* GetCurrentActiveComboAbility() const;
+
+	UFUNCTION(BlueprintCallable, Category = "GAS Companion|Combat")
+	void ResetCombo();
+
+	void IncrementCombo();
+
+private:
+	void SetComboIndex(int32 InComboIndex);
+
+protected:
+	UFUNCTION(Server, Reliable)
+	void ServerSetComboIndex(int32 InComboIndex);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSetComboIndex(int32 InComboIndex);
+
+	
+
+#pragma endregion
 
 };
 

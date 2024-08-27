@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/CapsuleComponent.h"
+#include "AbilitySystemComponent.h"
 #include "NyotaWeapon.generated.h"
+
+
 
 
 UCLASS()
@@ -25,5 +28,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UStaticMeshComponent* WeaponMesh;
 
+public:
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<UAnimMontage*> AttackAnimMontage;
 };

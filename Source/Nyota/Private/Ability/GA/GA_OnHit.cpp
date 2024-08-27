@@ -61,6 +61,6 @@ void UGA_OnHit::OnHitEffect(const FGameplayAbilityActorInfo* ActorInfo)
 	else character->GetAbilitySystemComponent()->SetNumericAttributeBase(UNyotaAttributeSet::GetHealthAttribute(), CurrentHealth + BasicDamage);
 
 	//理论上会损失性能但是问题应该不大
-	character->TryActiveAbilityByTag(FNyotaGameplayTags::Get().State_Dead);
+	//character->TryActiveAbilityByTag(FNyotaGameplayTags::Get().State_Dead);
 
 }

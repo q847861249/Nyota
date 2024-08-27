@@ -26,11 +26,28 @@ void FNyotaGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(InputTag_Attack, "InputTag.Attack", "BasicAttack");
 	
 	//character state tag
-	AddTag(State_Attack, "State.Attack", "State Attack.");
 	AddTag(State_OnHit, "State.OnHit", "State OnHit.");
+
+	// Dead
 	AddTag(State_Dead, "State.Dead", "State Dead.");
-	AddTag(State_Shooting, "State.Shooting", "State Shooting.");
 	AddTag(State_ZeroHealth, "State.ZeroHealth", "State ZeroHealth.");
+	AddTag(State_RagDoll, "State.RagDoll", "State RagDoll."); 
+
+
+	//Attack
+	AddTag(State_Attack, "State.Attack", "State Attack.");
+	AddTag(State_Shooting, "State.Shooting", "State Shooting.");
+	
+	AddTag(State_ComboWindowStart, "State.Combo.ComboWindowStart", "State Combo ComboWindowStart.");
+	AddTag(State_ComboWindowEnd, "State.Combo.ComboWindowEnd", "State Combo ComboWindowEnd.");
+
+	//Projectile
+	AddTag(State_Attack_First_Projectile, "State.Attack.Projectile.First", "Projectile First.");
+	AddTag(State_Attack_Second_Projectile, "State.Attack.Projectile.Second", "Projectile Second.");
+	AddTag(State_Attack_Third_Projectile, "State.Attack.Projectile.Third", "Projectile Third.");
+	AddTag(State_Attack_Fourth_Projectile, "State.Attack.Projectile.Fourth", "Projectile Fourth.");
+
+
 
 }
 

@@ -20,9 +20,8 @@
 //Debug
 #include "Debug/Debug.h"
 
-ANyotaPlayer::ANyotaPlayer()
+ANyotaPlayer::ANyotaPlayer(const FObjectInitializer& ObjectInitializer) :  Super(ObjectInitializer.SetDefaultSubobjectClass<UNyotaMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
-	//PrimaryActorTick.bCanEverTick = true;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -103,19 +102,32 @@ void ANyotaPlayer::Look(const FInputActionValue& Value)
 	}
 }
 
+void ANyotaPlayer::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+
+	
+}
+
+void ANyotaPlayer::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+}
+
 void ANyotaPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	if (UNyotaEnhancedInputComponent* EnhancedInputComponent = Cast<UNyotaEnhancedInputComponent>(PlayerInputComponent)) {
 		
+		//Ability InputAction
+		TArray<uint32> BindHandles;
+		//EnhancedInputComponent->BindAbilityActions(PlayerInputData, &ThisClass::Input_AbilityInputTagPressed,&ThisClass::Input_AbilityInputTagReleased, BindHandles);
 
 		//Native InputAction;
 		const FNyotaGameplayTags& GamplayTags = FNyotaGameplayTags::Get();
 
-		EnhancedInputComponent->BindNativeActionWithTag(PlayerInputData, GamplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ANyotaPlayer::Move);
-		EnhancedInputComponent->BindNativeActionWithTag(PlayerInputData, GamplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ANyotaPlayer::Look);
-		EnhancedInputComponent->BindNativeActionWithTag(PlayerInputData, GamplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ANyotaPlayer::Jump);
+		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ANyotaPlayer::Move);
+		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ANyotaPlayer::Look);
+		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ANyotaPlayer::Jump);
 
 	}
 

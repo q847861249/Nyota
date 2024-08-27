@@ -17,6 +17,8 @@ ANyotaWeapon::ANyotaWeapon()
 
 	WeaponMesh->SetupAttachment(WeaponCapsule);
 	RootComponent = WeaponCapsule;
+
+
 }
 
 
