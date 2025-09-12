@@ -13,13 +13,13 @@
 
 class UNyotaComponent;
 /**
- * 
+ *
  */
 UCLASS()
 class NYOTA_API UGA_Attack : public UGA_Base
 {
 	GENERATED_BODY()
-	
+
 public:
 
 	UGA_Attack();
@@ -29,9 +29,8 @@ public:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
-	
-	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr);
 
+	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr);
 
 
 	UFUNCTION()
@@ -39,23 +38,19 @@ public:
 
 
 
-public:
+private:
 
+	//Light attack monatge store list
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	TMap<int32, UAnimMontage*> LightAttackMontage;
 
-	// Montage Task For Attack
-	UAbilityTask_PlayMontageAndWait* MontageTask;
-
-	//Event Task for spawn projectile
-	UAbilityTask_WaitGameplayEvent* EventTask;
+	//Melee Montage count index 
+	int32 CurrrentComboCount = 1;
 
 
 protected:
 	UPROPERTY()
 	TObjectPtr<UNyotaComponent> NyotaComponent;
-
-	/** List of animation montages you want to cycle through when activating this ability */
-	UPROPERTY(EditDefaultsOnly, Category = "Montages")
-	TArray<TObjectPtr<UAnimMontage>> Montages;
 
 	/** Change to play the montage faster or slower */
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
@@ -65,17 +60,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	FGameplayTagContainer WaitForEventTag;
 
-	UFUNCTION(BlueprintPure, Category = "GAS Companion|Ability|Melee")
-	UAnimMontage* GetNextComboMontage();
-
-
-	UFUNCTION()
-	void OnMontageCancelled(FGameplayTag EventTag, FGameplayEventData EventData);
-
-	UFUNCTION()
-	void OnMontageCompleted(FGameplayTag EventTag, FGameplayEventData EventData);
-
-	UFUNCTION()
-	void OnEventReceived(FGameplayTag EventTag, FGameplayEventData EventData);
 
 };

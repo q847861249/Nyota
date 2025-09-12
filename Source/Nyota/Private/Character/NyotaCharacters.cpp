@@ -32,7 +32,7 @@ ANyotaCharacters::ANyotaCharacters(const FObjectInitializer& ObjectInitializer) 
 	NyotaComponent = CreateDefaultSubobject<UNyotaComponent>(TEXT("NyotaCharacterComponent"));
 
 	// GAS basic setting
-	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystem = CreateDefaultSubobject<UNyota_AbilitySystemComponent>(TEXT("AbilitySystem"));
 	AbilitySystem->SetIsReplicated(true);
 	AbilitySystem->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
@@ -54,9 +54,6 @@ ANyotaCharacters::ANyotaCharacters(const FObjectInitializer& ObjectInitializer) 
 	CharacterMovementComponent = Cast<UNyotaMovementComponent>(GetMovementComponent());
 	CharacterMovementComponent->SetIsReplicated(true);
 
-
-
-
 }
 
 
@@ -65,45 +62,38 @@ ANyotaCharacters::ANyotaCharacters(const FObjectInitializer& ObjectInitializer) 
 void ANyotaCharacters::BeginPlay()
 {
 	Super::BeginPlay();
-
-	CharacterMovementComponent = Cast<UNyotaMovementComponent>(GetMovementComponent());
 }
 
-UAbilitySystemComponent* ANyotaCharacters::GetAbilitySystemComponent() const
-{
-	return AbilitySystem;
-}
 
 void ANyotaCharacters::GiveAbility()
 {
-	if (nullptr != AbilitySystem)
-	{
-		// 修改：给ASC赋予技能
-		if (HasAuthority() && NyotaComponent->CharacterConfig->CharacterAbilityConfig->NyotaAbilities.Num() > 0)
-		{
-			for (auto i = 0; i < NyotaComponent->CharacterConfig->CharacterAbilityConfig->NyotaAbilities.Num(); i++)
-			{
-				if (NyotaComponent->CharacterConfig->CharacterAbilityConfig->NyotaAbilities[i] == nullptr)
-				{
-					continue;
-				}
-				AbilitySystem->GiveAbility(FGameplayAbilitySpec(NyotaComponent->CharacterConfig->CharacterAbilityConfig->NyotaAbilities[i].GetDefaultObject(), 1, 0));
-			}
-		}
-		// 修改：初始化ASC
-		//AbilitySystem->InitAbilityActorInfo(this, this);
-	}
+
 }
 
 void ANyotaCharacters::PossessedBy(AController* NewController)
 {
-
 	Super::PossessedBy(NewController);
 
-	AbilitySystem->InitAbilityActorInfo(this,this);
+	check(NewController);
 
-	GiveAbility();
-	ApplyStartUpEffect();
+	if (AbilitySystem) 
+	{
+		AbilitySystem->InitAbilityActorInfo(this,this);
+
+		if (NyotaComponent->CharacterConfig->CharacterAbilityConfig) 
+		{
+			NyotaComponent->CharacterConfig->CharacterAbilityConfig->GiveAbilityToComponent(AbilitySystem,0);
+		}
+
+		ApplyStartUpEffect();
+	}
+
+
+}
+
+UNyota_AbilitySystemComponent* ANyotaCharacters::GetAbilitySystemComponent() const
+{
+	return AbilitySystem;
 }
 
 bool ANyotaCharacters::ApplyGameplayEffectToself(TSubclassOf<UGameplayEffect> Effect, FGameplayEffectContextHandle inEffectHandle)
@@ -127,15 +117,12 @@ void ANyotaCharacters::ApplyStartUpEffect()
 {
 	if (GetLocalRole() == ROLE_Authority) {
 
+		if (!AbilitySystem) return;
+
 		FGameplayEffectContextHandle EffectContext = AbilitySystem->MakeEffectContext();
 
 		EffectContext.AddSourceObject(this);
 
-		for (auto& CharacterEffect : NyotaComponent->CharacterConfig->CharacterAbilityConfig->DefaultCharacterInfomation) {
-
-			ApplyGameplayEffectToself(CharacterEffect, EffectContext);
-
-		}
 	}
 }
 

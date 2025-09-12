@@ -5,7 +5,7 @@
 
 const UInputAction* UNyotaInputConfig::FindNativeInputActionForTag(const FGameplayTag& InputTag) const
 {
-	for (const auto& Action : PlayerInput) {
+	for (const auto& Action : InputConfigs) {
 
 		if (Action.Input && (Action.TagName == InputTag)) {
 

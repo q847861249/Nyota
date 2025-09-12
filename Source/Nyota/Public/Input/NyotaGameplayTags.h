@@ -49,6 +49,10 @@ public:
 	FGameplayTag State_Attack_Second_Close;
 	FGameplayTag State_Attack_Third_Close;
 
+	//Light Attack
+	FGameplayTag Player_LightAttack;
+	FGameplayTag State_LightAttack;
+
 protected:
 
 	//**使用 GameplayTags Manager 注册所有标签**//

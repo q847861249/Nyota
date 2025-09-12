@@ -22,6 +22,7 @@ void UNyotaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 
 void UNyotaAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {
+
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNyotaAttributeSet, Health, OldHealth);
 
 }

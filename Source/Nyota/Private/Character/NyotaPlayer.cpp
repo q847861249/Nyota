@@ -9,6 +9,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Input/NyotaGameplayTags.h"
 #include "EnhancedInputComponent.h"
+#include "Ability/NyotaAttributeSet.h"
+
 
 //Camera
 #include "Camera/CameraComponent.h"
@@ -22,7 +24,7 @@
 
 ANyotaPlayer::ANyotaPlayer(const FObjectInitializer& ObjectInitializer) :  Super(ObjectInitializer.SetDefaultSubobjectClass<UNyotaMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
-
+	
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -49,7 +51,7 @@ void ANyotaPlayer::PawnClientRestart()
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(PlayerInputData->DefaultMappingContext, 0);
+			Subsystem->AddMappingContext(PlayerInputData->getDefaultMapContext(), 0);
 		}
 	}
 }
@@ -57,9 +59,6 @@ void ANyotaPlayer::PawnClientRestart()
 void ANyotaPlayer::BeginPlay()
 {
 	Super::BeginPlay();
-
-
-	
 
 }
 
@@ -100,16 +99,18 @@ void ANyotaPlayer::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 		
 	}
+
 }
 
 void ANyotaPlayer::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
 
-	
+	GetAbilitySystemComponent()->OnAbilityPressed(InputTag);
 }
 
 void ANyotaPlayer::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	//GetAbilitySystemComponent()->OnAbilityPressed(InputTag);
 }
 
 void ANyotaPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -125,9 +126,11 @@ void ANyotaPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		//Native InputAction;
 		const FNyotaGameplayTags& GamplayTags = FNyotaGameplayTags::Get();
 
-		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ANyotaPlayer::Move);
-		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ANyotaPlayer::Look);
-		EnhancedInputComponent->BindNativeAction(PlayerInputData, GamplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ANyotaPlayer::Jump);
+		EnhancedInputComponent->BindActionByTag(PlayerInputData, GamplayTags.InputTag_Move, ETriggerEvent::Triggered, this, &ANyotaPlayer::Move);
+		EnhancedInputComponent->BindActionByTag(PlayerInputData, GamplayTags.InputTag_Look_Mouse, ETriggerEvent::Triggered, this, &ANyotaPlayer::Look);
+		EnhancedInputComponent->BindActionByTag(PlayerInputData, GamplayTags.InputTag_Jump, ETriggerEvent::Triggered, this, &ANyotaPlayer::Jump);
+
+		EnhancedInputComponent->BindAbility(PlayerInputData, this, &ANyotaPlayer::Input_AbilityInputTagPressed, &ANyotaPlayer::Input_AbilityInputTagReleased);
 
 	}
 

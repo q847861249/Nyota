@@ -13,6 +13,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Ability/GA/GA_Base.h"
 #include "./Ability/GA/GA_Attack.h"
+#include "Character/NyotaCharacters.h"
 
 
 // Sets default values for this component's properties
@@ -30,31 +31,8 @@ UNyotaComponent::UNyotaComponent()
 void UNyotaComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	InitializeWeapon();
-
-
 }
 
-void UNyotaComponent::SetupOwner()
-{
-	if (!GetOwner())
-	{
-		return;
-	}
-
-
-	OwnerActor = GetOwner();
-	if (!OwnerActor)
-	{
-		return;
-	}
-
-	OwnerPawn = Cast<APawn>(OwnerActor);
-	OwnerCharacter = Cast<ACharacter>(OwnerActor);
-
-	OwnerAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor);
-}
 
 
 // Called every frame
@@ -63,144 +41,9 @@ void UNyotaComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-bool UNyotaComponent::ActivateAbilityByClass(const TSubclassOf<UGameplayAbility> AbilityClass, UGA_Base*& ActivatedAbility, const bool bAllowRemoteActivation )
-{
-	if (!OwnerAbilitySystemComponent || !AbilityClass)
-	{
-		return false;
-	}
-
-	const bool bSuccess = OwnerAbilitySystemComponent->TryActivateAbilityByClass(AbilityClass, bAllowRemoteActivation);
-
-	TArray<UGameplayAbility*> ActiveAbilities = GetActiveAbilitiesByClass(AbilityClass);
-	if (ActiveAbilities.Num() == 0)
-	{
-		Debug::SLOG(TEXT("UGSCCoreComponent::ActivateAbilityByClass Couldn't get back active abilities with Class %s. Won't be able to return ActivatedAbility instance."));
-
-	}
-
-	if (bSuccess && ActiveAbilities.Num() > 0)
-	{
-		UGA_Base* Ability = Cast<UGA_Base>(ActiveAbilities[0]);
-		if (Ability)
-		{
-			ActivatedAbility = Ability;
-		}
-	}
-
-	return bSuccess;
-}
-
-TArray<UGameplayAbility*> UNyotaComponent::GetActiveAbilitiesByClass(TSubclassOf<UGameplayAbility> AbilityToSearch) const
-{
-	if (!OwnerAbilitySystemComponent)
-	{
-		Debug::SLOG(TEXT("UGSCCoreComponent::GetActiveAbilitiesByClass() ASC is not valid"));
-		return {};
-	}
-
-	TArray<FGameplayAbilitySpec> Specs = OwnerAbilitySystemComponent->GetActivatableAbilities();
-	TArray<struct FGameplayAbilitySpec*> MatchingGameplayAbilities;
-	TArray<UGameplayAbility*> ActiveAbilities;
-
-	// First, search for matching Abilities for this class
-	for (const FGameplayAbilitySpec& Spec : Specs)
-	{
-		if (Spec.Ability && Spec.Ability->GetClass()->IsChildOf(AbilityToSearch))
-		{
-			MatchingGameplayAbilities.Add(const_cast<FGameplayAbilitySpec*>(&Spec));
-		}
-	}
-
-	// Iterate the list of all ability specs
-	for (const FGameplayAbilitySpec* Spec : MatchingGameplayAbilities)
-	{
-		// Iterate all instances on this ability spec, which can include instance per execution abilities
-		TArray<UGameplayAbility*> AbilityInstances = Spec->GetAbilityInstances();
-
-		for (UGameplayAbility* ActiveAbility : AbilityInstances)
-		{
-			if (ActiveAbility->IsActive())
-			{
-				ActiveAbilities.Add(ActiveAbility);
-			}
-		}
-	}
-
-	return ActiveAbilities;
-}
 
 
-UAnimMontage* UNyotaComponent::GetCurrentCombSequence()
-{
-	if (ANyotaCharacters* character = Cast<ANyotaCharacters>(GetOwner()))
-	{
-		float CurrentMontageIndex = character->GetAbilitySystemComponent()->GetNumericAttributeBase(UNyotaAttributeSet::GetComboIndexAttribute());
 
-		if (!(CurrentMontageIndex >= 0))
-		{
-			if (GetOwner()->HasAuthority()) Debug::SLOG(FString::Printf(TEXT("Server: %s doesn't have Animation to play"), *CurrentWeapon->GetName()));
-			if (!GetOwner()->HasAuthority()) Debug::SLOG(FString::Printf(TEXT("Client: %s doesn't have Animation to play"), *CurrentWeapon->GetName()));
-
-			return nullptr;
-		}
-
-		return CurrentWeapon->AttackAnimMontage[CurrentMontageIndex];
-	}
-	
-	return nullptr;
-}
-
-UGameplayAbility* UNyotaComponent::GetCurrentActiveComboAbility() const
-{
-	TArray<UGameplayAbility*> Abilities = GetActiveAbilitiesByClass(MeleeBaseAbility);
-	return Abilities.IsValidIndex(0) ? Abilities[0] : nullptr;
-}
-
-void UNyotaComponent::ResetCombo()
-{
-	SetComboIndex(0);
-}
-
-void UNyotaComponent::IncrementCombo()
-{
-	if (bComboWindowOpened)
-	{
-		ComboIndex = ComboIndex + 1;
-	}
-
-}
-
-void UNyotaComponent::SetComboIndex(int32 InComboIndex)
-{
-	if (!IsNetSimulating())
-	{
-		ComboIndex = InComboIndex;
-	}
-	else
-	{
-
-
-		ComboIndex = InComboIndex;
-		ServerSetComboIndex(InComboIndex);
-	}
-
-}
-
-void UNyotaComponent::ServerSetComboIndex_Implementation(int32 InComboIndex)
-{
-	MulticastSetComboIndex(InComboIndex);
-}
-
-void UNyotaComponent::MulticastSetComboIndex_Implementation(int32 InComboIndex)
-{
-	OwnerCharacter = Cast<ACharacter>(GetOwner());
-
-	if (OwnerCharacter && !OwnerCharacter->IsLocallyControlled())
-	{
-		ComboIndex = InComboIndex;
-	}
-}
 
 
 bool UNyotaComponent::InitializeWeapon()
@@ -225,8 +68,7 @@ bool UNyotaComponent::InitializeWeapon()
 			break;
 		}
 	}
-
-	return CurrentWeapon->IsValidLowLevelFast();
+	return IsValid(CurrentWeapon);
 }
 
 
@@ -296,7 +138,6 @@ void UNyotaComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaComponent, CurrentActivateProjectileInfo, COND_None, REPNOTIFY_Always);	
 
-	
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaComponent, ComboIndex, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaComponent, bComboWindowOpened, COND_None, REPNOTIFY_Always);

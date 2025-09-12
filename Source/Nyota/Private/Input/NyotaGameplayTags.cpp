@@ -37,6 +37,9 @@ void FNyotaGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	//Attack
 	AddTag(State_Attack, "State.Attack", "State Attack.");
 	AddTag(State_Shooting, "State.Shooting", "State Shooting.");
+	AddTag(Player_LightAttack, "State.LightAttack", "State LightAttack.");
+	AddTag(State_LightAttack, "State.LightAttack", "State LightAttack.");
+
 	
 	AddTag(State_ComboWindowStart, "State.Combo.ComboWindowStart", "State Combo ComboWindowStart.");
 	AddTag(State_ComboWindowEnd, "State.Combo.ComboWindowEnd", "State Combo ComboWindowEnd.");

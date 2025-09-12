@@ -37,81 +37,13 @@ void UNyota_ComboNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	const AActor* Owner = GetOwnerActor(MeshComp);
-	if (!Owner)
-	{
-		return;
-	}
-
-	// run only on server
-	if (!Owner->HasAuthority())
-	{
-		return;
-	}
-
-	UNyotaComponent* NyotaComponent = Owner->FindComponentByClass<UNyotaComponent>();
-	if (NyotaComponent)
-	{
-		NyotaComponent->bComboWindowOpened = true;
-	}
-
-	if (NyotaComponent)
-	{
-			if (!NyotaComponent->bNextComboAbilityActivated || bEndCombo)
-			{
-				
-				NyotaComponent->ResetCombo();
-			}
-
-			NyotaComponent->bComboWindowOpened = false;
-			NyotaComponent->bRequestTriggerCombo = false;
-			NyotaComponent->bShouldTriggerCombo = false;
-			NyotaComponent->bNextComboAbilityActivated = false;
-	}
 }
 
 void UNyota_ComboNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 
-	const AActor* Owner = GetOwnerActor(MeshComp);
-	if (!Owner)
-	{
-		return;
-	}
 
-	// run only on server
-	if (!Owner->HasAuthority())
-	{
-		return;
-	}
-
-	UNyotaComponent* NyotaComponent = Owner->FindComponentByClass<UNyotaComponent>();
-	if (NyotaComponent)
-	{
-		NyotaComponent->bComboWindowOpened = true;
-
-		if (NyotaComponent->bComboWindowOpened && NyotaComponent->bShouldTriggerCombo && NyotaComponent->bRequestTriggerCombo && !bEndCombo)
-		{
-			if (!NyotaComponent->bNextComboAbilityActivated)
-			{
-				const UGameplayAbility* ComboAbility = NyotaComponent->GetCurrentActiveComboAbility();
-				if (ComboAbility)
-				{
-					UGA_Base* ActivatedAbility;
-					const bool bSuccess = NyotaComponent->ActivateAbilityByClass(ComboAbility->GetClass(), ActivatedAbility);
-					if (bSuccess)
-					{
-						NyotaComponent->bNextComboAbilityActivated = true;
-					}
-					else
-					{
-						Debug::SLOG(FString::Printf(TEXT("ComboWindowNotifyState:NotifyTick Ability %s didn't activate"), *ComboAbility->GetClass()->GetName()));
-					}
-				}
-			}
-		}
-	}
 
 }
 

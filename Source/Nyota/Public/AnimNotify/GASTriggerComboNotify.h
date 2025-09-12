@@ -21,7 +21,6 @@ public:
 
 	virtual FString GetNotifyName_Implementation() const override;
 
-
 private:
 	// Used to check if the owner actor of this notify is the preview actor of Persona, in which case we don't do anything
 	// to prevent log warning when getting components via Companion interfaces

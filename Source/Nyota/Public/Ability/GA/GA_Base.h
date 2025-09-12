@@ -9,7 +9,8 @@
 #include "GA_Base.generated.h"
 
 
-
+UENUM(BlueprintType)
+enum class EAbilityActivatePolicy : uint8 {Immediate,Triggered};
 
 USTRUCT(BlueprintType)
 struct FGSCGameplayEffectContainer
@@ -65,6 +66,8 @@ class NYOTA_API UGA_Base : public UGameplayAbility
 	
 public:
 
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const override;
 
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
@@ -106,4 +109,10 @@ protected:
 	/** Make gameplay effect container spec to be applied later, using the passed in container */
 	UFUNCTION(BlueprintCallable, Category = "GAS Companion|Ability", meta = (AutoCreateRefTerm = "EventData"))
 	virtual FGSCGameplayEffectContainerSpec MakeEffectContainerSpecFromContainer(const FGSCGameplayEffectContainer& Container, const FGameplayEventData& EventData, int32 OverrideGameplayLevel = -1);
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Ability")
+	EAbilityActivatePolicy AbilityActivatePolicy;
+
 };

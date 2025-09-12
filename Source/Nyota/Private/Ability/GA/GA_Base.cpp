@@ -6,6 +6,20 @@
 #include "Debug/Debug.h"
 #include <AbilitySystemGlobals.h>
 
+void UGA_Base::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+
+	if (AbilityActivatePolicy == EAbilityActivatePolicy::Immediate)
+	{
+		if (ActorInfo && !Spec.IsActive()) 
+		{
+			ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle);
+		
+		}
+	}
+}
+
 bool UGA_Base::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const
 {
 	if (!Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags)) return false;
@@ -77,7 +91,17 @@ void UGA_Base::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 void UGA_Base::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	if (IsInstantiated()) {
+	if (IsInstantiated()) 
+	{
+		if (AbilityActivatePolicy == EAbilityActivatePolicy::Immediate)
+		{
+			if (ActorInfo)
+			{
+				ActorInfo->AbilitySystemComponent->TryActivateAbility(Handle);
+
+			}
+		}
+
 
 		for (auto ActiveHandle : RemoveOnEndEffectHandle) {
 
@@ -87,6 +111,8 @@ void UGA_Base::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGamepl
 		}
 		RemoveOnEndEffectHandle.Empty();
 	}
+
+
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 

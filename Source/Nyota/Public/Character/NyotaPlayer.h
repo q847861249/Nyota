@@ -53,9 +53,12 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
+	UFUNCTION()
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 
+	UFUNCTION()
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+
 public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

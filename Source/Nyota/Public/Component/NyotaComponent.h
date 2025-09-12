@@ -8,6 +8,7 @@
 #include "DataAsset/NyotaCharacterConfig.h"
 #include "Projectile/ProjectileBase.h"
 #include "Ability/GA/GA_Base.h"
+#include "Component/Nyota_AbilitySystemComponent.h"
 
 #include "NyotaComponent.generated.h"
 
@@ -37,25 +38,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	ANyotaWeapon* GetWeaponInstance();
 
-
-
-	UPROPERTY()
-	TObjectPtr<AActor> OwnerActor;
-
-	UPROPERTY()
-	TObjectPtr<APawn> OwnerPawn;
-
-	UPROPERTY()
-	TObjectPtr<ACharacter> OwnerCharacter;
-
-
-
-
-
-
 public:
 
-	//get character onhit projectile information
+	//get character on hit projectile information
 	UPROPERTY(BlueprintReadOnly, Replicated)
 	FProjectileCFG CurrentActivateProjectileInfo;
 
@@ -64,8 +49,6 @@ protected:
 	UPROPERTY(Replicated)
 	ANyotaWeapon* CurrentWeapon;
 
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> OwnerAbilitySystemComponent;
 
 private:
 	// read the config file and initilize the weapon
@@ -75,16 +58,12 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void SetupOwner();
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	bool ActivateAbilityByClass(const TSubclassOf<UGameplayAbility> AbilityClass, UGA_Base*& ActivatedAbility, const bool bAllowRemoteActivation = true);
 
-	UFUNCTION(BlueprintCallable, Category = "GAS Companion|Abilities")
-	TArray<UGameplayAbility*> GetActiveAbilitiesByClass(TSubclassOf<UGameplayAbility> AbilityToSearch) const;
 
 #pragma region CharacterCombo
 
@@ -127,32 +106,8 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-
 	void DoMeleeAttack(TSubclassOf<UGameplayAbility> AttackAbility);
 
-	UAnimMontage* GetCurrentCombSequence();
-
-public:
-
-	/** Get the currently active combo ability */
-	UGameplayAbility* GetCurrentActiveComboAbility() const;
-
-	UFUNCTION(BlueprintCallable, Category = "GAS Companion|Combat")
-	void ResetCombo();
-
-	void IncrementCombo();
-
-private:
-	void SetComboIndex(int32 InComboIndex);
-
-protected:
-	UFUNCTION(Server, Reliable)
-	void ServerSetComboIndex(int32 InComboIndex);
-
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastSetComboIndex(int32 InComboIndex);
-
-	
 
 #pragma endregion
 

@@ -8,19 +8,21 @@
 // 修改：添加引用
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
-
+#include "Component/Nyota_AbilitySystemComponent.h"
 #include "InputActionValue.h"
 #include "DataAsset/NyotaCharacterConfig.h"
 #include "Character/NyotaPlayerController.h"
+#include "Character/NyotaMovementComponent.h"
 
 #include "GameplayEffectExtension.h"
-
 #include "NyotaCharacters.generated.h"
 
 
 
 class UNyotaAttributeSet;
 class UNyotaMovementComponent;
+class UNyota_AbilitySystemComponent;
+
 
 UCLASS()
 class NYOTA_API ANyotaCharacters : public ACharacter,
@@ -36,6 +38,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	UNyotaMovementComponent* CharacterMovementComponent;
 
+
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,30 +51,36 @@ public:
 	ANyotaPlayerController* NyotaPlayerController;
 
 	// 修改：申明ASC
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameplayAbilities, meta = (AllowPrivateAccess = "true"))
-	class UAbilitySystemComponent* AbilitySystem;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = NyotaCharacterBaseSetting, meta = (AllowPrivateAccess = "true"))
-	class UNyotaComponent* NyotaComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = GameplayAbilities)
+	TObjectPtr<UNyota_AbilitySystemComponent> AbilitySystem;
 
 	UPROPERTY()
 	TObjectPtr<UNyotaAttributeSet>AttributeSet;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = NyotaCharacterBaseSetting, meta = (AllowPrivateAccess = "true"))
+	class UNyotaComponent* NyotaComponent;
+
+	UFUNCTION()
+	virtual UNyota_AbilitySystemComponent* GetAbilitySystemComponent() const override;
+
 	UFUNCTION(BlueprintCallable)
 	bool ApplyGameplayEffectToself(TSubclassOf<UGameplayEffect> Effect, FGameplayEffectContextHandle inEffectHandle);
 
+	UFUNCTION()
 	UNyotaAttributeSet* getAttributeSet() const { return AttributeSet; }
 
-	// 修改：实现接口方法
-	UAbilitySystemComponent* GetAbilitySystemComponent()const override;
+
 
 	/** Default NetWork override function */
+	UFUNCTION()
 	virtual void PossessedBy(AController* NewController) override;
 
 	/** Default GAS Start Effect Setup */
+	UFUNCTION()
 	void ApplyStartUpEffect();
 
 	/** Send GameplayEvent To Self */
+	UFUNCTION()
 	void SendGameEventByTag(FGameplayTag Tag);
 
 
@@ -111,6 +122,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void PrintString(const FString& string, FLinearColor TextColor = FLinearColor(0.0f, 0.66f, 1.0f), float duration = 0.2f);
+
+
 
 
 
