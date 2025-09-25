@@ -18,8 +18,11 @@ ANyotaWeapon::ANyotaWeapon()
 	WeaponMesh->SetupAttachment(WeaponCapsule);
 	RootComponent = WeaponCapsule;
 
-
+	bReplicates = true;
+	SetReplicateMovement(true);
 }
+
+
 
 
 

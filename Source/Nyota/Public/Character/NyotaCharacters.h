@@ -13,6 +13,8 @@
 #include "DataAsset/NyotaCharacterConfig.h"
 #include "Character/NyotaPlayerController.h"
 #include "Character/NyotaMovementComponent.h"
+#include "Weapon/NyotaWeapon.h"
+
 
 #include "GameplayEffectExtension.h"
 #include "NyotaCharacters.generated.h"
@@ -38,8 +40,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	UNyotaMovementComponent* CharacterMovementComponent;
 
+// current character weapon
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
+	ANyotaWeapon* CharacterWeapon;
 
-
+public:
+	//get
+	UFUNCTION(BlueprintCallable)
+	ANyotaWeapon* getWeapon() { return CharacterWeapon; };
+	//set
+	void SetWeapon(ANyotaWeapon* CurrentWeapon) { CharacterWeapon = CurrentWeapon; };
 
 protected:
 	// Called when the game starts or when spawned

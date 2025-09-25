@@ -80,6 +80,8 @@ void ANyotaCharacters::PossessedBy(AController* NewController)
 	{
 		AbilitySystem->InitAbilityActorInfo(this,this);
 
+		if (!NyotaComponent->CharacterConfig) return;
+
 		if (NyotaComponent->CharacterConfig->CharacterAbilityConfig) 
 		{
 			NyotaComponent->CharacterConfig->CharacterAbilityConfig->GiveAbilityToComponent(AbilitySystem,0);

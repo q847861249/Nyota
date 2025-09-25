@@ -34,6 +34,10 @@ class NYOTA_API UNyotaCharacterAbilityBaseConfig : public UDataAsset
 
 public:
 
+	//µÈ´ýGA
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TArray<TSubclassOf<UGameplayAbility>> NyotaWaitingAbilities;
+
 	//±»¶¯GA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<TSubclassOf<UGameplayAbility>> NyotaPassiveAbilities;

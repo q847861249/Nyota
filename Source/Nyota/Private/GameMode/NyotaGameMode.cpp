@@ -9,7 +9,7 @@
 ANyotaGameMode::ANyotaGameMode()
 {
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/NyotaCharacter/Gemini/Blueprint/BP_Gemini"));
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/NyotaCharacter/Pig/Blueprint/BP_Pig"));
 	if (PlayerPawnBPClass.Class != NULL)
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;

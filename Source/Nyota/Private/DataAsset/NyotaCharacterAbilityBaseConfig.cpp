@@ -39,4 +39,20 @@ void UNyotaCharacterAbilityBaseConfig::GiveAbilityToComponent(UAbilitySystemComp
 		}
 	}
 
+	if (!NyotaWaitingAbilities.IsEmpty())
+	{
+		for (TSubclassOf<UGameplayAbility>Ability : NyotaWaitingAbilities)
+		{
+			if (Ability)
+			{
+				FGameplayAbilitySpec ABilitySpec(Ability);
+				ABilitySpec.SourceObject = inComponent->GetAvatarActor();
+				ABilitySpec.Level = InLevel;
+
+				inComponent->GiveAbility(ABilitySpec);
+			}
+
+		}
+	}
+
 }
