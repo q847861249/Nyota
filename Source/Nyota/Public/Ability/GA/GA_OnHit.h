@@ -29,21 +29,12 @@ public:
 
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
 
-private:
-	
-	void OnHitEffect(const FGameplayAbilityActorInfo* ActorInfo);
+
 	
 public:
 
-	UPROPERTY(EditDefaultsOnly)
-	UDamgeConfig* DamageConfig;
-
-	UPROPERTY(BlueprintReadWrite)
-	FProjectileCFG CurrentActivateProjectileInfo;
-
-	TSubclassOf<UGameplayEffect> DamageEffect;
-
-	// Montage Task On Hit
-	UAbilityTask_PlayMontageAndWait* MontageTask;
+ 	//Hit montage store list
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* OnHitMontage;
 
 };

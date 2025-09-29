@@ -16,8 +16,6 @@ void UNyotaAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 
 	if (Health.GetBaseValue() <= 0)Health.SetBaseValue(0);
 	//if (Health.GetBaseValue() > MaxHealth.GetBaseValue()) Health.SetBaseValue(MaxHealth.GetBaseValue());
-	
-
 }
 
 void UNyotaAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
@@ -30,6 +28,11 @@ void UNyotaAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth)
 void UNyotaAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UNyotaAttributeSet, MaxHealth, OldMaxHealth);
+}
+
+void UNyotaAttributeSet::OnRep_MinHealth(const FGameplayAttributeData& OldMinHealth)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UNyotaAttributeSet, MinHealth, OldMinHealth);
 }
 
 void UNyotaAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana)
@@ -59,6 +62,8 @@ void UNyotaAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, Health, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, MinHealth, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UNyotaAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 

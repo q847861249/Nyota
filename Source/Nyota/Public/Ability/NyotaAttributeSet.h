@@ -33,6 +33,10 @@ public:
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UNyotaAttributeSet, MaxHealth)
 
+	UPROPERTY(BlueprintReadOnly, Category = "MinHealth", ReplicatedUsing = OnRep_MinHealth)
+	FGameplayAttributeData MinHealth;
+	ATTRIBUTE_ACCESSORS(UNyotaAttributeSet, MinHealth)
+
 
 	UPROPERTY(BlueprintReadOnly, Category = "Mana", ReplicatedUsing = OnRep_Mana)
 	FGameplayAttributeData Mana;
@@ -63,6 +67,9 @@ public:
 
 	UFUNCTION()
 	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth);
+
+	UFUNCTION()
+	virtual void OnRep_MinHealth(const FGameplayAttributeData& OldMinHealth);
 
 	UFUNCTION()
 	virtual void OnRep_Mana(const FGameplayAttributeData& OldMana);

@@ -125,6 +125,10 @@ void ANyotaCharacters::ApplyStartUpEffect()
 
 		EffectContext.AddSourceObject(this);
 
+		for (TSubclassOf<UGameplayEffect> effect :  NyotaComponent->CharacterConfig->CharacterAbilityConfig->NyotaPassiveEffect)
+		{
+			ApplyGameplayEffectToself(effect, EffectContext);
+		}
 	}
 }
 

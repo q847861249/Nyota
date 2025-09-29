@@ -34,10 +34,6 @@ class NYOTA_API UNyotaCharacterAbilityBaseConfig : public UDataAsset
 
 public:
 
-	//等待GA
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	TArray<TSubclassOf<UGameplayAbility>> NyotaWaitingAbilities;
-
 	//被动GA
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<TSubclassOf<UGameplayAbility>> NyotaPassiveAbilities;
@@ -49,9 +45,7 @@ public:
 	//被动GE
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<TSubclassOf<UGameplayEffect>> NyotaPassiveEffect;
-
-
-
+	
 
 	UFUNCTION()
 	void GiveAbilityToComponent(UAbilitySystemComponent* inComponent, int32 InLevel = 0);

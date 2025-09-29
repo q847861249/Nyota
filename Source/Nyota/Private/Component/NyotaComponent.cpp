@@ -103,10 +103,7 @@ void UNyotaComponent::DoMeleeAttack(TSubclassOf<UGameplayAbility> AttackAbility)
 
 					character->AbilitySystem->CancelAbility(spec->Ability);
 
-					if (CurrentMontageIndex + 1 < CurrentWeapon->AttackAnimMontage.Num())
-					{
-						character->GetAbilitySystemComponent()->SetNumericAttributeBase(UNyotaAttributeSet::GetComboIndexAttribute(), CurrentMontageIndex + 1);
-					}
+
 
 					character->AbilitySystem->TryActivateAbilityByClass(AttackAbility);
 				}
@@ -119,10 +116,7 @@ void UNyotaComponent::DoMeleeAttack(TSubclassOf<UGameplayAbility> AttackAbility)
 				}
 				else
 				{
-					if ((CurrentMontageIndex + 1) == CurrentWeapon->AttackAnimMontage.Num())
-					{
-						character->GetAbilitySystemComponent()->SetNumericAttributeBase(UNyotaAttributeSet::GetComboIndexAttribute(),0);
-					}
+
 				}
 			}
 		}
