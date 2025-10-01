@@ -58,6 +58,16 @@ ANyotaCharacters::ANyotaCharacters(const FObjectInitializer& ObjectInitializer) 
 
 
 
+void ANyotaCharacters::SetWeapon_Implementation(ANyotaWeapon* CurrentWeapon)
+{
+	Rep_SetWeapon_Multicast(CurrentWeapon);
+}
+
+void ANyotaCharacters::Rep_SetWeapon_Multicast_Implementation(ANyotaWeapon* CurrentWeapon)
+{
+	CharacterWeapon_ptr = CurrentWeapon;
+}
+
 // Called when the game starts or when spawned
 void ANyotaCharacters::BeginPlay()
 {
@@ -170,7 +180,7 @@ void ANyotaCharacters::Rep_EanbleRagdoll_Multicast_Implementation()
 	if (APlayerController* PlayerController = Cast<APlayerController> (GetController())) {
 		DisableInput(PlayerController);
 	}
-
+	if (CharacterWeapon_ptr) CharacterWeapon_ptr->Destroy();
 }
 
 // Called every frame
@@ -241,6 +251,15 @@ void ANyotaCharacters::PrintString(const FString& string, FLinearColor TextColor
 		GEngine->AddOnScreenDebugMessage(-1, duration, TextColor.ToFColor(true), FString::Printf(TEXT("Client %d %s: "), PlayInEditorID, *string));
 	}
 }
+
+void ANyotaCharacters::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ANyotaCharacters, CharacterWeapon_ptr);
+
+}
+
 
 
 

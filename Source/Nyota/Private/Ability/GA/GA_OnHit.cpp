@@ -7,6 +7,8 @@
 #include "Component/NyotaComponent.h"
 #include "Input/NyotaGameplayTags.h"
 #include "GameplayEffectTypes.h"
+#include "GameplayTagContainer.h"
+#include "Ability/GA/GA_Dead.h"
 
 #include "Character/NyotaCharacters.h"
 
@@ -43,8 +45,11 @@ void UGA_OnHit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 void UGA_OnHit::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	
-
+	//remove 'on hit' tag after ability execution 
 	ActorInfo->AbilitySystemComponent->RemoveActiveEffectsWithGrantedTags(AbilityTags);
+
+	// active GA_Dead, and check the character health on CanActivateAbility 
+	ActorInfo->AbilitySystemComponent->TryActivateAbilityByClass(DeadGA);
 
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

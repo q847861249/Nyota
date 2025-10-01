@@ -14,6 +14,7 @@ void UGA_SpawnWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 	{
 		FActorSpawnParameters SpawnInfo;
 		SpawnInfo.Instigator = Character;
+		SpawnInfo.Owner = Character;
 
 		FRotator SpawnTransformRotation = Character->GetRootComponent()->GetRelativeRotation();
 
@@ -21,10 +22,12 @@ void UGA_SpawnWeapon::ActivateAbility(const FGameplayAbilitySpecHandle Handle, c
 
 		ANyotaWeapon* CurrentWeapon = GetWorld()->SpawnActor<ANyotaWeapon>(WeaponBlueprintClass, SpawnTransformLocation, SpawnTransformRotation, SpawnInfo);
 
+		if (CurrentWeapon) 
+		{
+			Character->SetWeapon(CurrentWeapon);
 
-		if (CurrentWeapon) CurrentWeapon->AttachToComponent(Character->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSpawnSocketName);
-
-		Character->SetWeapon(CurrentWeapon);
+			CurrentWeapon->AttachToComponent(Character->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, WeaponSpawnSocketName);
+		} 
 
 	}
 }

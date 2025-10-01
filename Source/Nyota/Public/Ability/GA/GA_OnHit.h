@@ -7,6 +7,7 @@
 #include "DataAsset/DamgeConfig.h"
 #include "DataAsset/ProjectileConfig.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "Ability/GA/GA_Dead.h"
 
 #include "GA_OnHit.generated.h"
 
@@ -36,5 +37,9 @@ public:
  	//Hit montage store list
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* OnHitMontage;
+
+	//Dead GA Class here
+	UPROPERTY(EditDefaultsOnly, Category = "GA_Dead")
+	TSubclassOf<UGA_Dead> DeadGA;
 
 };

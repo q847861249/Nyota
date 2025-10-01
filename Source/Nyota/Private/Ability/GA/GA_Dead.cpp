@@ -12,9 +12,8 @@ bool UGA_Dead::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const
 {
 	ANyotaCharacters* character = Cast<ANyotaCharacters>(ActorInfo->AvatarActor.Get());
 
-	float Health = character->GetAbilitySystemComponent()->GetNumericAttribute(UNyotaAttributeSet::GetHealthAttribute());
-
-	return Health == 0;
+	// check character health on attribute 
+	return character->GetAbilitySystemComponent()->GetNumericAttribute(UNyotaAttributeSet::GetHealthAttribute()) == 0;
 }
 
 void UGA_Dead::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -24,14 +23,15 @@ void UGA_Dead::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FG
 	ANyotaCharacters* character = Cast<ANyotaCharacters>(ActorInfo->AvatarActor.Get());
 
 
-	FGameplayEventData Payload;
-	Payload.EventTag = FNyotaGameplayTags::Get().State_RagDoll;
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(character, FNyotaGameplayTags::Get().State_RagDoll, Payload);
+	//FGameplayEventData Payload;
+	//Payload.EventTag = FNyotaGameplayTags::Get().State_RagDoll;
+	//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(character, FNyotaGameplayTags::Get().State_RagDoll, Payload);
+
+	character->EnableRagDoll();
 
 	character->SetLifeSpan(2.0f);
 	
 	K2_EndAbility();
-
 
 }
 

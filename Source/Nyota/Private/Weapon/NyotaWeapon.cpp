@@ -60,8 +60,6 @@ void ANyotaWeapon::WeaponBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 					AbilitySystem->ApplyGameplayEffectToTarget(effect->GetDefaultObject<UGameplayEffect>(), charater->AbilitySystem);
 
-					
-
 				}
 			}
 		}

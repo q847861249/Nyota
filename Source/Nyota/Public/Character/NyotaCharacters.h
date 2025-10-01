@@ -41,16 +41,22 @@ public:
 	UNyotaMovementComponent* CharacterMovementComponent;
 
 // current character weapon
-protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Weapon")
-	ANyotaWeapon* CharacterWeapon;
+private:
+	UPROPERTY(Replicated)
+	ANyotaWeapon* CharacterWeapon_ptr;
 
 public:
 	//get
 	UFUNCTION(BlueprintCallable)
-	ANyotaWeapon* getWeapon() { return CharacterWeapon; };
+	ANyotaWeapon* getWeapon() { return CharacterWeapon_ptr; };
+
 	//set
-	void SetWeapon(ANyotaWeapon* CurrentWeapon) { CharacterWeapon = CurrentWeapon; };
+	UFUNCTION(BlueprintCallable, reliable,Server)
+	void SetWeapon(ANyotaWeapon* CurrentWeapon);
+
+	UFUNCTION(reliable, NetMulticast)
+	void Rep_SetWeapon_Multicast(ANyotaWeapon* CurrentWeapon);
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -118,6 +124,9 @@ public:
 	void Rep_EanbleRagdoll_Multicast();
 
 
+
+
+
 	void StartRagDoll();
 
 
@@ -134,6 +143,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PrintString(const FString& string, FLinearColor TextColor = FLinearColor(0.0f, 0.66f, 1.0f), float duration = 0.2f);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 
 
