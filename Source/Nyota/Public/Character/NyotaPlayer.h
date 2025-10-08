@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Character/NyotaCharacters.h"
+#include "Character/NyotaPlayerController.h"
 #include "NyotaPlayer.generated.h"
 
 /**
@@ -18,7 +19,7 @@ class NYOTA_API ANyotaPlayer : public ANyotaCharacters
 public:
 	ANyotaPlayer(const FObjectInitializer& ObjectInitializer);
 
-
+	TObjectPtr<AController> NyotaPlayerController;
 
 public:
 
@@ -63,4 +64,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Destroyed() override;
 };

@@ -22,14 +22,9 @@ void UGA_Dead::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 	ANyotaCharacters* character = Cast<ANyotaCharacters>(ActorInfo->AvatarActor.Get());
 
-
-	//FGameplayEventData Payload;
-	//Payload.EventTag = FNyotaGameplayTags::Get().State_RagDoll;
-	//UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(character, FNyotaGameplayTags::Get().State_RagDoll, Payload);
-
 	character->EnableRagDoll();
 
-	character->SetLifeSpan(2.0f);
+	character->SetLifeSpan(4.0f);
 	
 	K2_EndAbility();
 

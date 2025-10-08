@@ -43,8 +43,6 @@ void UNyota_ComboNotifyState::NotifyTick(USkeletalMeshComponent* MeshComp, UAnim
 {
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 
-
-
 }
 
 FString UNyota_ComboNotifyState::GetEditorComment()

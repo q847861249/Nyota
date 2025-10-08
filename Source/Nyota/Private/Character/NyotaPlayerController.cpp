@@ -68,6 +68,7 @@ void ANyotaPlayerController::OnPawnDeathStateChanged(const FGameplayTag Callback
 
 void ANyotaPlayerController::RestartPlayer()
 {
+
 	UWorld* world = GetWorld();
 
 	ANyotaGameMode* GameMode = world ? Cast<ANyotaGameMode>(world->GetAuthGameMode()) : nullptr;

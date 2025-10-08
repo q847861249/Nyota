@@ -123,15 +123,7 @@ public:
 	UFUNCTION(reliable, NetMulticast)
 	void Rep_EanbleRagdoll_Multicast();
 
-
-
-
-
 	void StartRagDoll();
-
-
-	void OnHealthAttributeChanged(const FOnAttributeChangeData& Data);
-
 	
 protected:
 

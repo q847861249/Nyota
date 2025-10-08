@@ -11,7 +11,6 @@
 #include "EnhancedInputComponent.h"
 #include "Ability/NyotaAttributeSet.h"
 
-
 //Camera
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -19,6 +18,7 @@
 //Component
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
+
 //Debug
 #include "Debug/Debug.h"
 
@@ -47,7 +47,7 @@ void ANyotaPlayer::PawnClientRestart()
 {
 	Super::PawnClientRestart();
 	//Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	if (ANyotaPlayerController* PlayerController = Cast<ANyotaPlayerController>(Controller))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
@@ -134,4 +134,12 @@ void ANyotaPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	}
 
+}
+
+void ANyotaPlayer::Destroyed()
+{
+	if (ANyotaPlayerController* PlayerController = Cast<ANyotaPlayerController>(Controller)) 
+	{
+		PlayerController->ResartPlayerin(1);
+	}
 }

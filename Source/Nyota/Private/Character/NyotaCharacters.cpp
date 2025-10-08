@@ -15,6 +15,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Math/Color.h"
 #include "Debug/Debug.h"
+#include "Character/NyotaPlayerController.h"
 
 #include "Character/NyotaMovementComponent.h"
 
@@ -39,15 +40,6 @@ ANyotaCharacters::ANyotaCharacters(const FObjectInitializer& ObjectInitializer) 
 	//GAS attribute
 	AttributeSet = CreateDefaultSubobject<UNyotaAttributeSet>(TEXT("AttributeSet"));
 
-	//Notify On Attribute Changed
-	//character on dead
-	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &ANyotaCharacters::OnHealthAttributeChanged);
-	AbilitySystem->RegisterGameplayTagEvent(FNyotaGameplayTags::Get().State_RagDoll, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ANyotaCharacters::OnRagdollStateChanged);
-
-	//Receive Combo tag 
-	AbilitySystem->RegisterGameplayTagEvent(FNyotaGameplayTags::Get().State_RagDoll, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ANyotaCharacters::OnRagdollStateChanged);
-
-	//NyotaComponent->SetNetAddressable();
 	NyotaComponent->SetIsReplicated(true);
 
 
@@ -177,9 +169,11 @@ void ANyotaCharacters::Rep_EanbleRagdoll_Multicast_Implementation()
 
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 
-	if (APlayerController* PlayerController = Cast<APlayerController> (GetController())) {
+	//限制角色移动
+	if (ANyotaPlayerController* PlayerController = Cast<ANyotaPlayerController> (GetController())) {
 		DisableInput(PlayerController);
 	}
+
 	if (CharacterWeapon_ptr) CharacterWeapon_ptr->Destroy();
 }
 
@@ -191,27 +185,6 @@ void ANyotaCharacters::Tick(float DeltaTime)
 }
 
 
-
-void ANyotaCharacters::OnHealthAttributeChanged(const FOnAttributeChangeData& Data)
-{
-	if (Data.NewValue <= 0 && Data.OldValue > 0) 
-	{
-		ANyotaCharacters* OtherCharacter = nullptr;
-	
-		if (Data.GEModData) 
-		{
-			const FGameplayEffectContextHandle& EffectContent = Data.GEModData->EffectSpec.GetEffectContext();
-
-			OtherCharacter = Cast<ANyotaCharacters>(EffectContent.GetInstigator());
-
-		}
-
-		FGameplayEventData EventPayload;
-		EventPayload.EventTag = FNyotaGameplayTags::Get().State_Dead;
-
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, FNyotaGameplayTags::Get().State_Dead, EventPayload);
-	}
-}
 
 void ANyotaCharacters::OnRagdollStateChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
@@ -236,6 +209,8 @@ void ANyotaCharacters::StartRagDoll()
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
+
+
 
 
 

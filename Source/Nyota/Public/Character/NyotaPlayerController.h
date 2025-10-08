@@ -28,6 +28,7 @@ protected:
 	UFUNCTION()
 	void OnPawnDeathStateChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
+public:
 	void RestartPlayer();
 
 	FTimerHandle RestartPlayerTimerHandle;
