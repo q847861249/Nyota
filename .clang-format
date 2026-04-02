@@ -1,0 +1,9 @@
+BasedOnStyle: Microsoft
+ColumnLimit: 120
+IndentWidth: 4
+Language: Cpp
+AlignAfterOpenBracket: BlockIndent
+BinPackArguments: false
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+SortIncludes: Never

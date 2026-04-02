@@ -6,12 +6,13 @@
 #include "GA/GA_BaseHitReact.h"
 #include "GA_Ability_WaterBall.generated.h"
 
+class UNiagaraSystem;
+
 /**
- * 
+ *
  */
 UCLASS()
 class PROTOTYPE_API UGA_Ability_WaterBall : public UGA_BaseHitReact
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
 };
