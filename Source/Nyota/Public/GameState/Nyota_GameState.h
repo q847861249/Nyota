@@ -15,21 +15,21 @@ class NYOTA_API ANyota_GameState : public AGameStateBase
 {
 	GENERATED_BODY()
 private:
-	// UPROPERTY(EditDefaultsOnly,Category="Time")
-	// int32 TimeSetting;
+	UPROPERTY(EditDefaultsOnly,Category="Time")
+	int32 TimeSetting;
 
-	// UPROPERTY(ReplicatedUsing = OnRep_RemainTime)
-	// int32 RemainTime;
+	UPROPERTY(ReplicatedUsing = OnRep_RemainTime)
+	int32 RemainTime;
 
-    // FTimerHandle GameTimerHandle;
+    FTimerHandle GameTimerHandle;
 
 	TObjectPtr<UMainUI> MainUI;
 
-	// UFUNCTION()
-	// void OnRep_RemainTime();
+	UFUNCTION()
+	void OnRep_RemainTime();
 
-	// UFUNCTION()
-	// void UpdateTime();
+	UFUNCTION()
+	void UpdateTime();
 
 
 protected:

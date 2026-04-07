@@ -12,11 +12,11 @@
 void ANyota_GameState::BeginPlay()
 {
     Super::BeginPlay();
-    // if (HasAuthority())
-    // {
-    //     RemainTime = TimeSetting;
-    //     GetWorldTimerManager().SetTimer(GameTimerHandle, this, &ANyota_GameState::UpdateTime, 1.0f, true);
-    // }
+    if (HasAuthority())
+    {
+        RemainTime = TimeSetting;
+        GetWorldTimerManager().SetTimer(GameTimerHandle, this, &ANyota_GameState::UpdateTime, 1.0f, true);
+    }
 
     ANyota_PlayerController* PC = Cast<ANyota_PlayerController>(GetWorld()->GetFirstPlayerController());
     if (!PC) return;
@@ -47,25 +47,26 @@ void ANyota_GameState::RemovePlayerState(APlayerState* PlayerState)
     Super::RemovePlayerState(PlayerState);
 }
 
-// void ANyota_GameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
-// {
-//     DOREPLIFETIME_CONDITION_NOTIFY(ANyota_GameState, RemainTime, COND_None, REPNOTIFY_Always);
-// }
+void ANyota_GameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+    DOREPLIFETIME_CONDITION_NOTIFY(ANyota_GameState, RemainTime, COND_None, REPNOTIFY_Always);
+}
 
-// void ANyota_GameState::OnRep_RemainTime()
-// {
-//     if(!MainUI) return;
-//     MainUI->UpdateRemainTime(RemainTime);
-// }
+void ANyota_GameState::OnRep_RemainTime()
+{
+    if(!MainUI) return;
+    MainUI->UpdateRemainTime(RemainTime);
+}
 
-// void ANyota_GameState::UpdateTime()
-// {
-//     if(RemainTime > 0)
-//     {
-//         RemainTime--;
-//     }
-//     else
-//     {
-//         UE_LOG(LogTemp,Warning,TEXT("GameOver"));
-//     }
-// }
+void ANyota_GameState::UpdateTime()
+{
+    if(RemainTime > 0)
+    {
+        RemainTime--;
+    }
+    else
+    {
+        UE_LOG(LogTemp,Warning,TEXT("GameOver"));
+    }
+}
