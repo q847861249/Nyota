@@ -24,9 +24,14 @@ void UNyota_AttributeSet::PostGameplayEffectExecute(const struct FGameplayEffect
         bBaseAttributesInitialized = true;
         OnBaseAttributeInitialized.Broadcast();
     }
+    
     if(GetHealth()<0.0f)
     {
         Health = 0;
+    }
+    if(GetScore()>GetMaxScore())
+    {
+        SetScore(GetMaxScore());
     }
 }
 

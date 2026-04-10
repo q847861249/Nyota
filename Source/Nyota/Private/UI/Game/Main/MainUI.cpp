@@ -6,6 +6,8 @@
 #include "UI/Game/Main/PlayerListSection.h"
 #include "GameState/Nyota_GameState.h"
 #include "Components/TextBlock.h"
+#include "AbilitySystemComponent.h"
+#include "Characters/Player/Nyota_PlayerState.h"
 
 void UMainUI::UpdatePlayerList()
 {
@@ -14,19 +16,20 @@ void UMainUI::UpdatePlayerList()
     PlayerList->ClearChildren();
 
     ANyota_GameState* GS = Cast<ANyota_GameState>(GetWorld()->GetGameState());
-
     if (!GS) return;
-    UE_LOG(LogTemp,Warning,TEXT("Array %d"),GS->PlayerArray.Num());
 
     for (APlayerState* PS : GS->PlayerArray)
     {
-        if (PS)
+        ANyota_PlayerState* Nyota_PS = Cast<ANyota_PlayerState>(PS);
+        if (Nyota_PS)
         {
             UPlayerListSection* NewSection = CreateWidget<UPlayerListSection>(this, PlayerListClass);
             if (NewSection)
             {
-                UE_LOG(LogTemp,Warning,TEXT("创建成功"));
                 PlayerList->AddChildToVerticalBox(NewSection);
+                UAbilitySystemComponent* ASC = Nyota_PS->GetAbilitySystemComponent();
+                if (ASC) NewSection->SetASC(ASC);
+                else UE_LOG(LogTemp,Warning,TEXT("没有ASC"));
             }
         }
     }

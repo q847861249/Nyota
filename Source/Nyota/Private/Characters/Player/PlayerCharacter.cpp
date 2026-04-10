@@ -11,6 +11,9 @@
 #include "UI/HUD/HUD_Layout.h"
 #include "UI/Game/Main/MainUI.h"
 #include "UI/HUD/HUD_Layout.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Tags/Nyota_Tag.h"
+#include "Components/CapsuleComponent.h"
 APlayerCharacter::APlayerCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -23,7 +26,16 @@ APlayerCharacter::APlayerCharacter()
 
 }
 
-void APlayerCharacter::PossessedBy(AController* NewController)
+void APlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+    if (GetCapsuleComponent())
+    {
+        GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapBegin);
+    }
+}
+
+void APlayerCharacter::PossessedBy(AController *NewController) 
 {
     Super::PossessedBy(NewController);
     if (!GetAbilitySystemComponent() || !HasAuthority()) return;
@@ -38,21 +50,6 @@ void APlayerCharacter::OnRep_PlayerState()
     if (!GetAbilitySystemComponent()) return;
 
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-
-    UE_LOG(LogTemp,Warning,TEXT("PlayerState同步"));
-
-    // ANyota_PlayerController* PC = Cast<ANyota_PlayerController>(GetController());
-    // if (!PC) return;
-  
-    // ANyota_HUD* HUD = Cast<ANyota_HUD>(PC->GetHUD());
-    // if(!HUD) return;
-    // UHUD_Layout* HUD_layout = Cast<UHUD_Layout>(HUD->RootLayout);
-    // if(!HUD_layout) return;
-    // UMainUI* MainUI = HUD_layout->MainUI;
-    // if(!MainUI) return;
-    // MainUI->UpdatePlayerList();
-
-
 }
 
 void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
@@ -67,4 +64,18 @@ UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
     if (!PS) return nullptr;
 
     return PS->GetAbilitySystemComponent();
+}
+
+void APlayerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
+    int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+{
+    // Check if the actor has specific tag
+    if (OtherActor && OtherActor->ActorHasTag(FName("Coin")))
+    {
+        FGameplayEventData Payload;
+        Payload.Instigator = this;
+        Payload.Target = OtherActor;
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Ability::Item::PickUp,Payload);
+    }
+    
 }

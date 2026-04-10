@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnASCReady,UAbilitySystemComponent*,ASC);
 UCLASS()
 class NYOTA_API ABaseCharacter : public ACharacter,public IAbilitySystemInterface
 {
@@ -39,6 +40,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr;}
+
+	FOnASCReady OnASCReady;	
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const {return bAlive;}

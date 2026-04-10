@@ -27,20 +27,11 @@ void ANyota_GameState::BeginPlay()
     MainUI = HUD_layout->MainUI;
 }
 
+
 void ANyota_GameState::AddPlayerState(APlayerState* PlayerState)
 {
     Super::AddPlayerState(PlayerState);
-    UE_LOG(LogTemp,Warning,TEXT("加入"));
-    if(MainUI)
-    {
-        MainUI->UpdatePlayerList(); 
-        UE_LOG(LogTemp,Warning,TEXT("有"));
-    }
-    else
-    {
-        UE_LOG(LogTemp,Warning,TEXT("空的"));
-    }
-
+    if(MainUI) MainUI->UpdatePlayerList(); 
 }
 void ANyota_GameState::RemovePlayerState(APlayerState* PlayerState)
 {

@@ -15,7 +15,12 @@ namespace Nyota
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(Primary);
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(Q);
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(E);
-            UE_DECLARE_GAMEPLAY_TAG_EXTERN(R);  
+            UE_DECLARE_GAMEPLAY_TAG_EXTERN(R); 
+ 
+        }
+        namespace Item
+        {
+            UE_DECLARE_GAMEPLAY_TAG_EXTERN(PickUp);  
         }
 
     }

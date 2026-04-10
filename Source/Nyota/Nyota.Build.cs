@@ -10,6 +10,6 @@ public class Nyota : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", 
 		"EnhancedInput" ,"GameplayAbilities", "GameplayTags", "GameplayTasks","CommonUI", "CommonInput","UMG","Slate",
-        "SlateCore"});
+        "SlateCore","NavigationSystem",});
 	}
 }

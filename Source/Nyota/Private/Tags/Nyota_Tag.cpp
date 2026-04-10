@@ -11,6 +11,11 @@ namespace Nyota
             UE_DEFINE_GAMEPLAY_TAG(Q, "Nyota.Ability.Player.Q");
             UE_DEFINE_GAMEPLAY_TAG(E, "Nyota.Ability.Player.E");
             UE_DEFINE_GAMEPLAY_TAG(R, "Nyota.Ability.Player.R");
+
+        }
+        namespace Item
+        {
+            UE_DEFINE_GAMEPLAY_TAG(PickUp, "Nyota.Ability.Item.PickUp");
         }
     }
 }

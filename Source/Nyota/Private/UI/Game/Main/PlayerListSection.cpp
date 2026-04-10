@@ -8,13 +8,10 @@
 #include "AttributeSet/Nyota_AttributeSet.h"
 #include "GameplayEffectTypes.h"
 
+
 void UPlayerListSection::NativeConstruct()
 {
     Super::NativeConstruct();
-    APlayerCharacter* PC = Cast<APlayerCharacter>(GetOwningPlayerPawn());
-    if(!PC) return;
-    ASC = PC->GetAbilitySystemComponent();
-    Inital();
 }
 void UPlayerListSection::NativeDestruct()
 {
@@ -22,9 +19,14 @@ void UPlayerListSection::NativeDestruct()
     UnBind();
 }
 
+void UPlayerListSection::SetASC(UAbilitySystemComponent *RepASC)
+{
+    ASC = RepASC;
+    Inital();
+}
+
 void UPlayerListSection::Inital()
 {
-    if(!ASC) return;
     float CurrentMaxHealthValue = ASC->GetNumericAttribute(UNyota_AttributeSet::GetMaxHealthAttribute());
     float CurrentHealthValue = ASC->GetNumericAttribute(UNyota_AttributeSet::GetHealthAttribute());
     float CurrentMaxScore = ASC->GetNumericAttribute(UNyota_AttributeSet::GetMaxScoreAttribute());
@@ -58,4 +60,5 @@ void UPlayerListSection::OnScoreValueChange(const FOnAttributeChangeData& Data)
     if(!ASC) return;
     float CurrentMaxScore = ASC->GetNumericAttribute(UNyota_AttributeSet::GetMaxScoreAttribute());
     ScoreBar->SetPercent(Data.NewValue/CurrentMaxScore);
+    UE_LOG(LogTemp,Warning,TEXT("Score:%f"),Data.NewValue);
 }

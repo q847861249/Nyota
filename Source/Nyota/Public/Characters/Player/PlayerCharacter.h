@@ -23,12 +23,18 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* CameraComponent;
 protected:
+	virtual void BeginPlay() override;
+	
 	// Replicated function called when the player is possessed by a controller (server side)
 	virtual void PossessedBy(AController* NewController) override;
 	// Replicated function called when the player state is replicated to clients
 	virtual void OnRep_PlayerState() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult);
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 };

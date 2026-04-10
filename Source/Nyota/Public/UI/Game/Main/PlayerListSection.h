@@ -13,6 +13,7 @@
 class UImage;
 class UProgressBar;
 class UAbilitySystemComponent;
+class APlayerCharacter;
 UCLASS()
 class NYOTA_API UPlayerListSection : public UCommonUserWidget
 {
@@ -27,9 +28,10 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UProgressBar> ScoreBar;
 
+	TObjectPtr<APlayerCharacter> PC;
 	TObjectPtr<UAbilitySystemComponent> ASC;
 
-
+	UFUNCTION()
 	void Inital();
 	void UnBind();
 
@@ -41,4 +43,7 @@ private:
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override; 
+
+public:
+	void SetASC(UAbilitySystemComponent* RepASC);
 };
