@@ -8,13 +8,11 @@
 ABaseCharacter::ABaseCharacter()
 {
     PrimaryActorTick.bCanEverTick = false;
-
-    AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 }
 
 UAbilitySystemComponent *ABaseCharacter::GetAbilitySystemComponent() const
 {
-    return AbilitySystemComponent;
+    return nullptr;
 }
 
 void ABaseCharacter::SetHit()
@@ -52,32 +50,16 @@ void ABaseCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
     Super::EndPlay(EndPlayReason);
 }
 
-void ABaseCharacter::PossessedBy(AController *NewController)
-{
-    Super::PossessedBy(NewController);
-
-    if (AbilitySystemComponent)
-    {
-        AbilitySystemComponent->InitAbilityActorInfo(this, this);
-    }
-
-    GiveDefaultAbility();
-}
-
 void ABaseCharacter::GiveDefaultAbility()
 {
-    if (!AbilitySystemComponent)
+    if (!IsValid(GetAbilitySystemComponent()))
     {
         return;
     }
-
-    for (const TSubclassOf<UGameplayAbility> &GA : GAClass)
+    
+    for (const auto& Ability : GAClass)
     {
-        if (!GA)
-        {
-            continue;
-        }
-
-        AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(GA.GetDefaultObject(), 1, 0));
+        FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
+        GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
     }
 }

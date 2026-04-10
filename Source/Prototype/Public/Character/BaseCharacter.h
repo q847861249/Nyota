@@ -41,10 +41,7 @@ public:
      */
     UFUNCTION(BlueprintCallable)
     void SetDead();
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Abilities")
-    UAbilitySystemComponent *AbilitySystemComponent;
-
+    
     UPROPERTY()
     bool bIsHit;
 
@@ -59,13 +56,6 @@ public:
 
 protected:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-    /**
-     * @brief 当角色被控制时调用
-     *
-     * @param NewController 新的控制者
-     */
-    virtual void PossessedBy(AController *NewController) override;
 
     virtual void GiveDefaultAbility();
 

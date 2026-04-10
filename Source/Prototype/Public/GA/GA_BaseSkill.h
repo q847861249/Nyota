@@ -1,0 +1,22 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Abilities/GameplayAbility.h"
+#include "GA_BaseSkill.generated.h"
+
+/**
+ *
+ */
+UCLASS()
+class PROTOTYPE_API UGA_BaseSkill : public UGameplayAbility
+{
+    GENERATED_BODY()
+    
+public:
+    UGA_BaseSkill();
+    
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash|Debug")
+    bool bDrawDebugs = false;
+};

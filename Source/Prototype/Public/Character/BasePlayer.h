@@ -18,21 +18,17 @@ class PROTOTYPE_API ABasePlayer : public ABaseCharacter
 
 public:
     virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
+    
+    virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
+    
+    virtual void PossessedBy(AController *NewController) override;
+    
+    virtual void OnRep_PlayerState() override;
 
 protected:
     void MoveInput(const FInputActionValue &Value);
 
     void LookInput(const FInputActionValue &Value);
-
-    void LightAttack(const FInputActionValue &Value);
-
-    void ActivateSkill_1(const FInputActionValue &Value);
-
-    void ActivateSkill_2(const FInputActionValue &Value);
-
-    void ActivateSkill_3(const FInputActionValue &Value);
-
-    void TryActivateAbilityByTags(const FGameplayTagContainer &TagContainer);
 
 protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")

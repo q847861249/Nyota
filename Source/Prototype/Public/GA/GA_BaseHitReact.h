@@ -53,7 +53,6 @@ protected:
      * @brief 攻击处理函数，处理攻击相关的逻辑，包括攻击时间、动画蒙太奇和特效
      *
      */
-    UFUNCTION()
     void Attack(
         ABaseCharacter *AttackCharacter, UAnimMontage *HitMontage, UNiagaraSystem *HitEffect,
         TSubclassOf<UGameplayEffect> HitEffectClass

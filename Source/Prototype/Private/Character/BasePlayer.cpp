@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "AbilitySystemComponent.h"
+#include "Character/BasePlayerState.h"
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
@@ -51,55 +52,49 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponen
         {
             UE_LOG(LogTemp, Warning, TEXT("%s: MoveAction Is Null."), *GetNameSafe(this));
         }
-
-        if (LightAttack_Action)
-        {
-            EnhancedInputComponent->BindAction(
-                LightAttack_Action, ETriggerEvent::Triggered, this, &ABasePlayer::LightAttack
-            );
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("%s: LightAttack_Action Is Null."), *GetNameSafe(this));
-        }
-
-        if (Skill_1_Action)
-        {
-            EnhancedInputComponent->BindAction(
-                Skill_1_Action, ETriggerEvent::Triggered, this, &ABasePlayer::ActivateSkill_1
-            );
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("%s: Skill_1_Action Is Null."), *GetNameSafe(this));
-        }
-
-        if (Skill_2_Action)
-        {
-            EnhancedInputComponent->BindAction(
-                Skill_2_Action, ETriggerEvent::Triggered, this, &ABasePlayer::ActivateSkill_2
-            );
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("%s: Skill_2_Action Is Null."), *GetNameSafe(this));
-        }
-
-        if (Skill_3_Action)
-        {
-            EnhancedInputComponent->BindAction(
-                Skill_3_Action, ETriggerEvent::Triggered, this, &ABasePlayer::ActivateSkill_3
-            );
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("%s: Skill_3_Action Is Null."), *GetNameSafe(this));
-        }
     }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("%s: EnhancedInputComponent Is Null."), *GetNameSafe(this));
     }
+}
+
+UAbilitySystemComponent *ABasePlayer::GetAbilitySystemComponent() const
+{
+    ABasePlayerState *MyPlayerState = Cast<ABasePlayerState>(GetPlayerState());
+    if (!IsValid(MyPlayerState))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s: MyPlayerState Is Null."), *GetNameSafe(this));
+        return nullptr;
+    }
+
+    return MyPlayerState->GetAbilitySystemComponent();
+}
+
+void ABasePlayer::PossessedBy(AController *NewController)
+{
+    Super::PossessedBy(NewController);
+
+    if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority())
+    {
+        return;
+    }
+
+    GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+    
+    GiveDefaultAbility();
+}
+
+void ABasePlayer::OnRep_PlayerState()
+{
+    Super::OnRep_PlayerState();
+
+    if (!IsValid(GetAbilitySystemComponent()))
+    {
+        return;
+    }
+
+    GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 }
 
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
@@ -130,47 +125,4 @@ void ABasePlayer::LookInput(const FInputActionValue &Value)
 
     AddControllerYawInput(LookVector2D.X);
     AddControllerPitchInput(LookVector2D.Y);
-}
-
-void ABasePlayer::LightAttack(const FInputActionValue &Value)
-{
-    UE_LOG(LogTemp, Warning, TEXT("LightAttack Function Call"));
-
-    TryActivateAbilityByTags(LightAttack_Container);
-}
-
-void ABasePlayer::ActivateSkill_1(const FInputActionValue &Value)
-{
-    TryActivateAbilityByTags(Skill_1_Container);
-}
-
-void ABasePlayer::ActivateSkill_2(const FInputActionValue &Value)
-{
-    TryActivateAbilityByTags(Skill_2_Container);
-}
-
-void ABasePlayer::ActivateSkill_3(const FInputActionValue &Value)
-{
-    TryActivateAbilityByTags(Skill_3_Container);
-}
-
-void ABasePlayer::TryActivateAbilityByTags(const FGameplayTagContainer &TagContainer)
-{
-    if (!AbilitySystemComponent)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("%s: AbilitySystemComponent Is Null."), *GetNameSafe(this));
-
-        return;
-    }
-
-    if (TagContainer.IsEmpty())
-    {
-        UE_LOG(LogTemp, Warning, TEXT("%s: TagContainer Is Empty."), *GetNameSafe(this));
-
-        return;
-    }
-
-	UE_LOG(LogTemp, Warning, TEXT("TagContainer: %s"), *TagContainer.ToString());
-
-    AbilitySystemComponent->TryActivateAbilitiesByTag(TagContainer);
 }

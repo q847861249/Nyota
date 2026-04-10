@@ -4,14 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "AbilitySystemInterface.h"
+
 #include "BasePlayerState.generated.h"
 
+class UCustomAbilitySystemComponent;
 /**
- * 
+ *
  */
 UCLASS()
-class PROTOTYPE_API ABasePlayerState : public APlayerState
+class PROTOTYPE_API ABasePlayerState : public APlayerState, public IAbilitySystemInterface
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
+    
+public:
+    ABasePlayerState();
+    
+    virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
+
+private:
+    UPROPERTY(VisibleAnywhere, Category = "Crash|Abilities")
+    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
 };
