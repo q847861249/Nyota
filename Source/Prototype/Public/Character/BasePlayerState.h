@@ -8,7 +8,6 @@
 
 #include "BasePlayerState.generated.h"
 
-class UCustomAbilitySystemComponent;
 /**
  *
  */
@@ -24,5 +23,5 @@ public:
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Crash|Abilities")
-    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+    TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };

@@ -12,14 +12,10 @@ class PROTOTYPE_API UCustomAbilitySystemComponent : public UAbilitySystemCompone
     GENERATED_BODY()
 
 public:
-    UCustomAbilitySystemComponent();
+    virtual void OnGiveAbility(FGameplayAbilitySpec &AbilitySpec) override;
 
-    virtual void TickComponent(
-        float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction
-    ) override;
-
-protected:
-    virtual void BeginPlay() override;
+    virtual void OnRep_ActivateAbilities() override;
 
 private:
+    void HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec);
 };

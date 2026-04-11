@@ -14,10 +14,11 @@ class PROTOTYPE_API ABaseEnemy : public ABaseCharacter
 public:
     ABaseEnemy();
     
+    virtual void BeginPlay() override;
+    
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
     
-    virtual void PossessedBy(AController *NewController) override;
-    
-    virtual void OnRep_PlayerState() override;
-
+private:
+    UPROPERTY(VisibleAnywhere)
+    TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };

@@ -2,19 +2,43 @@
 
 #include "GA/CustomAbilitySystemComponent.h"
 
-UCustomAbilitySystemComponent::UCustomAbilitySystemComponent()
+#include "Abilities/GameplayAbility.h"
+#include "GameplayTags/GameTags.h"
+
+void UCustomAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec &AbilitySpec)
 {
-    PrimaryComponentTick.bCanEverTick = true;
+    Super::OnGiveAbility(AbilitySpec);
+
+    HandleAutoActivateAbility(AbilitySpec);
 }
 
-void UCustomAbilitySystemComponent::BeginPlay()
+void UCustomAbilitySystemComponent::OnRep_ActivateAbilities()
 {
-    Super::BeginPlay();
+    Super::OnRep_ActivateAbilities();
+
+    // 防止遍历期间能力列表被修改，避免迭代器失效
+    FScopedAbilityListLock ScopedAbilityListLock(*this);
+    for (const FGameplayAbilitySpec &AbilitySpec : GetActivatableAbilities())
+    {
+        HandleAutoActivateAbility(AbilitySpec);
+    }
 }
 
-void UCustomAbilitySystemComponent::TickComponent(
-    float DeltaTime, ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction
-)
+void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)
 {
-    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    if (!IsValid(AbilitySpec.Ability))
+    {
+        return;
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("Tags: %s"), *AbilitySpec.Ability->AbilityTags.ToString());
+    for (const FGameplayTag &Tag : AbilitySpec.Ability->AbilityTags)
+    {
+        if (!Tag.MatchesTagExact(GameTags::Abilities::ActivateOnGive))
+        {
+            continue;
+        }
+
+        TryActivateAbility(AbilitySpec.Handle);
+    }
 }

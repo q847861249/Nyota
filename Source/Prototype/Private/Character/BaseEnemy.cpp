@@ -2,48 +2,37 @@
 
 #include "Character/BaseEnemy.h"
 
-#include "Character/BasePlayerState.h"
-#include "AbilitySystemComponent.h"
+#include "GA/CustomAbilitySystemComponent.h"
 
 ABaseEnemy::ABaseEnemy()
 {
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
+    
+    AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
+    AbilitySystemComponent->SetIsReplicated(true);
+    AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 }
-
-UAbilitySystemComponent *ABaseEnemy::GetAbilitySystemComponent() const
+void ABaseEnemy::BeginPlay()
 {
-    ABasePlayerState *MyPlayerState = Cast<ABasePlayerState>(GetPlayerState());
-    if (!IsValid(MyPlayerState))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("%s: MyPlayerState Is Null."), *GetNameSafe(this));
-        return nullptr;
-    }
-
-    return MyPlayerState->GetAbilitySystemComponent();
-}
-
-void ABaseEnemy::PossessedBy(AController *NewController)
-{
-    Super::PossessedBy(NewController);
-
-    if (!IsValid(GetAbilitySystemComponent()) || !HasAuthority())
+    Super::BeginPlay();
+    
+    if (!IsValid(AbilitySystemComponent))
     {
         return;
     }
-
-    GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+    
+    AbilitySystemComponent->InitAbilityActorInfo(this, this);
+    
+    if (!HasAuthority())
+    {
+        return;
+    }
     
     GiveDefaultAbility();
 }
 
-void ABaseEnemy::OnRep_PlayerState()
+UAbilitySystemComponent *ABaseEnemy::GetAbilitySystemComponent() const
 {
-    Super::OnRep_PlayerState();
-
-    if (!IsValid(GetAbilitySystemComponent()))
-    {
-        return;
-    }
-
-    GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+    return AbilitySystemComponent;
 }
+
