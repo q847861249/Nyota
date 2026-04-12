@@ -6,6 +6,7 @@
 #include "Characters/Player/PlayerCharacter.h"
 #include "GameItems/PickUpItem/Coin.h"
 
+//Destory the pick up Item and apply pick up effect to add score.
 void UPickUpAbility::PickUpCoin(AActor *PickUpItem)
 {
     ACoin* Coin = Cast<ACoin>(PickUpItem);

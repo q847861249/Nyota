@@ -26,6 +26,7 @@ void ACoinManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// only server side to cotroll coin spawn
 	if(HasAuthority())
 	{
 		CurrentSpawnRate += DeltaTime;
@@ -50,13 +51,16 @@ void ACoinManager::SpawnCoin()
 		ACoin* NewCoin = GetWorld()->SpawnActor<ACoin>(CoinClass, RandomLocation.Location, FRotator::ZeroRotator);
 		if (NewCoin)
         {
+			// tweak the coin location. Prevent the coin sink into the ground
 			UCapsuleComponent* Capsule = NewCoin->FindComponentByClass<UCapsuleComponent>();
 			if (Capsule)
 			{
 				float HalfHeight = Capsule->GetScaledCapsuleHalfHeight();
 				NewCoin->AddActorWorldOffset(FVector(0.f, 0.f, HalfHeight));
 			}
+			// Increase the number of currently alive coins.
             CurrentCount++;
+			// when coin destroy minus the number of currently alive coins
             NewCoin->OnCoinDestroy.AddDynamic(this, &ACoinManager::OnCoinDestroy);
         }
 	}

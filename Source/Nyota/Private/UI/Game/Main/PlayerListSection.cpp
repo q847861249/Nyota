@@ -18,13 +18,13 @@ void UPlayerListSection::NativeDestruct()
     Super::NativeDestruct();
     UnBind();
 }
-
+//this function will be called when player list section is constructed. Passing ASC, next will use asc to ini UI
 void UPlayerListSection::SetASC(UAbilitySystemComponent *RepASC)
 {
     ASC = RepASC;
     Inital();
 }
-
+//according the attribute set to initial UI
 void UPlayerListSection::Inital()
 {
     float CurrentMaxHealthValue = ASC->GetNumericAttribute(UNyota_AttributeSet::GetMaxHealthAttribute());

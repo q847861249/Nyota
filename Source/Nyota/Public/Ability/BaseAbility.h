@@ -13,5 +13,7 @@ UCLASS()
 class NYOTA_API UBaseAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
-	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Debuug")
+	bool bDrawDebug = false;
 };

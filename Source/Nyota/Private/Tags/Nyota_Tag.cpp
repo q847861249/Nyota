@@ -5,6 +5,9 @@ namespace Nyota
     namespace Ability
     {
         UE_DEFINE_GAMEPLAY_TAG(Init, "Nyota.Ability.Init");
+        UE_DEFINE_GAMEPLAY_TAG(AttackCheck, "Nyota.Ability.AttackCheck");
+        UE_DEFINE_GAMEPLAY_TAG(HitReact, "Nyota.Ability.HitReact");
+        UE_DEFINE_GAMEPLAY_TAG(Damage, "Nyota.Ability.Damage");
         namespace Player
         {
             UE_DEFINE_GAMEPLAY_TAG(Primary, "Nyota.Ability.Player.Primary");
