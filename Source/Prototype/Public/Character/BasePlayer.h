@@ -6,6 +6,8 @@
 #include "Character/BaseCharacter.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
+#include "Enums/PlayerType.h"
+
 #include "BasePlayer.generated.h"
 
 /**
@@ -18,19 +20,20 @@ class PROTOTYPE_API ABasePlayer : public ABaseCharacter
 
 public:
     virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
-    
+
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
-    
+
     virtual void PossessedBy(AController *NewController) override;
-    
+
     virtual void OnRep_PlayerState() override;
+    
+    EPlayerType GetPlayerType() const;
 
 protected:
     void MoveInput(const FInputActionValue &Value);
 
     void LookInput(const FInputActionValue &Value);
 
-protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputMappingContext *InputMappingContext;
 
@@ -63,4 +66,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Tag")
     FGameplayTagContainer Skill_3_Container;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enums")
+    EPlayerType PlayerType;
 };

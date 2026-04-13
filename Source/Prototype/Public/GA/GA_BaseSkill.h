@@ -13,10 +13,15 @@ UCLASS()
 class PROTOTYPE_API UGA_BaseSkill : public UGameplayAbility
 {
     GENERATED_BODY()
-    
+
 public:
     UGA_BaseSkill();
-    
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash|Debug")
+
+    virtual void ActivateAbility(
+        const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
+        const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
+    ) override;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash | Debug")
     bool bDrawDebugs = false;
 };

@@ -97,6 +97,11 @@ void ABasePlayer::OnRep_PlayerState()
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 }
 
+EPlayerType ABasePlayer::GetPlayerType() const
+{
+    return PlayerType;
+}
+
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
 {
     if (!Controller)

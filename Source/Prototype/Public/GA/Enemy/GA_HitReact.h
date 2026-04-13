@@ -7,10 +7,20 @@
 #include "GA_HitReact.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PROTOTYPE_API UGA_HitReact : public UGA_BaseSkill
 {
     GENERATED_BODY()
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "Crash | Abilities")
+    void CacheHitDirectionVectors(AActor *Instigator);
+
+    UPROPERTY(BlueprintReadOnly, Category = "Crash | Abilities")
+    FVector AvatarForward;
+
+    UPROPERTY(BlueprintReadOnly, Category = "Crash | Abilities")
+    FVector ToInstigator;
 };
