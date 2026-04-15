@@ -6,6 +6,8 @@
 #include "BaseCharacter.h"
 #include "BaseEnemy.generated.h"
 
+class UAttributeSet;
+
 UCLASS()
 class PROTOTYPE_API ABaseEnemy : public ABaseCharacter
 {
@@ -13,12 +15,15 @@ class PROTOTYPE_API ABaseEnemy : public ABaseCharacter
 
 public:
     ABaseEnemy();
-    
+
     virtual void BeginPlay() override;
-    
+
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
-    
+
 private:
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+    UPROPERTY()
+    TObjectPtr<UAttributeSet> AttributeSet;
 };

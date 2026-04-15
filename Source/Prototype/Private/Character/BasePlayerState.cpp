@@ -2,6 +2,7 @@
 
 #include "Character/BasePlayerState.h"
 
+#include "AttributeSet/BaseAttributeSet.h"
 #include "GA/CustomAbilitySystemComponent.h"
 
 ABasePlayerState::ABasePlayerState()
@@ -11,6 +12,8 @@ ABasePlayerState::ABasePlayerState()
     AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+    AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>("AttributeSet");
 }
 
 UAbilitySystemComponent *ABasePlayerState::GetAbilitySystemComponent() const

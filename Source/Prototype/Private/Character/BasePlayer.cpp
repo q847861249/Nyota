@@ -83,6 +83,8 @@ void ABasePlayer::PossessedBy(AController *NewController)
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
     
     GiveDefaultAbility();
+    
+    InitializeAttributes();
 }
 
 void ABasePlayer::OnRep_PlayerState()

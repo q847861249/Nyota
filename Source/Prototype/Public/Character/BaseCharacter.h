@@ -11,6 +11,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, MaxHealth);
 
+class UGameplayEffect;
+
 UCLASS()
 class PROTOTYPE_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -22,45 +24,21 @@ public:
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
     /**
-     * @brief 设置被击中
-     *
-     */
-    UFUNCTION(BlueprintCallable)
-    void SetHit();
-
-    /**
-     * @brief 应用生命值变化
-     *
-     */
-    UFUNCTION(BlueprintCallable)
-    void ApplyHealthChange(float DeltaValue);
-
-    /**
      * @brief 设置死亡
      *
      */
     UFUNCTION(BlueprintCallable)
     void SetDead();
-    
-    UPROPERTY()
-    bool bIsHit;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
-    float CurrentHealth;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities", meta = (ClampMin = "0.0"))
-    float MaxHealth = 10.0f;
-
-    UPROPERTY(BlueprintAssignable)
-    FOnHealthChanged OnHealthChanged;
 
 protected:
-    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+    void GiveDefaultAbility();
 
-    virtual void GiveDefaultAbility();
+    void InitializeAttributes() const;
 
-    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Abilities")
+    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Crash | Abilities")
     TArray<TSubclassOf<UGameplayAbility>> GAClass;
 
-    FTimerHandle HitTimerHandle;
+private:
+    UPROPERTY(EditDefaultsOnly, Category = "Crash | Effects")
+    TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
 };

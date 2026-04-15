@@ -8,6 +8,8 @@
 
 #include "BasePlayerState.generated.h"
 
+class UAttributeSet;
+
 /**
  *
  */
@@ -15,13 +17,16 @@ UCLASS()
 class PROTOTYPE_API ABasePlayerState : public APlayerState, public IAbilitySystemInterface
 {
     GENERATED_BODY()
-    
+
 public:
     ABasePlayerState();
-    
+
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Crash|Abilities")
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+
+    UPROPERTY()
+    TObjectPtr<UAttributeSet> AttributeSet;
 };
