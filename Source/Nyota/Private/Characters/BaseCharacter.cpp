@@ -37,6 +37,7 @@ void ABaseCharacter::SetStartAbilities()
 	//Register ability from StartingAbiities array by using ASC API(GiveAbility)
 	for(const auto& Ability: StartingAbilities)
 	{
+		
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
 		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
 	}
@@ -50,6 +51,7 @@ void ABaseCharacter::InitializedAttributes()
 		return;
 	}
 	if(!GetAbilitySystemComponent()) return;
+	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitialGameplayEffect,1.0f,ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());

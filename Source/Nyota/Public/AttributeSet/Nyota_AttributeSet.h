@@ -41,6 +41,9 @@ public:
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Attack)
 	FGameplayAttributeData Attack;
 
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_AttackRange)
+	FGameplayAttributeData AttackRange;
+
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Defense)
 	FGameplayAttributeData Defense;
 
@@ -49,6 +52,8 @@ public:
 
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Score)
 	FGameplayAttributeData Score;
+
+
 
 	// Callback functions
 	UFUNCTION()
@@ -64,6 +69,9 @@ public:
 	void OnRep_Attack(const FGameplayAttributeData& OldAttack);
 
 	UFUNCTION()
+	void OnRep_AttackRange(const FGameplayAttributeData& OldAttackRange);
+
+	UFUNCTION()
 	void OnRep_Defense(const FGameplayAttributeData& OldDefense);
 
 	UFUNCTION()
@@ -76,6 +84,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,Health);
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,MaxHealth);
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,Attack);
+	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,AttackRange);
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,Defense);
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,MaxScore);
 	ATTRIBUTE_ACCESSORS(UNyota_AttributeSet,Score);

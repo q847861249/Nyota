@@ -12,6 +12,7 @@ void UNyota_AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, Health, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, Attack, COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, AttackRange, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, Defense, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, MaxScore, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UNyota_AttributeSet, Score, COND_None, REPNOTIFY_Always);
@@ -61,6 +62,10 @@ void UNyota_AttributeSet::OnRep_Attack(const FGameplayAttributeData& OldAttack)
     GAMEPLAYATTRIBUTE_REPNOTIFY(UNyota_AttributeSet, Attack, OldAttack);
 }
 
+void UNyota_AttributeSet::OnRep_AttackRange(const FGameplayAttributeData& OldAttackRange)
+{
+    GAMEPLAYATTRIBUTE_REPNOTIFY(UNyota_AttributeSet, AttackRange, OldAttackRange);
+}
 
 void UNyota_AttributeSet::OnRep_Defense(const FGameplayAttributeData& OldDefense)
 {

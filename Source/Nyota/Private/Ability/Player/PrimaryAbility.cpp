@@ -37,14 +37,16 @@ void UPrimaryAbility::PrimaryAttack()
     TArray<AActor*> FilterActor;
     for(const FOverlapResult& Result : OverlapResults)
     {
-        if(!IsValid(Result.GetActor())) continue;
+        // if(!IsValid(Result.GetActor())) continue;
         AActor* HitActor = Result.GetActor();
+        if(!HitActor) continue;
+        FilterActor.Add(HitActor);
         // In the future if the primary want to use complex logic we can use tag for help 
         // if (HitActor && !HitActor->ActorHasTag(FName("Player")))
         // {
         //     FilterActor.Add(HitActor);
         // }
-        if (HitActor) FilterActor.Add(HitActor);
+        // if (HitActor) FilterActor.Add(HitActor);
     
     }
 

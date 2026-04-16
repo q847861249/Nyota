@@ -12,6 +12,8 @@ namespace Nyota
         UE_DECLARE_GAMEPLAY_TAG_EXTERN(AttackCheck);
         UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
         UE_DECLARE_GAMEPLAY_TAG_EXTERN(Damage);
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death);
+        UE_DECLARE_GAMEPLAY_TAG_EXTERN(Kill);
         //specific
         namespace Player
         {
@@ -22,7 +24,7 @@ namespace Nyota
         }
         namespace Enemy
         {
-
+            UE_DECLARE_GAMEPLAY_TAG_EXTERN(Primary);
         }
 
         namespace Item
@@ -30,6 +32,10 @@ namespace Nyota
             UE_DECLARE_GAMEPLAY_TAG_EXTERN(PickUp);  
         }
 
+        namespace Data
+        {
+            UE_DECLARE_GAMEPLAY_TAG_EXTERN(KillReward);
+        }
 
     }
 }

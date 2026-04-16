@@ -28,6 +28,12 @@ void UNyota_AbilitySystemComponent::ActivateAbilityWithInitTag(const FGameplayAb
 {
     if(!IsValid(AbilitySpec.Ability)) return;
 
+    if (AbilitySpec.Ability->GetNetExecutionPolicy() == EGameplayAbilityNetExecutionPolicy::ServerInitiated 
+        && !IsOwnerActorAuthoritative())
+    {
+        return;
+    }
+
 	if (AbilitySpec.Ability->AbilityTags.HasTagExact(Nyota::Ability::Init))
 	{
 		TryActivateAbility(AbilitySpec.Handle);
