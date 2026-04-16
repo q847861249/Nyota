@@ -9,7 +9,7 @@
 
 #include "BaseCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnHealthChanged, float, NewHealth, float, MaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
 
 class UGameplayEffect;
 
@@ -23,12 +23,17 @@ public:
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
+    virtual UAttributeSet *GetAttributeSet() const;
+
     /**
      * @brief 设置死亡
      *
      */
     UFUNCTION(BlueprintCallable)
     void SetDead();
+
+    UPROPERTY(BlueprintAssignable)
+    FASCInitialized OnASCInitialized;
 
 protected:
     void GiveDefaultAbility();

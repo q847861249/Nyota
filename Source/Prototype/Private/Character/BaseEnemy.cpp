@@ -15,6 +15,7 @@ ABaseEnemy::ABaseEnemy()
 
     AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>("AttributeSet");
 }
+
 void ABaseEnemy::BeginPlay()
 {
     Super::BeginPlay();
@@ -25,6 +26,8 @@ void ABaseEnemy::BeginPlay()
     }
 
     AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+    OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
 
     if (!HasAuthority())
     {
@@ -39,4 +42,9 @@ void ABaseEnemy::BeginPlay()
 UAbilitySystemComponent *ABaseEnemy::GetAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
+}
+
+UAttributeSet *ABaseEnemy::GetAttributeSet() const
+{
+    return AttributeSet;
 }

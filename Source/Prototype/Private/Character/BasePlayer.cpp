@@ -81,9 +81,11 @@ void ABasePlayer::PossessedBy(AController *NewController)
     }
 
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
-    
+
+    OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+
     GiveDefaultAbility();
-    
+
     InitializeAttributes();
 }
 
@@ -97,6 +99,20 @@ void ABasePlayer::OnRep_PlayerState()
     }
 
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+
+    OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+}
+
+UAttributeSet *ABasePlayer::GetAttributeSet() const
+{
+    ABasePlayerState *MyPlayerState = Cast<ABasePlayerState>(GetPlayerState());
+    if (!IsValid(MyPlayerState))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s: MyPlayerState Is Null."), *GetNameSafe(this));
+        return nullptr;
+    }
+
+    return MyPlayerState->GetAttributeSet();
 }
 
 EPlayerType ABasePlayer::GetPlayerType() const

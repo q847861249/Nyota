@@ -14,6 +14,8 @@
     GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName)                                                                       \
     GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAttributesInitialized);
+
 /**
  *
  */
@@ -24,6 +26,8 @@ class PROTOTYPE_API UBaseAttributeSet : public UAttributeSet
 
 public:
     virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty> &OutLifetimeProps) const override;
+    
+    virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
 
     UFUNCTION()
     void OnRep_Health(const FGameplayAttributeData &OldValue);
@@ -36,6 +40,9 @@ public:
 
     UFUNCTION()
     void OnRep_MaxMana(const FGameplayAttributeData &OldValue);
+    
+    UFUNCTION()
+    void OnRep_AttributesInitialized();
 
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health)
     FGameplayAttributeData Health;
@@ -52,4 +59,10 @@ public:
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana)
     FGameplayAttributeData MaxMana;
     ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
+    
+    UPROPERTY(ReplicatedUsing = OnRep_AttributesInitialized)
+    bool bAttributesInitialized = false;
+    
+    UPROPERTY(BlueprintAssignable)
+    FAttributesInitialized OnAttributesInitialized;
 };

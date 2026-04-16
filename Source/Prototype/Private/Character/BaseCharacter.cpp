@@ -15,6 +15,11 @@ UAbilitySystemComponent *ABaseCharacter::GetAbilitySystemComponent() const
     return nullptr;
 }
 
+UAttributeSet * ABaseCharacter::GetAttributeSet() const
+{
+    return nullptr;
+}
+
 void ABaseCharacter::SetDead()
 {
     GetMesh()->SetAllBodiesSimulatePhysics(true);       // 设置网格体模拟物理

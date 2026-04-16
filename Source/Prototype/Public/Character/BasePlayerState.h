@@ -22,6 +22,8 @@ public:
     ABasePlayerState();
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
+    
+    UAttributeSet* GetAttributeSet() const;
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Crash|Abilities")

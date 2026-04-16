@@ -20,3 +20,8 @@ UAbilitySystemComponent *ABasePlayerState::GetAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
 }
+
+UAttributeSet * ABasePlayerState::GetAttributeSet() const
+{
+    return AttributeSet;
+}

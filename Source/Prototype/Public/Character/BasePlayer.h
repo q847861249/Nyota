@@ -27,6 +27,8 @@ public:
 
     virtual void OnRep_PlayerState() override;
     
+    virtual UAttributeSet *GetAttributeSet() const override;
+    
     EPlayerType GetPlayerType() const;
 
 protected:
