@@ -89,6 +89,6 @@ void UPrimaryAbility::SendHitReactEventToActor(TArray<AActor*> HitActors)
                 Payload.EventMagnitude = -(ASC->GetNumericAttribute(UNyota_AttributeSet::GetAttackAttribute()));
             } 
         }
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor,Nyota::Ability::HitReact, Payload);
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor,Nyota::Event::HitReact, Payload);
     }
 }

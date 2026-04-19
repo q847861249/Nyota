@@ -5,6 +5,7 @@ namespace Nyota
     namespace Ability
     {
         UE_DEFINE_GAMEPLAY_TAG(Init, "Nyota.Ability.Init");
+        UE_DEFINE_GAMEPLAY_TAG(Primary, "Nyota.Ability.Primary");
         UE_DEFINE_GAMEPLAY_TAG(AttackCheck, "Nyota.Ability.AttackCheck");
         UE_DEFINE_GAMEPLAY_TAG(HitReact, "Nyota.Ability.HitReact");
         UE_DEFINE_GAMEPLAY_TAG(Damage, "Nyota.Ability.Damage");
@@ -22,6 +23,15 @@ namespace Nyota
         {
             UE_DEFINE_GAMEPLAY_TAG(Primary, "Nyota.Ability.Enemy.Primary");
         }
+        namespace Event
+        {
+            UE_DEFINE_GAMEPLAY_TAG(AttackCheck, "Nyota.Ability.Event.AttackCheck");
+            UE_DEFINE_GAMEPLAY_TAG(HitReact, "Nyota.Ability.Event.HitReact");
+            UE_DEFINE_GAMEPLAY_TAG(PickUp, "Nyota.Ability.Event.PickUp");
+            UE_DEFINE_GAMEPLAY_TAG(KillReward, "Nyota.Ability.Event.KillReward");
+            UE_DEFINE_GAMEPLAY_TAG(Kill, "Nyota.Ability.Event.Kill");
+
+        }
         namespace Item
         {
             UE_DEFINE_GAMEPLAY_TAG(PickUp, "Nyota.Ability.Item.PickUp");
@@ -29,6 +39,20 @@ namespace Nyota
         namespace Data
         {
             UE_DEFINE_GAMEPLAY_TAG(KillReward, "Nyota.Ability.Data.KillReward");
+            UE_DEFINE_GAMEPLAY_TAG(Damage, "Nyota.Ability.Data.Damage");
         }
+    }
+    namespace Event
+    {
+        UE_DEFINE_GAMEPLAY_TAG(AttackCheck, "Nyota.Event.AttackCheck");
+        UE_DEFINE_GAMEPLAY_TAG(HitReact, "Nyota.Event.HitReact");
+        UE_DEFINE_GAMEPLAY_TAG(PickUp, "Nyota.Event.PickUp");
+        UE_DEFINE_GAMEPLAY_TAG(KillReward, "Nyota.Event.KillReward");
+        UE_DEFINE_GAMEPLAY_TAG(Kill, "Nyota.Event.Kill");
+    }
+    namespace Data
+    {
+        UE_DEFINE_GAMEPLAY_TAG(KillReward, "Nyota.Data.KillReward");
+        UE_DEFINE_GAMEPLAY_TAG(Damage, "Nyota.Data.Damage");
     }
 }

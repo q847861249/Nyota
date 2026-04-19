@@ -112,7 +112,7 @@ void ANyota_PlayerController::Look(const FInputActionValue& Value)
 
 void ANyota_PlayerController::Primary()
 {
-    ActivateAbilityByTag(Nyota::Ability::Player::Primary);
+    ActivateAbilityByTag(Nyota::Ability::Primary);
 }
 
 void ANyota_PlayerController::QAbility()

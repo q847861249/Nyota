@@ -17,7 +17,7 @@ void UKillAbility::ApplyKill(TSubclassOf<UGameplayEffect> KillEffClass,float Kil
 
     if(SpecHandle.IsValid())
     {
-        SpecHandle.Data.Get()->SetSetByCallerMagnitude(Nyota::Ability::Data::KillReward,KillReward);
+        SpecHandle.Data.Get()->SetSetByCallerMagnitude(Nyota::Data::KillReward,KillReward);
         ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
     }
 }

@@ -50,10 +50,15 @@ void ABaseCharacter::InitializedAttributes()
 		UE_LOG(LogTemp, Warning, TEXT("InitialGameplayEffect is not set on %s"), *GetName());
 		return;
 	}
-	if(!GetAbilitySystemComponent()) return;
+	if(!GetAbilitySystemComponent())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ASC is none %s"), *GetName());
+		return;
+	} 
 	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitialGameplayEffect,1.0f,ContextHandle);
+	UE_LOG(LogTemp, Warning, TEXT("应用%s"), *GetName());
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 

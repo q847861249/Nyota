@@ -75,7 +75,7 @@ void APlayerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
         FGameplayEventData Payload;
         Payload.Instigator = this;
         Payload.Target = OtherActor;
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Ability::Item::PickUp,Payload);
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Event::PickUp,Payload);
     }
     
 }

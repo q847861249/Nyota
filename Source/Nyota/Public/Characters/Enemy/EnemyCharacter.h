@@ -25,6 +25,8 @@ private:
 	TObjectPtr<UAttributeSet> BaseAttributeSet;
 protected:
 	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
 public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UAttributeSet* GetAttributeSet();
 };

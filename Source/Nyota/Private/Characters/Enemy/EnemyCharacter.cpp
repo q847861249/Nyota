@@ -14,6 +14,18 @@ AEnemyCharacter::AEnemyCharacter()
     BaseAttributeSet = CreateDefaultSubobject<UNyota_AttributeSet>(TEXT("BaseAttributeSet"));
 }
 
+void AEnemyCharacter::PossessedBy(AController* NewController)
+{
+    Super::PossessedBy(NewController);
+    if(!IsValid(GetAbilitySystemComponent())) return;
+
+    GetAbilitySystemComponent()->InitAbilityActorInfo(this, this);
+    // if(!HasAuthority()) return;
+    SetStartAbilities();
+    InitializedAttributes();
+
+}
+
 void AEnemyCharacter::BeginPlay()
 {
     Super::BeginPlay();
@@ -23,9 +35,21 @@ void AEnemyCharacter::BeginPlay()
     if(!HasAuthority()) return;
     SetStartAbilities();
     InitializedAttributes();
+
+    UNyota_AttributeSet* AttributeSet = Cast<UNyota_AttributeSet>(GetAttributeSet());
+    if(!IsValid(AttributeSet))
+    {
+        UE_LOG(LogTemp,Warning,TEXT("没有属性集"))
+        return;  
+    } 
 }
 
 UAbilitySystemComponent* AEnemyCharacter::GetAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
+}
+
+UAttributeSet* AEnemyCharacter::GetAttributeSet()
+{
+    return BaseAttributeSet;
 }

@@ -99,6 +99,6 @@ void UBTTask_Primary::Attack(AEnemyCharacter* EC)
     UAbilitySystemComponent* ASC = EC->GetAbilitySystemComponent();
     if(!ASC) return;
     FGameplayTagContainer TagContainer;
-    TagContainer.AddTag(Nyota::Ability::Enemy::Primary);
+    TagContainer.AddTag(Nyota::Ability::Primary);
     ASC->TryActivateAbilitiesByTag(TagContainer);
 }

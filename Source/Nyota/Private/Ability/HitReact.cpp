@@ -21,7 +21,7 @@ void UHitReact::ApplyDamage(TSubclassOf<UGameplayEffect> GEClass, float Damage,A
 
     if(SpecHandle.IsValid())
     {
-        SpecHandle.Data.Get()->SetSetByCallerMagnitude(Nyota::Ability::Damage,Damage);
+        SpecHandle.Data.Get()->SetSetByCallerMagnitude(Nyota::Data::Damage,Damage);
         ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
     }
 
@@ -47,7 +47,7 @@ void UHitReact::OnHealthValueChange(const struct FOnAttributeChangeData& Data)
         Payload.Instigator = Instigator;
         float Reward = ASC->GetNumericAttribute(UNyota_AttributeSet::GetScoreAttribute());
         Payload.EventMagnitude = Reward / DeathDropRate;
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Instigator,Nyota::Ability::Kill,Payload);
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Instigator,Nyota::Event::Kill,Payload);
         FGameplayTagContainer TagContainer;
         TagContainer.AddTag(Nyota::Ability::Death);
         ASC->TryActivateAbilitiesByTag(TagContainer);
