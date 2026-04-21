@@ -26,9 +26,9 @@ public:
     virtual void PossessedBy(AController *NewController) override;
 
     virtual void OnRep_PlayerState() override;
-    
+
     virtual UAttributeSet *GetAttributeSet() const override;
-    
+
     EPlayerType GetPlayerType() const;
 
 protected:
@@ -45,30 +45,6 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction *MoveAction;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction *LightAttack_Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction *Skill_1_Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction *Skill_2_Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-    UInputAction *Skill_3_Action;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Tag")
-    FGameplayTagContainer LightAttack_Container;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Tag")
-    FGameplayTagContainer Skill_1_Container;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Tag")
-    FGameplayTagContainer Skill_2_Container;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Tag")
-    FGameplayTagContainer Skill_3_Container;
-    
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enums")
     EPlayerType PlayerType;
 };

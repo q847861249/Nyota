@@ -21,9 +21,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "OverlapTest")
     void SendHitReactEventToActor(const TArray<AActor *> &HitActors);
 
-private:
-    void SetLookAtEnemyRotation(const TArray<FOverlapResult> &OverlapResults) const;
+    UFUNCTION(BlueprintCallable, Category = "OverlapTest")
+    void SetLookAtEnemyRotation(AActor *LookAtActor) const;
 
+private:
     void DrawDebugInformation(const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation) const;
 
     UPROPERTY(EditDefaultsOnly, Category = "OverlapTest")

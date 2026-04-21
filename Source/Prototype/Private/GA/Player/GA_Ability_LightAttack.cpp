@@ -50,7 +50,14 @@ TArray<AActor *> UGA_Ability_LightAttack::HitBoxOverlapTest()
     // ==============================
 
     // 获取角色前方向，并乘以前移距离
-    const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector() * HitBoxForwardOffset;
+    // 这里如果是螃蟹，需要调整
+    FVector ForwardVector = GetAvatarActorFromActorInfo()->GetActorForwardVector();
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+    if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
+    {
+        ForwardVector = GetAvatarActorFromActorInfo()->GetActorRightVector();
+    }
+    const FVector Forward = ForwardVector * HitBoxForwardOffset;
 
     // 最终 HitBox 位置：
     // 角色位置 + 前移 + 高度偏移
@@ -66,13 +73,13 @@ TArray<AActor *> UGA_Ability_LightAttack::HitBoxOverlapTest()
 
     // 执行多目标重叠检测（Sphere Overlap）
     GetWorld()->OverlapMultiByChannel(
-        OverlapResults,                    // 输出：命中的结果列表
-        HitBoxLocation,                    // 检测位置
-        FQuat::Identity,                   // 旋转（Sphere 不需要旋转）
-        ECollisionChannel::ECC_Visibility, // 使用的检测通道
-        CollisionShape,                    // 碰撞体形状（Sphere）
-        QueryParams,                       // 查询参数（忽略 Actor）
-        ResponseParams                     // 碰撞响应规则
+        OverlapResults,  // 输出：命中的结果列表
+        HitBoxLocation,  // 检测位置
+        FQuat::Identity, // 旋转（Sphere 不需要旋转）
+        ECC_Visibility,  // 使用的检测通道
+        CollisionShape,  // 碰撞体形状（Sphere）
+        QueryParams,     // 查询参数（忽略 Actor）
+        ResponseParams   // 碰撞响应规则
     );
 
     TArray<AActor *> HitActors;
@@ -96,12 +103,6 @@ TArray<AActor *> UGA_Ability_LightAttack::HitBoxOverlapTest()
         DrawDebugInformation(OverlapResults, HitBoxLocation);
     }
 
-    // ==============================
-    // 7. 设置玩家到敌人的旋转
-    // ==============================
-
-    SetLookAtEnemyRotation(OverlapResults);
-
     return HitActors;
 }
 
@@ -118,30 +119,25 @@ void UGA_Ability_LightAttack::SendHitReactEventToActor(const TArray<AActor *> &H
     }
 }
 
-void UGA_Ability_LightAttack::SetLookAtEnemyRotation(const TArray<FOverlapResult> &OverlapResults) const
+void UGA_Ability_LightAttack::SetLookAtEnemyRotation(AActor *LookAtActor) const
 {
-    // 设置玩家到第一个敌人的旋转
-    if (!OverlapResults.IsEmpty())
+    // 设置玩家到敌人的旋转
+    if (IsValid(LookAtActor))
     {
-        const FOverlapResult &FirstResult = OverlapResults[0];
+        // 计算玩家到敌人的旋转角度
+        FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
+            GetAvatarActorFromActorInfo()->GetActorLocation(), LookAtActor->GetActorLocation()
+        );
 
-        if (IsValid(FirstResult.GetActor()))
+        // 这里如果是螃蟹，需要调整 Yaw
+        ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+        if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
         {
-            // 计算玩家到敌人的旋转角度
-            FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(
-                GetAvatarActorFromActorInfo()->GetActorLocation(), FirstResult.GetActor()->GetActorLocation()
-            );
-
-            // 这里如果是螃蟹，需要调整 Yaw
-            ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-            if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
-            {
-                LookAtRotation.Yaw -= 90;
-            }
-
-            // 设置玩家面朝敌人
-            GetAvatarActorFromActorInfo()->SetActorRotation(LookAtRotation);
+            LookAtRotation.Yaw -= 90;
         }
+
+        // 设置玩家面朝敌人
+        GetAvatarActorFromActorInfo()->SetActorRotation(LookAtRotation);
     }
 }
 
