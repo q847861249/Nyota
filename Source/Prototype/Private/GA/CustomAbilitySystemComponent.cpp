@@ -24,6 +24,36 @@ void UCustomAbilitySystemComponent::OnRep_ActivateAbilities()
     }
 }
 
+void UCustomAbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
+{
+    if (IsValid(GetAvatarActor()) && !GetAvatarActor()->HasAuthority())
+    {
+        return;
+    }
+
+    if (FGameplayAbilitySpec *AbilitySpec = FindAbilitySpecFromClass(GameplayAbility))
+    {
+        AbilitySpec->Level = Level;
+
+        MarkAbilitySpecDirty(*AbilitySpec);
+    }
+}
+
+void UCustomAbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
+{
+    if (IsValid(GetAvatarActor()) && !GetAvatarActor()->HasAuthority())
+    {
+        return;
+    }
+
+    if (FGameplayAbilitySpec *AbilitySpec = FindAbilitySpecFromClass(GameplayAbility))
+    {
+        AbilitySpec->Level += Level;
+
+        MarkAbilitySpecDirty(*AbilitySpec);
+    }
+}
+
 void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)
 {
     if (!IsValid(AbilitySpec.Ability))
