@@ -49,15 +49,8 @@ TArray<AActor *> UGA_Ability_LightAttack::HitBoxOverlapTest()
     // 4. 计算 HitBox 位置（角色前方）
     // ==============================
 
-    // 获取角色前方向，并乘以前移距离
-    // 这里如果是螃蟹，需要调整
-    FVector ForwardVector = GetAvatarActorFromActorInfo()->GetActorForwardVector();
-    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-    if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
-    {
-        ForwardVector = GetAvatarActorFromActorInfo()->GetActorRightVector();
-    }
-    const FVector Forward = ForwardVector * HitBoxForwardOffset;
+    // 获取角色前方向，并乘以前移距离，如果未设置使用默认获取到的值
+    const FVector Forward = GetAbilityDetectionDirection() * HitBoxForwardOffset;
 
     // 最终 HitBox 位置：
     // 角色位置 + 前移 + 高度偏移
@@ -139,6 +132,28 @@ void UGA_Ability_LightAttack::SetLookAtEnemyRotation(AActor *LookAtActor) const
         // 设置玩家面朝敌人
         GetAvatarActorFromActorInfo()->SetActorRotation(LookAtRotation);
     }
+}
+
+FVector UGA_Ability_LightAttack::GetAbilityDetectionDirection_Implementation() const
+{
+    AActor *AvatarActor = GetAvatarActorFromActorInfo();
+
+    if (!IsValid(AvatarActor))
+    {
+        UE_LOG(LogTemp, Error, TEXT("AvatarActor is null."));
+
+        return FVector::ForwardVector;
+    }
+
+    FVector BaseDirection = AvatarActor->GetActorForwardVector();
+
+    ABasePlayer *Player = Cast<ABasePlayer>(AvatarActor);
+    if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
+    {
+        BaseDirection = AvatarActor->GetActorRightVector();
+    }
+
+    return BaseDirection;
 }
 
 void UGA_Ability_LightAttack::DrawDebugInformation(
