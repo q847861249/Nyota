@@ -9,7 +9,7 @@
 
 #include "BaseCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent*, ASC, UAttributeSet*, AS);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent *, ASC, UAttributeSet *, AS);
 
 class UGameplayEffect;
 
@@ -25,12 +25,11 @@ public:
 
     virtual UAttributeSet *GetAttributeSet() const;
 
-    /**
-     * @brief 设置死亡
-     *
-     */
-    UFUNCTION(BlueprintCallable)
-    void SetDead();
+    bool IsAlive() const;
+
+    void SetAlive(bool bAliveStatus);
+
+    virtual void OnRespawn();
 
     UPROPERTY(BlueprintAssignable)
     FASCInitialized OnASCInitialized;
@@ -40,10 +39,17 @@ protected:
 
     void InitializeAttributes() const;
 
+    void OnHealthChange(const FOnAttributeChangeData &AttributeChangeData);
+
+    virtual void OnDeath();
+
     UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Crash | Abilities")
     TArray<TSubclassOf<UGameplayAbility>> GAClass;
 
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Crash | Effects")
     TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
+
+    UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
+    bool bAlive = true;
 };

@@ -3,7 +3,6 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystemComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 ABaseCharacter::ABaseCharacter()
 {
@@ -15,15 +14,19 @@ UAbilitySystemComponent *ABaseCharacter::GetAbilitySystemComponent() const
     return nullptr;
 }
 
-UAttributeSet * ABaseCharacter::GetAttributeSet() const
+UAttributeSet *ABaseCharacter::GetAttributeSet() const
 {
     return nullptr;
 }
 
-void ABaseCharacter::SetDead()
+bool ABaseCharacter::IsAlive() const
 {
-    GetMesh()->SetAllBodiesSimulatePhysics(true);       // 设置网格体模拟物理
-    GetCharacterMovement()->SetMovementMode(MOVE_None); // 停止移动
+    return bAlive;
+}
+
+void ABaseCharacter::SetAlive(bool bAliveStatus)
+{
+    bAlive = bAliveStatus;
 }
 
 void ABaseCharacter::GiveDefaultAbility()
@@ -48,4 +51,27 @@ void ABaseCharacter::InitializeAttributes() const
     FGameplayEffectSpecHandle SpecHandle =
         GetAbilitySystemComponent()->MakeOutgoingSpec(InitializeAttributesEffect, 1.f, ContextHandle);
     GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+void ABaseCharacter::OnHealthChange(const FOnAttributeChangeData &AttributeChangeData)
+{
+    if (AttributeChangeData.NewValue <= 0.f)
+    {
+        OnDeath();
+    }
+}
+
+void ABaseCharacter::OnDeath()
+{
+    bAlive = false;
+
+    if (GEngine)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString::Printf(TEXT("%s has die!"), *GetName()));
+    }
+}
+
+void ABaseCharacter::OnRespawn()
+{
+    bAlive = true;
 }

@@ -5,6 +5,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "AbilitySystemComponent.h"
+#include "AttributeSet/BaseAttributeSet.h"
 #include "Character/BasePlayerState.h"
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
@@ -87,6 +88,16 @@ void ABasePlayer::PossessedBy(AController *NewController)
     GiveDefaultAbility();
 
     InitializeAttributes();
+
+    UBaseAttributeSet *BaseAttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet());
+    if (!IsValid(BaseAttributeSet))
+    {
+        return;
+    }
+
+    GetAbilitySystemComponent()
+        ->GetGameplayAttributeValueChangeDelegate(BaseAttributeSet->GetHealthAttribute())
+        .AddUObject(this, &ThisClass::OnHealthChange);
 }
 
 void ABasePlayer::OnRep_PlayerState()
@@ -101,6 +112,16 @@ void ABasePlayer::OnRep_PlayerState()
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 
     OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
+
+    UBaseAttributeSet *BaseAttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet());
+    if (!IsValid(BaseAttributeSet))
+    {
+        return;
+    }
+
+    GetAbilitySystemComponent()
+        ->GetGameplayAttributeValueChangeDelegate(BaseAttributeSet->GetHealthAttribute())
+        .AddUObject(this, &ThisClass::OnHealthChange);
 }
 
 UAttributeSet *ABasePlayer::GetAttributeSet() const

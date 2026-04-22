@@ -37,6 +37,16 @@ void ABaseEnemy::BeginPlay()
     GiveDefaultAbility();
 
     InitializeAttributes();
+
+    UBaseAttributeSet *BaseAttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet());
+    if (!IsValid(BaseAttributeSet))
+    {
+        return;
+    }
+
+    GetAbilitySystemComponent()
+        ->GetGameplayAttributeValueChangeDelegate(BaseAttributeSet->GetHealthAttribute())
+        .AddUObject(this, &ThisClass::OnHealthChange);
 }
 
 UAbilitySystemComponent *ABaseEnemy::GetAbilitySystemComponent() const
