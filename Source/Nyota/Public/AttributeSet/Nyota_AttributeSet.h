@@ -28,7 +28,7 @@ public:
 	// Base attributes value
 	UPROPERTY(BlueprintAssignable)
 	FBaseAttributeInitialized OnBaseAttributeInitialized;
-
+	/**Check if the attribute already init */
 	UPROPERTY(ReplicatedUsing = OnRep_bBaseAttributesInitialized)
 	bool bBaseAttributesInitialized = false;
 	

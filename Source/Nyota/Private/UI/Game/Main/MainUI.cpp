@@ -11,7 +11,7 @@
 
 void UMainUI::UpdatePlayerList()
 {
-    if (!PlayerList || !PlayerListClass) return;
+    if (!PlayerList || !PlayerListSectionClass) return;
     // when the playerlist container update, clear this container first.
     PlayerList->ClearChildren();
     //Get GameState, we will get current all playerState in the game from PlayerArray.
@@ -25,7 +25,7 @@ void UMainUI::UpdatePlayerList()
         ANyota_PlayerState* Nyota_PS = Cast<ANyota_PlayerState>(PS);
         if (Nyota_PS)
         {
-            UPlayerListSection* NewSection = CreateWidget<UPlayerListSection>(this, PlayerListClass);
+            UPlayerListSection* NewSection = CreateWidget<UPlayerListSection>(this, PlayerListSectionClass);
             if (NewSection)
             {
                 PlayerList->AddChildToVerticalBox(NewSection);

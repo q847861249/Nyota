@@ -9,6 +9,7 @@
 #include "Engine/OverlapResult.h"
 #include "AttributeSet/Nyota_AttributeSet.h"
 #include "AbilitySystemComponent.h"
+
 void UBTService_FindTarget::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *NodeMemory, float DeltaSeconds)
 {
     Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
@@ -32,10 +33,11 @@ void UBTService_FindTarget::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
     
     TArray<FOverlapResult> OverlapResults;
     FCollisionShape Sphere = FCollisionShape::MakeSphere(BC->GetValueAsFloat(FName("DetectRadius")));
-
+    //Generate Overlap 
     GetWorld()->OverlapMultiByChannel(OverlapResults,EnemyController->GetPawn()->GetActorLocation(),FQuat::Identity,ECC_Pawn,Sphere,Params,ResponseParams);
 
     TArray<APlayerCharacter*> PlayerCharacterArr;
+    //filter overlap result, if result has player character add it in array
     for(const FOverlapResult& Result : OverlapResults)
     {
         if(!IsValid(Result.GetActor())) continue;
@@ -43,8 +45,10 @@ void UBTService_FindTarget::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
         if(PlayerCharacterActor) PlayerCharacterArr.Add(PlayerCharacterActor);
     
     }
+    //Currently only use the first result as target
     if (PlayerCharacterArr.Num() > 0) BC->SetValueAsObject(GetSelectedBlackboardKey(),PlayerCharacterArr[0]);
 
+    //check if the distance wih target character over the lost radius. If yes clear the blackboard value
     if(BC->GetValueAsObject(GetSelectedBlackboardKey()))
     {
         APlayerCharacter* PC = Cast<APlayerCharacter>(BC->GetValueAsObject(GetSelectedBlackboardKey()));
@@ -53,6 +57,7 @@ void UBTService_FindTarget::TickNode(UBehaviorTreeComponent &OwnerComp, uint8 *N
         if(Distance>=BC->GetValueAsFloat(FName("LostRadius"))) BC->ClearValue(GetSelectedBlackboardKey());
     }
 
+    //Debug setting
     DrawDebugSphere(GetWorld(),EnemyController->GetPawn()->GetActorLocation(),BC->GetValueAsFloat(FName("DetectRadius")),12,FColor::Red,false,2.f);
     DrawDebugSphere(GetWorld(),EnemyController->GetPawn()->GetActorLocation(),BC->GetValueAsFloat(FName("LostRadius")),12,FColor::Blue,false,1.0f);
     DrawDebugSphere(GetWorld(),EnemyController->GetPawn()->GetActorLocation(),

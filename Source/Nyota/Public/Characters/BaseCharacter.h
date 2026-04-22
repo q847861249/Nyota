@@ -14,29 +14,25 @@ class NYOTA_API ABaseCharacter : public ACharacter,public IAbilitySystemInterfac
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	ABaseCharacter();
 private:
 	UPROPERTY(Replicated)
 	bool bAlive = true;
 
-	// mounted initial abilities and effects
+	/** mounted initial abilities and effects*/ 
 	UPROPERTY(EditDefaultsOnly, Category = "AbilitySystem")
 	TArray<TSubclassOf<class UGameplayAbility>> StartingAbilities;
-
+	/** This effect will be used to initialize character attribute */
 	UPROPERTY(EditDefaultsOnly,Category = "Effect")
 	TSubclassOf<class UGameplayEffect> InitialGameplayEffect;
 protected:
-	// Init start abilities from StartingAbilities array
+	/** Init start abilities from StartingAbilities array*/ 
 	void SetStartAbilities();
-	// Init attribute set
+	/** Init attribute set*/ 
 	void InitializedAttributes();
 
 public:	
-	// Called to bind functionality to input
-	// virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// Replicated function to setup replication for bAlive
+	/** Replicated function to setup replication for bAlive*/ 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return nullptr;}

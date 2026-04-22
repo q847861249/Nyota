@@ -19,16 +19,13 @@ void AEnemyManager::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// 只在服务器执行生成逻辑
     if (!HasAuthority()) return;
 
-    // 1. 寻找场景中所有的 TargetPoint
-    // 你也可以通过给 TargetPoint 添加 Tag 来筛选特定的出生点
+    //Find spawn point at world
     UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATargetPoint::StaticClass(), SpawnPoints);
 
     if (SpawnPoints.Num() > 0)
     {
-        // 2. 设置定时器，延迟执行生成
         FTimerHandle TimerHandle;
         GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &AEnemyManager::SpawnEnemiesAtPoints, SpawnDelay, false);
     }
@@ -45,12 +42,11 @@ void AEnemyManager::SpawnEnemiesAtPoints()
     {
         if (Point)
         {
-            // 在 TargetPoint 的位置生成敌人
+            //spawn enemy
             GetWorld()->SpawnActor<AEnemyCharacter>(EnemyClass, Point->GetActorTransform(), SpawnParams);
         }
     }
     
-    UE_LOG(LogTemp, Warning, TEXT("Nyota Manager: 已在 %d 个出生点生成敌人"), SpawnPoints.Num());
 }
 
 

@@ -7,7 +7,10 @@
 #include "HUD_Layout.generated.h"
 
 /**
- * 
+ * UHUD_Layout
+ *
+ * The primary UI layout manager for the HUD. 
+ * Handles the layering of different UI elements using CommonUI Widget Stacks.
  */
 class UCommonActivatableWidgetStack;
 class UCommonActivatableWidget;
@@ -17,19 +20,25 @@ class NYOTA_API UHUD_Layout : public UCommonUserWidget
 {
 	GENERATED_BODY()
 public:
+	/** The lowest layer stack, typically used for persistent gameplay UI elements. */
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonActivatableWidgetStack> GameStack;
 
+	/** The middle layer stack, used for menus, inventory, and pause screens. */
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonActivatableWidgetStack> MenuStack;
 
+	/** The highest layer stack, reserved for modal popups and critical notifications. */
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UCommonActivatableWidgetStack> ModalStack;
 
-
+	/** MainUI is the parent widget element within GameStack. As the parent container, 
+	 * it contains all the child widget elements to be displayed within GameStack.
+	*/
 	UPROPERTY(EditDefaultsOnly,Category="UI")
 	TSubclassOf<UCommonActivatableWidget>  MainUIClass;
 
+	/** Storage MainUI reference when it be create and push to GameStack */
 	UPROPERTY()
 	TObjectPtr<UMainUI> MainUI;
 protected:

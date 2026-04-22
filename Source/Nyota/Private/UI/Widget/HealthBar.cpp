@@ -12,6 +12,7 @@ void UHealthBar::InitialHealthBar(UAbilitySystemComponent* OutASC)
 
     if (ASC)
     {
+        //Using delegate to listen attribute change
         ASC->GetGameplayAttributeValueChangeDelegate(UNyota_AttributeSet::GetHealthAttribute())
            .AddUObject(this, &UHealthBar::OnHealthChanged);
         ASC->GetGameplayAttributeValueChangeDelegate(UNyota_AttributeSet::GetMaxHealthAttribute())

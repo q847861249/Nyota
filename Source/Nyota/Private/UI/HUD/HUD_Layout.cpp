@@ -11,6 +11,7 @@ void UHUD_Layout::NativeConstruct()
 
     if(MainUIClass)
     {
+        // Auto create MainUI instance and push to GameStack
         MainUI = Cast<UMainUI>(GameStack->AddWidget(MainUIClass));
     }
 }

@@ -25,13 +25,14 @@ private:
 protected:
 	virtual void BeginPlay() override;
 	
-	// Replicated function called when the player is possessed by a controller (server side)
+	/** Replicated function called when the player is possessed by a controller (server side)*/ 
 	virtual void PossessedBy(AController* NewController) override;
-	// Replicated function called when the player state is replicated to clients
+	/** Replicated function called when the player state is replicated to clients */
 	virtual void OnRep_PlayerState() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	/**When the Capsule componet trigger overlap event, this function will be called to check overlap actor and send event */
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
 		int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult);

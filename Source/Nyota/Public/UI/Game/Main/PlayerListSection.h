@@ -28,11 +28,16 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UProgressBar> ScoreBar;
 
-	TObjectPtr<APlayerCharacter> PC;
+	// UPROPERTY()
+	// TObjectPtr<APlayerCharacter> PC;
+	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> ASC;
 
+	/**PlayerListSection call this function to initalize */
 	UFUNCTION()
 	void Inital();
+	/** when the playerListSection is destoried, call this fucntion to unbind delegate */
+	UFUNCTION()
 	void UnBind();
 
 
@@ -45,5 +50,7 @@ protected:
 	virtual void NativeDestruct() override; 
 
 public:
+	/**this function will be called when player list section is constructed. 
+	 * Passing ASC, next will use asc to ini UI*/
 	void SetASC(UAbilitySystemComponent* RepASC);
 };

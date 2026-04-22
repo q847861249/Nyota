@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTTask_Primary::ExecuteTask(UBehaviorTreeComponent& OwnerCo
     {
         if(IsInAttackRange(EC,Target))
         {
-            //Attack
+            //Rotate to Target and Attack
             RotateToTarget(EC,Target);
             Attack(EC);
             return EBTNodeResult::Succeeded;
@@ -77,18 +77,18 @@ bool UBTTask_Primary::IsInAttackRange(AEnemyCharacter* OwnerCharacter,APlayerCha
 
 void UBTTask_Primary::RotateToTarget(AEnemyCharacter* OwnerCharacter, APlayerCharacter* Target)
 {
-
+    //Calculate the orientation vector
     FVector LookAtVector = Target->GetActorLocation() - OwnerCharacter->GetActorLocation();
     LookAtVector.Z = 0; 
-
+    //if vector very small, ignore this change
     if (LookAtVector.IsNearlyZero()) return;
-
-
+    //get rotator
     FRotator LookAtRotation = LookAtVector.Rotation();
 
+    //caculate offset
     float OffsetYaw = -90.f; 
     LookAtRotation.Yaw += OffsetYaw;
-
+    //Set new Rotation, use Interp function let rotate be smooth
     FRotator CurrentRotation = OwnerCharacter->GetActorRotation();
     FRotator SmoothedRotation = FMath::RInterpTo(CurrentRotation, LookAtRotation, GetWorld()->GetDeltaSeconds(), 25.f);
     OwnerCharacter->SetActorRotation(SmoothedRotation);

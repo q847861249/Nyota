@@ -15,8 +15,20 @@ class NYOTA_API UBTTask_Primary : public UBTTask_BlackboardBase
 public:
 	UBTTask_Primary();
 private:
+	/**
+    * Checks if the target is within the acceptable attack range.
+    * @param OwnerCharacter The enemy character performing the task.
+    * @param Target Attack Target character
+    * @return True if the target is within range, false otherwise.
+    */
 	bool IsInAttackRange(AEnemyCharacter* OwnerCharacter, APlayerCharacter* Target);
+	/**
+    * Smoothly rotates the owner character to face the specified target.
+    * @param OwnerCharacter The character that needs to rotate.
+    * @param Target The target actor to look at.
+    */
 	void RotateToTarget(AEnemyCharacter* OwnerCharacter, APlayerCharacter* Target);
+	
 	void Attack(AEnemyCharacter* EC);
 protected:
     virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;

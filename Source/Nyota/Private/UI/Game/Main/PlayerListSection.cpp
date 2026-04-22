@@ -18,7 +18,7 @@ void UPlayerListSection::NativeDestruct()
     Super::NativeDestruct();
     UnBind();
 }
-//this function will be called when player list section is constructed. Passing ASC, next will use asc to ini UI
+
 void UPlayerListSection::SetASC(UAbilitySystemComponent *RepASC)
 {
     ASC = RepASC;

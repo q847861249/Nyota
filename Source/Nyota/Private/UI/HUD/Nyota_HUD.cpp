@@ -10,6 +10,7 @@ void ANyota_HUD::BeginPlay()
 
     if(HUDLayoutClass)
     {
+        //create HUD layout and add it to viewport
         RootLayout = CreateWidget<UCommonUserWidget>(GetOwningPlayerController(),HUDLayoutClass);
         RootLayout->AddToViewport();
     }

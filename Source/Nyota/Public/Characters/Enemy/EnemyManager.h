@@ -18,19 +18,18 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	// 存储找到的出生点
+	/**Enemy Spawn point */
     UPROPERTY()
     TArray<AActor*> SpawnPoints;
 
-    // 要生成的敌人类型（在编辑器里指定）
+    /**Enemy Spawn class */
     UPROPERTY(EditAnywhere, Category = "Nyota|Spawning")
     TSubclassOf<class AEnemyCharacter> EnemyClass;
 
-    // 延迟生成的时间
     UPROPERTY(EditAnywhere, Category = "Nyota|Spawning")
     float SpawnDelay = 0.1f;
 
-    // 实际执行生成的函数
+    /** Spawn function */
     void SpawnEnemiesAtPoints();
 
 

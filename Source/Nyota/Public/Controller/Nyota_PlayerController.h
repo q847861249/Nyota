@@ -21,7 +21,7 @@ protected:
 public:
 	UPROPERTY()
 	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> Subsystem;
-	// input mapping context
+	/** input mapping context */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Nyota_|InputContext")
 	TObjectPtr<UInputMappingContext> MovingMappingContext;
 
@@ -34,7 +34,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Nyota_|InputContext")
 	TObjectPtr<UInputMappingContext> UIMappingContext;
 
-	//input actions
+	/**input actions */
 	UPROPERTY(EditDefaultsOnly, Category = "Nyota_|InputAction")
 	UInputAction* MoveAction;
 	UPROPERTY(EditDefaultsOnly, Category = "Nyota_|InputAction")
@@ -51,7 +51,7 @@ public:
 	UInputAction* RAction;
 
 
-	// actions callback functions
+	/** actions callback functions*/
 	void Move(const FInputActionValue& Value);
 	void StopMove();
 	void StartJump();

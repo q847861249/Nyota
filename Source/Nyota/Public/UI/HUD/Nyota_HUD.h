@@ -18,6 +18,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UCommonUserWidget> HUDLayoutClass;
 
+	/**This value is used to storaged the HUD layout reference when it be created*/
 	UPROPERTY()
 	UCommonUserWidget* RootLayout;
 protected:

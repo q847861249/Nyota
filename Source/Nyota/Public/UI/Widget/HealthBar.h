@@ -9,6 +9,7 @@
 
 class UProgressBar;
 class UAbilitySystemComponent;
+
 UCLASS()
 class NYOTA_API UHealthBar : public UCommonUserWidget
 {
@@ -25,6 +26,9 @@ private:
 
 	void SetHealthBar();
 public:
+	/** Initial the health bar widget by passing AbilitySystemComponent parameter
+	 * @param OutASC the pointer of AbilitySystemComponent 
+	 */
 	UFUNCTION(BlueprintCallable)
 	void InitialHealthBar(UAbilitySystemComponent* OutASC);
 };

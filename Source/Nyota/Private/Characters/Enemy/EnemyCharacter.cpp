@@ -36,12 +36,6 @@ void AEnemyCharacter::BeginPlay()
     SetStartAbilities();
     InitializedAttributes();
 
-    UNyota_AttributeSet* AttributeSet = Cast<UNyota_AttributeSet>(GetAttributeSet());
-    if(!IsValid(AttributeSet))
-    {
-        UE_LOG(LogTemp,Warning,TEXT("没有属性集"))
-        return;  
-    } 
 }
 
 UAbilitySystemComponent* AEnemyCharacter::GetAbilitySystemComponent() const

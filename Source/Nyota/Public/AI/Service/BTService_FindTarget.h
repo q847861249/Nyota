@@ -7,7 +7,9 @@
 #include "BTService_FindTarget.generated.h"
 
 /**
- * 
+ * Using Collosion to check if find target, It will generate colliders within a certain radius centered on itself. 
+ * If a collider collides with a player, it will consider the player detected.
+ * Collision range come from Blackboard
  */
 UCLASS()
 class NYOTA_API UBTService_FindTarget : public UBTService_BlackboardBase

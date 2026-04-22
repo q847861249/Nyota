@@ -18,28 +18,33 @@ protected:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	virtual void NativeConstruct() override;
 public:
-	//Left Top Position
+	/**Level ground Left Top Position*/
 	UPROPERTY(EditDefaultsOnly)
 	FVector2D LeftTopLocation;
-	//Right Buttom Position
+	/**Level ground Right Buttom Position*/
 	UPROPERTY(EditDefaultsOnly)
 	FVector2D RightButtomLocation;
 
+	/**if there is some offset on minimap, use x/y offset variable to tweak*/
 	UPROPERTY(EditAnyWhere,Category = "Offset")
 	float X_Location_offset = 0.f;
 	UPROPERTY(EditAnyWhere,Category = "Offset")
 	float Y_Location_offset = 0.f;
 
+	/**minimap display size */
 	UPROPERTY(EditDefaultsOnly)
 	FVector2D ImageSize;
 
-	// Minimal Map UI
+	/**minimap display image */
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> MinimalMapImage;
 
+	/**pointer display image */
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UImage> PointerImage;
 
 	UPROPERTY()
     TWeakObjectPtr<APawn> CachedPlayerPawn;
+
+
 };

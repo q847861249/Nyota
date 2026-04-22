@@ -13,10 +13,6 @@ ABaseCharacter::ABaseCharacter()
 	bReplicates = true;
 }
 
-// Called to bind functionality to input
-// void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-// {
-// 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 // }
 void ABaseCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &OutLifetimeProps) const
@@ -37,7 +33,6 @@ void ABaseCharacter::SetStartAbilities()
 	//Register ability from StartingAbiities array by using ASC API(GiveAbility)
 	for(const auto& Ability: StartingAbilities)
 	{
-		
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
 		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
 	}
@@ -58,7 +53,6 @@ void ABaseCharacter::InitializedAttributes()
 	
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(InitialGameplayEffect,1.0f,ContextHandle);
-	UE_LOG(LogTemp, Warning, TEXT("应用%s"), *GetName());
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
 

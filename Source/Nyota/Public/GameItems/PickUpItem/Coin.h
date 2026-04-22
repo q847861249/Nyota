@@ -13,16 +13,17 @@ class NYOTA_API ACoin : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ACoin();
 
 private:
+	/**controlling the lifecycle of golden */
 	UPROPERTY(EditDefaultsOnly)
 	float LifeTime = 10.f;
 protected:
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 public:	
 	FOnCoinDestroy OnCoinDestroy;
+	
 	void Destroy();
 
 };

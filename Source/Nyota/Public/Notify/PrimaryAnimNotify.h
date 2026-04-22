@@ -8,7 +8,7 @@
 #include "PrimaryAnimNotify.generated.h"
 
 /**
- * 
+ * This class is used to send event to notify actor montage already play in correct time.
  */
 UCLASS()
 class NYOTA_API UPrimaryAnimNotify : public UAnimNotify
