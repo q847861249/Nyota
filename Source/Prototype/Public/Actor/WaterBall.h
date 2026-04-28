@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "WaterBall.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWaterBallHit, const FHitResult &, Hit);
 
 class UNiagaraSystem;
 class UNiagaraComponent;
@@ -19,6 +22,9 @@ public:
     AWaterBall();
 
     virtual void Tick(float DeltaTime) override;
+
+    UPROPERTY(BlueprintAssignable)
+    FOnWaterBallHit OnWaterBallHit;
 
 protected:
     virtual void BeginPlay() override;

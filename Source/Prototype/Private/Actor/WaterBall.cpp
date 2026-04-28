@@ -17,7 +17,6 @@ AWaterBall::AWaterBall()
     CollisionComponent = CreateDefaultSubobject<USphereComponent>("CollisionComponent");
     CollisionComponent->InitSphereRadius(20.f);
     CollisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
-    CollisionComponent->OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
     RootComponent = CollisionComponent;
 
     // 飞行特效挂在碰撞球上
@@ -51,6 +50,8 @@ void AWaterBall::BeginPlay()
             const FVector ForwardVector = Cast<ABaseCharacter>(GetInstigator())->GetForwardDirection();
             ProjectileMovementComponent->Velocity = ForwardVector * ProjectileMovementComponent->InitialSpeed;
         }
+
+        CollisionComponent->OnComponentHit.AddDynamic(this, &ThisClass::OnHit);
     }
 }
 
@@ -59,14 +60,19 @@ void AWaterBall::OnHit(
     const FHitResult &Hit
 )
 {
+    if (OtherActor)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("WaterBall Hit: %s"), *OtherActor->GetName());
+    }
+    
     // 跳过自己和发射者
     if (!OtherActor || OtherActor == this || OtherActor == GetInstigator())
     {
         return;
     }
 
-    // 造成伤害
-    UGameplayStatics::ApplyDamage(OtherActor, Damage, GetInstigatorController(), this, UDamageType::StaticClass());
+    // 通知外部更新
+    OnWaterBallHit.Broadcast(Hit);
 
     ExplodeAndDestroy(Hit.ImpactPoint);
 }
