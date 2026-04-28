@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
+#include "Enums/PlayerType.h"
 
 #include "BaseCharacter.generated.h"
 
@@ -31,6 +32,10 @@ public:
 
     virtual void OnRespawn();
 
+    EPlayerType GetPlayerType() const;
+
+    FVector GetForwardDirection() const;
+
     UPROPERTY(BlueprintAssignable)
     FASCInitialized OnASCInitialized;
 
@@ -52,4 +57,7 @@ private:
 
     UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
     bool bAlive = true;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Enums")
+    EPlayerType PlayerType;
 };

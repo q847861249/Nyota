@@ -134,28 +134,6 @@ void UGA_Ability_LightAttack::SetLookAtEnemyRotation(AActor *LookAtActor) const
     }
 }
 
-FVector UGA_Ability_LightAttack::GetAbilityDetectionDirection_Implementation() const
-{
-    AActor *AvatarActor = GetAvatarActorFromActorInfo();
-
-    if (!IsValid(AvatarActor))
-    {
-        UE_LOG(LogTemp, Error, TEXT("AvatarActor is null."));
-
-        return FVector::ForwardVector;
-    }
-
-    FVector BaseDirection = AvatarActor->GetActorForwardVector();
-
-    ABasePlayer *Player = Cast<ABasePlayer>(AvatarActor);
-    if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
-    {
-        BaseDirection = AvatarActor->GetActorRightVector();
-    }
-
-    return BaseDirection;
-}
-
 void UGA_Ability_LightAttack::DrawDebugInformation(
     const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation
 ) const

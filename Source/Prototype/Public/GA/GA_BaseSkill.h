@@ -24,4 +24,10 @@ public:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash | Debug")
     bool bDrawDebugs = false;
+
+protected:
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "OverlapTest")
+    FVector GetAbilityDetectionDirection() const;
+
+    virtual FVector GetAbilityDetectionDirection_Implementation() const;
 };

@@ -24,12 +24,6 @@ public:
     UFUNCTION(BlueprintCallable, Category = "OverlapTest")
     void SetLookAtEnemyRotation(AActor *LookAtActor) const;
 
-protected:
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "OverlapTest")
-    FVector GetAbilityDetectionDirection() const;
-
-    virtual FVector GetAbilityDetectionDirection_Implementation() const;
-
 private:
     void DrawDebugInformation(const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation) const;
 

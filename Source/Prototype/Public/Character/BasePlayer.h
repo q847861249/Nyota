@@ -29,8 +29,6 @@ public:
 
     virtual UAttributeSet *GetAttributeSet() const override;
 
-    EPlayerType GetPlayerType() const;
-
 protected:
     void MoveInput(const FInputActionValue &Value);
 
@@ -44,7 +42,4 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction *MoveAction;
-
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enums")
-    EPlayerType PlayerType;
 };

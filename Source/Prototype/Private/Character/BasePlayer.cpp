@@ -136,11 +136,6 @@ UAttributeSet *ABasePlayer::GetAttributeSet() const
     return MyPlayerState->GetAttributeSet();
 }
 
-EPlayerType ABasePlayer::GetPlayerType() const
-{
-    return PlayerType;
-}
-
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
 {
     if (!Controller)

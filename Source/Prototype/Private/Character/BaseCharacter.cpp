@@ -75,3 +75,18 @@ void ABaseCharacter::OnRespawn()
 {
     bAlive = true;
 }
+
+EPlayerType ABaseCharacter::GetPlayerType() const
+{
+    return PlayerType;
+}
+
+FVector ABaseCharacter::GetForwardDirection() const
+{
+    if (GetPlayerType() == EPlayerType::PangXie)
+    {
+        return GetActorRightVector();
+    }
+
+    return GetActorForwardVector();
+}
