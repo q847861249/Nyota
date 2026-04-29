@@ -10,8 +10,8 @@
 #include "AttributeSet/Nyota_AttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "Characters/BaseCharacter.h"
-
-void UPrimaryAbility::PrimaryAttack()
+#include "Characters/Player/PlayerCharacter.h"
+void UPrimaryAbility::PrimaryAttack(int32 ComboIndex)
 {
 
 	// Set up collision query parameters
@@ -24,13 +24,17 @@ void UPrimaryAbility::PrimaryAttack()
     ResponseParams.CollisionResponse.SetAllChannels(ECollisionResponse::ECR_Ignore);
     ResponseParams.CollisionResponse.SetResponse(ECC_Pawn, ECollisionResponse::ECR_Block);
     
+
     TArray<FOverlapResult> OverlapResults;
-    FCollisionShape Sphere = FCollisionShape::MakeSphere(HitBoxRadius);
+    FCollisionShape Sphere = FCollisionShape::MakeSphere(AbilityMontageDataArr[ComboIndex].HitBoxRadius);
 
     //Caculate HitBoxLocation
-    const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector() * HitBoxForwardOffset;
-    const FVector HitBoxLocation =  GetAvatarActorFromActorInfo()->GetActorLocation() + Forward + FVector(0.f, 0.f, HitBoxElevationOffset);
+    APlayerCharacter* PC = Cast<APlayerCharacter>(GetAvatarActorFromActorInfo());
+    if(!PC) return;
+    FVector HitBoxLocation = PC->GetMesh()->GetSocketLocation(AbilityMontageDataArr[ComboIndex].SocketName);
 
+    if(!K2_HasAuthority()) return;
+    
     GetWorld()->OverlapMultiByChannel(OverlapResults,HitBoxLocation,FQuat::Identity,ECC_Pawn,Sphere,Params,ResponseParams);
 
     // Filter Hit Actor. Ignore the actor who has "Player" Tag.
@@ -55,11 +59,11 @@ void UPrimaryAbility::PrimaryAttack()
     
     if(bDrawDebug)
     {
-        DrawHitBoxOverlapDebugs(FilterActor,HitBoxLocation);
+        DrawHitBoxOverlapDebugs(FilterActor,HitBoxLocation,AbilityMontageDataArr[ComboIndex].HitBoxRadius);
     }
 }
 
-void UPrimaryAbility::DrawHitBoxOverlapDebugs(const TArray<AActor*>& FilterActor, const FVector &HitBoxLocation)
+void UPrimaryAbility::DrawHitBoxOverlapDebugs(const TArray<AActor*>& FilterActor, const FVector &HitBoxLocation,float HitBoxRadius)
 {
     DrawDebugSphere(GetWorld(),HitBoxLocation,HitBoxRadius,12,FColor::Red,false,2.f);
     for(const AActor* HitActor: FilterActor)
@@ -91,4 +95,17 @@ void UPrimaryAbility::SendHitReactEventToActor(TArray<AActor*> HitActors)
         }
         UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor,Nyota::Event::HitReact, Payload);
     }
+}
+
+UAnimMontage* UPrimaryAbility::GetPrimaryMontage(int32 Index)
+{
+    if(Index >= AbilityMontageDataArr.Num()) return nullptr;
+
+    return AbilityMontageDataArr[Index].Montage;
+}
+
+
+int32 UPrimaryAbility::GetAbilityMontageDataArrNum()
+{
+    return AbilityMontageDataArr.Num();
 }

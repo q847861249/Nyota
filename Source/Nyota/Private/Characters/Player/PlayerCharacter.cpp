@@ -14,6 +14,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Tags/Nyota_Tag.h"
 #include "Components/CapsuleComponent.h"
+#include "Net/UnrealNetwork.h"
 APlayerCharacter::APlayerCharacter()
 {
     PrimaryActorTick.bCanEverTick = true;
@@ -56,6 +57,8 @@ void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> &Out
 {
     Super::GetLifetimeReplicatedProps(OutLifetimeProps);
     // Todo: replicated ComboIndex
+    DOREPLIFETIME_CONDITION_NOTIFY(APlayerCharacter, CurrentComboIndex,COND_None, REPNOTIFY_Always);
+    DOREPLIFETIME_CONDITION_NOTIFY(APlayerCharacter, bCanCombo,COND_None, REPNOTIFY_Always);
 }
 
 UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
@@ -78,4 +81,35 @@ void APlayerCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
         UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Event::PickUp,Payload);
     }
     
+}
+
+
+int32 APlayerCharacter::NextComboIndex()
+{
+    CurrentComboIndex = (CurrentComboIndex + 1) % MaxComboIndex;
+
+    return CurrentComboIndex;
+}
+
+int32 APlayerCharacter::GetComboIndex() const
+{
+    return CurrentComboIndex;
+}
+
+void APlayerCharacter::SetMaxComboIndex(int32 IndexNum)
+{
+    MaxComboIndex = IndexNum;
+}
+
+void APlayerCharacter::ResetComboIndex(float ResetTime)
+{
+    if(HasAuthority())
+    {
+        GetWorld()->GetTimerManager().ClearTimer(ComboResetTimerHandle);
+        GetWorld()->GetTimerManager().SetTimer(ComboResetTimerHandle,
+            [this]() 
+            {
+                this->CurrentComboIndex = -1;
+            }, ResetTime, false);
+    }
 }

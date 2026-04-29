@@ -13,5 +13,7 @@ UCLASS()
 class NYOTA_API UE_Ability : public UBaseAbility
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    TObjectPtr<UAnimMontage> Montage;
 };

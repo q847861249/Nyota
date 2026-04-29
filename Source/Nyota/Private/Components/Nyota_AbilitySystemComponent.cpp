@@ -3,7 +3,8 @@
 
 #include "Components/Nyota_AbilitySystemComponent.h"
 #include "Tags/Nyota_Tag.h"
-
+#include "Ability/Player/PrimaryAbility.h"
+#include "Characters/Player/PlayerCharacter.h"
 void UNyota_AbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) 
 {
 	Super::OnGiveAbility(AbilitySpec);
@@ -40,4 +41,12 @@ void UNyota_AbilitySystemComponent::ActivateAbilityWithInitTag(const FGameplayAb
         return;
 	}
     
+    //根据Primary技能里面动画数组的长度自动赋值MaxComboIndex
+    if(AbilitySpec.Ability->AbilityTags.HasTagExact(Nyota::Ability::Primary))
+    {
+        UPrimaryAbility* PrimaryAbility = Cast<UPrimaryAbility>(AbilitySpec.Ability);
+        APlayerCharacter* PC = Cast<APlayerCharacter>(GetAvatarActor());
+        if(PC) PC->SetMaxComboIndex(PrimaryAbility->GetAbilityMontageDataArrNum());
+        
+    }
 }

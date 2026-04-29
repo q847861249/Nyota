@@ -13,5 +13,7 @@ UCLASS()
 class NYOTA_API ANyota_GameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+public:
+
+protected:
 };

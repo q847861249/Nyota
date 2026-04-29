@@ -6,6 +6,7 @@
 #include "Engine/TargetPoint.h"
 #include "Characters/Enemy/EnemyCharacter.h" 
 #include "TimerManager.h"
+#include "Controller/EnemyController.h"
 // Sets default values
 AEnemyManager::AEnemyManager()
 {
@@ -43,7 +44,9 @@ void AEnemyManager::SpawnEnemiesAtPoints()
         if (Point)
         {
             //spawn enemy
-            GetWorld()->SpawnActor<AEnemyCharacter>(EnemyClass, Point->GetActorTransform(), SpawnParams);
+            AEnemyCharacter* NewEnemy = GetWorld()->SpawnActor<AEnemyCharacter>(EnemyClass, Point->GetActorTransform(), SpawnParams);
+            AEnemyController* Controller =  Cast<AEnemyController>(NewEnemy->GetController());
+            Controller->InitBlackBoardAttr();
         }
     }
     

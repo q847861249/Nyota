@@ -18,5 +18,10 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, Category="AI")
 	TObjectPtr<class UBehaviorTree> BehaviorTreeAsset;
+public:
+	/**
+	 * Initialize some attribute of BlackBoard
+	 */
+	void InitBlackBoardAttr();
 	
 };

@@ -45,4 +45,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetAlive(bool NewAlive) {bAlive = NewAlive;}
 
+
 };

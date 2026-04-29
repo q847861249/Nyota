@@ -13,13 +13,19 @@ class NYOTA_API UHitReact : public UBaseAbility
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY(EditDefaultsOnly)
-	float DeathDropRate = 4.0f;
+
+
 	TObjectPtr<UAbilitySystemComponent> ASC;
 	TObjectPtr<ABaseCharacter> Instigator;
 	
 	void OnHealthValueChange(const struct FOnAttributeChangeData& Data);
 public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	float DeathDropRate = 4.0f;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> HitMontage;
+
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamage(TSubclassOf<UGameplayEffect> GEClass, float Damage, AActor* OutInstigator);
 	UFUNCTION(BlueprintCallable)

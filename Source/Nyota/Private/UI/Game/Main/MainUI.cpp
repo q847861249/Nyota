@@ -12,15 +12,18 @@
 void UMainUI::UpdatePlayerList()
 {
     if (!PlayerList || !PlayerListSectionClass) return;
+    UE_LOG(LogTemp,Warning,TEXT("执行1"));
     // when the playerlist container update, clear this container first.
     PlayerList->ClearChildren();
     //Get GameState, we will get current all playerState in the game from PlayerArray.
     //PlayerArray is an array maintained by the official UE team. And it will automically update when a new playerState add or remove.
     ANyota_GameState* GS = Cast<ANyota_GameState>(GetWorld()->GetGameState());
     if (!GS) return;
+    UE_LOG(LogTemp,Warning,TEXT("执行2"));
     // loop playerArray to get all playerState
     for (APlayerState* PS : GS->PlayerArray)
     {
+        UE_LOG(LogTemp,Warning,TEXT("执行3"));
         //each playerState will create a playerlist section(this is a UI Section) and add to playerList container.
         ANyota_PlayerState* Nyota_PS = Cast<ANyota_PlayerState>(PS);
         if (Nyota_PS)
@@ -28,6 +31,7 @@ void UMainUI::UpdatePlayerList()
             UPlayerListSection* NewSection = CreateWidget<UPlayerListSection>(this, PlayerListSectionClass);
             if (NewSection)
             {
+                UE_LOG(LogTemp,Warning,TEXT("执行4"));
                 PlayerList->AddChildToVerticalBox(NewSection);
                 UAbilitySystemComponent* ASC = Nyota_PS->GetAbilitySystemComponent();
                 //passing the ASC come from this PlayerState to PlayerListSection
