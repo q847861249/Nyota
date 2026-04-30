@@ -5,46 +5,49 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "WaterBall.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWaterBallHit, const FHitResult &, Hit);
+#include "WaterBubble.generated.h"
 
 class UNiagaraSystem;
 class UNiagaraComponent;
 class UProjectileMovementComponent;
 class USphereComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWaterBubbleHit, const FHitResult &, HitResult);
+
+// TODO: 这里同 AWaterBall 类内容基本一致，考虑抽成一个，使用蓝图继承同一个
+
 UCLASS()
-class PROTOTYPE_API AWaterBall : public AActor
+class PROTOTYPE_API AWaterBubble : public AActor
 {
     GENERATED_BODY()
 
 public:
-    AWaterBall();
+    AWaterBubble();
 
     virtual void Tick(float DeltaTime) override;
 
     UPROPERTY(BlueprintAssignable)
-    FOnWaterBallHit OnWaterBallHit;
+    FOnWaterBubbleHit OnWaterBubbleHit;
 
 protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TObjectPtr<USphereComponent> CollisionComponent; // 碰撞组件
+    TObjectPtr<USphereComponent> CollisionComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent; // 飞行组件
+    TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-    TObjectPtr<UNiagaraComponent> FlightVFX; // 飞行特效
+    TObjectPtr<UNiagaraComponent> FlightVFX;
 
-    UPROPERTY(EditDefaultsOnly, Category = "WaterBall")
-    TObjectPtr<UNiagaraSystem> ExplosionVFX; // 爆炸特效
+    UPROPERTY(EditDefaultsOnly, Category = "WaterBubble")
+    TObjectPtr<UNiagaraSystem> HitVFX;
 
-    UPROPERTY(EditDefaultsOnly, Category = "WaterBall")
-    float MaxRange = 3000.f; // 最大飞行距离
+    UPROPERTY(EditDefaultsOnly, Category = "WaterBubble")
+    float MaxRange;
 
-    FVector SpawnLocation; // 记录出生位置
+    FVector SpawnLocation;
 
     /**
      * @brief 处理命中
@@ -66,5 +69,5 @@ protected:
      *
      * @param Location
      */
-    void ExplodeAndDestroy(const FVector &Location);
+    void PopAndDestroy(const FVector &Location);
 };

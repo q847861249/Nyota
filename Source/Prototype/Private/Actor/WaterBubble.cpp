@@ -1,38 +1,37 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Actor/WaterBall.h"
+#include "Actor/WaterBubble.h"
 
 #include "NiagaraComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Character/BaseCharacter.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Kismet/GameplayStatics.h"
 
-AWaterBall::AWaterBall()
+AWaterBubble::AWaterBubble()
 {
     PrimaryActorTick.bCanEverTick = true;
 
-    // 碰撞球
+    // 碰撞
     CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
-    CollisionComponent->InitSphereRadius(20.f);
+    CollisionComponent->InitSphereRadius(15.f);
     CollisionComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
     RootComponent = CollisionComponent;
 
-    // 飞行特效挂在碰撞球上
+    // 飞行特效
     FlightVFX = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FlightVFX"));
     FlightVFX->SetupAttachment(RootComponent);
     FlightVFX->bAutoActivate = true;
 
     // 飞行组件
     ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-    ProjectileMovementComponent->InitialSpeed = 2000.f;
-    ProjectileMovementComponent->MaxSpeed = 2000.f;
+    ProjectileMovementComponent->InitialSpeed = 1000.f;
+    ProjectileMovementComponent->MaxSpeed = 1000.f;
     ProjectileMovementComponent->bRotationFollowsVelocity = true;
-    ProjectileMovementComponent->ProjectileGravityScale = 0.f; // 不受重力影响
+    ProjectileMovementComponent->ProjectileGravityScale = 0.2f; // 泡泡有一点点重力，飘起来的感觉
 }
 
-void AWaterBall::BeginPlay()
+void AWaterBubble::BeginPlay()
 {
     Super::BeginPlay();
 
@@ -55,47 +54,44 @@ void AWaterBall::BeginPlay()
     }
 }
 
-void AWaterBall::OnHit(
+void AWaterBubble::OnHit(
     UPrimitiveComponent *HitComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, FVector NormalImpulse,
     const FHitResult &Hit
 )
 {
     if (OtherActor)
     {
-        UE_LOG(LogTemp, Warning, TEXT("WaterBall Hit: %s"), *OtherActor->GetName());
+        UE_LOG(LogTemp, Warning, TEXT("WaterBubble Hit: %s"), *OtherActor->GetName());
     }
 
-    // 跳过自己和发射者
     if (!OtherActor || OtherActor == this || OtherActor == GetInstigator())
     {
         return;
     }
 
-    // 通知外部更新
-    OnWaterBallHit.Broadcast(Hit);
+    OnWaterBubbleHit.Broadcast(Hit);
 
-    ExplodeAndDestroy(Hit.ImpactPoint);
+    PopAndDestroy(Hit.ImpactPoint);
 }
 
-void AWaterBall::ExplodeAndDestroy(const FVector &Location)
+void AWaterBubble::PopAndDestroy(const FVector &Location)
 {
     // 播放爆炸特效
-    if (ExplosionVFX)
+    if (HitVFX)
     {
-        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionVFX, Location);
+        UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitVFX, Location);
     }
 
     Destroy();
 }
 
-void AWaterBall::Tick(float DeltaTime)
+void AWaterBubble::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
 
-    // 超出最大距离就销毁
-    float DistanceTraveled = FVector::Dist(SpawnLocation, GetActorLocation());
-    if (DistanceTraveled >= MaxRange)
+    float Distance = FVector::Dist(SpawnLocation, GetActorLocation());
+    if (Distance >= MaxRange)
     {
-        ExplodeAndDestroy(GetActorLocation());
+        PopAndDestroy(GetActorLocation());
     }
 }
