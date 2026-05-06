@@ -29,6 +29,8 @@ public:
 
     virtual UAttributeSet *GetAttributeSet() const override;
 
+    virtual void Tick(float DeltaSeconds) override;
+
 protected:
     void MoveInput(const FInputActionValue &Value);
 
@@ -42,4 +44,28 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
     UInputAction *MoveAction;
+
+    float TargetYaw; // 记录目标朝向
+
+private:
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float RotationInterpSpeed;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_Forward = 0.f; // 纯前后
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_Side = -90.f; // 纯左右
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_ForwardLeft = -45.f; // W+A
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_ForwardRight = 45.f; // W+D
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_BackLeft = -135.f; // S+A
+
+    UPROPERTY(EditDefaultsOnly, Category = "Movement|Rotation")
+    float YawOffset_BackRight = 135.f; // S+D
 };
