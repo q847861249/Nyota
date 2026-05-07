@@ -83,7 +83,7 @@ EPlayerType ABaseCharacter::GetPlayerType() const
 
 FVector ABaseCharacter::GetForwardDirection() const
 {
-    if (GetPlayerType() == EPlayerType::PangXie)
+    if (GetPlayerType() == EPlayerType::Crab)
     {
         return GetActorRightVector();
     }

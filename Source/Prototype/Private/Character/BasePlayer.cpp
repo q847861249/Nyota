@@ -168,7 +168,7 @@ void ABasePlayer::MoveInput(const FInputActionValue &Value)
     bool bHasHorizontal = !FMath::IsNearlyZero(Axis.X);
     bool bHasVertical = !FMath::IsNearlyZero(Axis.Y);
 
-    if (GetPlayerType() == EPlayerType::PangXie)
+    if (GetPlayerType() == EPlayerType::Crab)
     {
         if (bHasHorizontal && bHasVertical)
         {

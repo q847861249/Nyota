@@ -11,11 +11,9 @@ namespace Abilities
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(ActivateOnGive);
 }
 
-namespace Events
-{
-namespace Enemy
+namespace Events::Enemy
 {
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
-}
-} // namespace Events
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(BoarLanded);
+} // namespace Events::Enemy
 } // namespace GameTags

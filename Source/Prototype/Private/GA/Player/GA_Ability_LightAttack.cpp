@@ -124,7 +124,7 @@ void UGA_Ability_LightAttack::SetLookAtEnemyRotation(AActor *LookAtActor) const
 
         // 这里如果是螃蟹，需要调整 Yaw
         ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-        if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::PangXie)
+        if (IsValid(Player) && Player->GetPlayerType() == EPlayerType::Crab)
         {
             LookAtRotation.Yaw -= 90;
         }

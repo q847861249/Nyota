@@ -3,8 +3,8 @@
 UENUM(BlueprintType)
 enum class EPlayerType : uint8
 {
-    PangXie = 0 UMETA(DisplayName = "PangXie"),
-    YeZhu = 1 UMETA(DisplayName = "YeZhu"),
+    Crab = 0 UMETA(DisplayName = "PangXie"),
+    WildBoar = 1 UMETA(DisplayName = "YeZhu"),
 };
 
 UENUM(BlueprintType)

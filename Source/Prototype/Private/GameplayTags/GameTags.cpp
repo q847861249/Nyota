@@ -12,11 +12,9 @@ UE_DEFINE_GAMEPLAY_TAG_COMMENT(
 );
 }
 
-namespace Events
-{
-namespace Enemy
+namespace Events::Enemy
 {
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(HitReact, "GameTags.Events.Enemy.HitReact", "Tag for the Enemy HitReact Event.");
-}
-} // namespace Events
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(BoarLanded, "GameTags.Events.Boar.Landed", "Tag for the Boar Landed Event.");
+} // namespace Events::Enemy
 } // namespace GameTags
