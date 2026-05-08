@@ -16,11 +16,14 @@ public:
 
     virtual void OnRep_ActivateAbilities() override;
 
-    UFUNCTION(BlueprintCallable, Category = "Crash | Ability")
+    UFUNCTION(BlueprintCallable, Category = "Nyota | Ability")
     void SetAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level);
 
-    UFUNCTION(BlueprintCallable, Category = "Crash | Ability")
+    UFUNCTION(BlueprintCallable, Category = "Nyota | Ability")
     void AddToAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level = 1);
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota | Ability")
+    UGameplayAbility *GetActivatableAbilitySpecByTag(const FGameplayTag &AbilityTag);
 
 private:
     void HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec);

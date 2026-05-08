@@ -40,11 +40,27 @@ public:
     UFUNCTION()
     void OnBoarLanded(const FHitResult &Hit);
 
+    UFUNCTION(BlueprintCallable)
+    void OnSlammed(int32 SlamCount);
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnGrabbed_Visual(); // 蓝图里播放被抓特效
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnSlammed_Visual(); // 蓝图里播放砸地受击特效
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnThrown_Visual(); // 蓝图里播放被摔特效
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnLanded_Visual(); // 蓝图里播放落地特效
+
+private:
     bool bIsGrabbed = false;
 
-    UPROPERTY(EditDefaultsOnly, Category = "WildBoar")
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | WildBoar")
     float ThrownDamage;
 
-    UPROPERTY(EditDefaultsOnly, Category = "WildBoar")
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | WildBoar")
     float ThrownDamageRadius;
 };

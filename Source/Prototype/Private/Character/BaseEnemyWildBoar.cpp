@@ -28,12 +28,11 @@ void ABaseEnemyWildBoar::OnGrabbed(ACharacter *Grabber)
     // Attach 到螃蟹的 GrabSocket
     AttachToComponent(Grabber->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("GrabSocket"));
 
-    // 微调位置和朝向
-    // SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-    // SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-
     // 监听落地事件
     LandedDelegate.AddDynamic(this, &ThisClass::OnBoarLanded);
+
+    // 通知蓝图播放表现
+    OnGrabbed_Visual();
 }
 
 void ABaseEnemyWildBoar::OnReleased()
@@ -79,6 +78,9 @@ void ABaseEnemyWildBoar::OnThrown(FVector Direction, float Force)
     {
         AIC->SetActorTickEnabled(true);
     }
+
+    // 通知蓝图播放表现
+    OnThrown_Visual();
 }
 
 void ABaseEnemyWildBoar::OnBoarLanded(const FHitResult &Hit)
@@ -93,5 +95,12 @@ void ABaseEnemyWildBoar::OnBoarLanded(const FHitResult &Hit)
         this, GameTags::Events::Enemy::BoarLanded, FGameplayEventData()
     );
 
+    // 通知蓝图播放落地特效
+    OnLanded_Visual();
+
     LandedDelegate.RemoveDynamic(this, &ThisClass::OnBoarLanded);
+}
+
+void ABaseEnemyWildBoar::OnSlammed(int32 SlamCount)
+{
 }

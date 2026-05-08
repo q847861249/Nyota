@@ -54,6 +54,33 @@ void UCustomAbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbili
     }
 }
 
+UGameplayAbility *UCustomAbilitySystemComponent::GetActivatableAbilitySpecByTag(const FGameplayTag &AbilityTag)
+{
+    TArray<FGameplayAbilitySpec> MatchingGameplayAbilities = GetActivatableAbilities();
+
+    if (MatchingGameplayAbilities.IsEmpty())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No activatable abilities."));
+
+        return nullptr;
+    }
+
+    for (const FGameplayAbilitySpec &AbilitySpec : MatchingGameplayAbilities)
+    {
+        for (const FGameplayTag &Tag : AbilitySpec.Ability->AbilityTags)
+        {
+            if (!Tag.MatchesTagExact(AbilityTag))
+            {
+                continue;
+            }
+
+            return AbilitySpec.Ability.Get();
+        }
+    }
+
+    return nullptr;
+}
+
 void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)
 {
     if (!IsValid(AbilitySpec.Ability))
