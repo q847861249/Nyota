@@ -26,11 +26,11 @@ void ABaseEnemyWildBoar::OnGrabbed(ACharacter *Grabber)
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
     // Attach 到螃蟹的 GrabSocket
-    AttachToComponent(Grabber->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("GrabSocket"));
+    AttachToComponent(Grabber->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("GrabSocket"));
 
     // 微调位置和朝向
     // SetActorRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-    // SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
+    // SetActorRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
     // 监听落地事件
     LandedDelegate.AddDynamic(this, &ThisClass::OnBoarLanded);
