@@ -57,10 +57,4 @@ public:
 
 private:
     bool bIsGrabbed = false;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | WildBoar")
-    float ThrownDamage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | WildBoar")
-    float ThrownDamageRadius;
 };
