@@ -15,7 +15,7 @@ public class Prototype : ModuleRules
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]
-			{ "GameplayAbilities", "GameplayTags", "AnimGraphRuntime", "GameplayTasks" });
+			{ "GameplayAbilities", "GameplayTags", "AnimGraphRuntime", "GameplayTasks","CommonUI","CommonInput" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
