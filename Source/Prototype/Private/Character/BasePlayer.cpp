@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Character/BasePlayerState.h"
+#include "GameplayTags/GameTags.h"
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
@@ -214,4 +215,40 @@ void ABasePlayer::LookInput(const FInputActionValue &Value)
 
     AddControllerYawInput(LookVector2D.X);
     AddControllerPitchInput(LookVector2D.Y);
+}
+
+void ABasePlayer::WaterBallAttack(const FGameplayTag &ActivateTag)
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    if (ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(ActivateTag);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::GrabSlamAttack(const FGameplayTag &ActivateTag)
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    if (!ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(ActivateTag);
+    ASC->TryActivateAbilitiesByTag(Container);
 }

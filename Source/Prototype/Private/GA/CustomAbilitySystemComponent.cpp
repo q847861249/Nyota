@@ -91,7 +91,7 @@ void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbi
     UE_LOG(LogTemp, Log, TEXT("Tags: %s"), *AbilitySpec.Ability->AbilityTags.ToString());
     for (const FGameplayTag &Tag : AbilitySpec.Ability->AbilityTags)
     {
-        if (!Tag.MatchesTagExact(GameTags::Abilities::ActivateOnGive))
+        if (!Tag.MatchesTagExact(Nyota::Ability_ActivateOnGive))
         {
             continue;
         }
