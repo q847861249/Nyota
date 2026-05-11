@@ -70,7 +70,7 @@ void ABaseEnemyWildBoar::OnThrown(FVector Direction, float Force)
 
     // 施加力
     FVector LaunchVelocity = Direction * Force;
-    LaunchVelocity.Z += 500.f;
+    LaunchVelocity.Z += ThrownZOffset;
     LaunchCharacter(LaunchVelocity, true, true);
 
     // 恢复 AI

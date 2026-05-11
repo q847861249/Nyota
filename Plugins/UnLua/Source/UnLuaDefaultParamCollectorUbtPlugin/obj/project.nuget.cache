@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "OyuwxaNCN/4c0U04jj7vL0WpxVsgCYcElj+c5t/ZIRWCs7cM7RtOiNWwbVRkeCiF9t/GwgmIE/3U7L9VzPWJEQ==",
+  "success": true,
+  "projectFilePath": "/Users/john/Documents/Projects/Unreal/GamePrototype/Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin/UnLuaDefaultParamCollectorUbtPlugin.ubtplugin.csproj",
+  "expectedPackageFiles": [
+    "/Users/john/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -57,4 +57,7 @@ public:
 
 private:
     bool bIsGrabbed = false;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float ThrownZOffset;
 };

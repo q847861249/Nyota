@@ -11,7 +11,7 @@ public class Prototype : ModuleRules
 		PublicDependencyModuleNames.AddRange(new[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "UMG", "AIModule",
-			"NavigationSystem"
+			"NavigationSystem", "UnLua"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]
