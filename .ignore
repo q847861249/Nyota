@@ -1,9 +1,11 @@
-/.git
-/.idea
-/.vs
-/.vscode
+/Saved
 /Content
 /DerivedDataCache
+/.git
+/.vscode
 /Intermediate
-/Saved
+/.idea
 /Plugins/Developer/RiderLink/Intermediate
+/Plugins/ElectronicNodes/Intermediate
+/Plugins/UnLua/Content
+/Plugins/UnLua/Intermediate

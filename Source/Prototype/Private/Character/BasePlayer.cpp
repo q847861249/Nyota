@@ -217,7 +217,7 @@ void ABasePlayer::LookInput(const FInputActionValue &Value)
     AddControllerPitchInput(LookVector2D.Y);
 }
 
-void ABasePlayer::WaterBallAttack(const FGameplayTag &ActivateTag)
+void ABasePlayer::WaterBallAttack()
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
     if (!IsValid(ASC))
@@ -231,11 +231,11 @@ void ABasePlayer::WaterBallAttack(const FGameplayTag &ActivateTag)
     }
 
     FGameplayTagContainer Container;
-    Container.AddTag(ActivateTag);
+    Container.AddTag(Nyota::Ability_WaterBall);
     ASC->TryActivateAbilitiesByTag(Container);
 }
 
-void ABasePlayer::GrabSlamAttack(const FGameplayTag &ActivateTag)
+void ABasePlayer::GrabSlamAttack()
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
     if (!IsValid(ASC))
@@ -249,6 +249,6 @@ void ABasePlayer::GrabSlamAttack(const FGameplayTag &ActivateTag)
     }
 
     FGameplayTagContainer Container;
-    Container.AddTag(ActivateTag);
+    Container.AddTag(Nyota::Ability_Grab_Slam);
     ASC->TryActivateAbilitiesByTag(Container);
 }

@@ -37,10 +37,10 @@ protected:
     void LookInput(const FInputActionValue &Value);
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")
-    void WaterBallAttack(const FGameplayTag &ActivateTag);
-    
+    void WaterBallAttack();
+
     UFUNCTION(BlueprintCallable, Category = "Nyota")
-    void GrabSlamAttack(const FGameplayTag &ActivateTag);
+    void GrabSlamAttack();
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Nyota | Input")
     UInputMappingContext *InputMappingContext;
