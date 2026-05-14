@@ -43,6 +43,9 @@ UnLua.EnhancedInput.BindAction(
 )
 
 function BP_Player:OnSkill1Started(ActionValue)
+    local WaterBallTag = UE.FGameplayTag.RequestGameplayTag("Nyota.Ability.WaterBall", true)
+    print("WaterBallTag: " .. WaterBallTag:ToString())
+
     self:WaterBallAttack()
     self:GrabSlamAttack()
 end
