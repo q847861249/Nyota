@@ -2,6 +2,7 @@
 
 #include "Character/BasePlayer.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "AbilitySystemComponent.h"
@@ -63,14 +64,14 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponen
 
 UAbilitySystemComponent *ABasePlayer::GetAbilitySystemComponent() const
 {
-    ABasePlayerState *MyPlayerState = Cast<ABasePlayerState>(GetPlayerState());
-    if (!IsValid(MyPlayerState))
+    ABasePlayerState *BasePlayerState = Cast<ABasePlayerState>(GetPlayerState());
+    if (!IsValid(BasePlayerState))
     {
-        UE_LOG(LogTemp, Warning, TEXT("%s: MyPlayerState Is Null."), *GetNameSafe(this));
+        UE_LOG(LogTemp, Warning, TEXT("%s Is Not Valid."), *GetNameSafe(this));
         return nullptr;
     }
 
-    return MyPlayerState->GetAbilitySystemComponent();
+    return BasePlayerState->GetAbilitySystemComponent();
 }
 
 void ABasePlayer::PossessedBy(AController *NewController)
@@ -250,5 +251,58 @@ void ABasePlayer::GrabSlamAttack()
 
     FGameplayTagContainer Container;
     Container.AddTag(Nyota::Ability_Grab_Slam);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::OnSkill_1_Started()
+{
+    // 水球攻击
+    WaterBallAttack();
+
+    // 抓取砸地攻击
+    GrabSlamAttack();
+}
+
+void ABasePlayer::OnSkill_2_Started()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    if (ASC->HasMatchingGameplayTag(Nyota::Ability_WaterBubble))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_WaterBubble);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::OnSkill_2_Completed()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        GetPlayerState(), Nyota::Event_Ability_WaterBubbleEnd, FGameplayEventData()
+    );
+}
+
+void ABasePlayer::OnSkill_3_Started()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_Grab);
     ASC->TryActivateAbilitiesByTag(Container);
 }

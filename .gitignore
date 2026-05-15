@@ -83,3 +83,6 @@ DerivedDataCache/*
 Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/build
 Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/lib-c
 Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
+
+# Other
+*.code-workspace

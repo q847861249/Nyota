@@ -42,6 +42,18 @@ protected:
     UFUNCTION(BlueprintCallable, Category = "Nyota")
     void GrabSlamAttack();
 
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnSkill_1_Started();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnSkill_2_Started();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnSkill_2_Completed();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnSkill_3_Started();
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Nyota | Input")
     UInputMappingContext *InputMappingContext;
 

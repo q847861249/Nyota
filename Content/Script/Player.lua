@@ -34,20 +34,71 @@ local BP_Player = UnLua.Class()
 
 -- 绑定 Input Action 到 Lua 函数
 UnLua.EnhancedInput.BindAction(
-        BP_Player,
-        "/Game/Input/InputAction/IA_Skill_1.IA_Skill_1",
-        "Started",
-        function(self, ActionValue, A, B)
-            self:OnSkill1Started(ActionValue)
-        end
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_1.IA_Skill_1",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnSkill1Started(ActionValue)
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnSkill2Started(ActionValue)
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnSkill2Started(ActionValue)
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
+    "Completed",
+    function(self, ActionValue, A, B)
+        self:OnSkill2Completed(ActionValue)
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
+    "Canceled",
+    function(self, ActionValue, A, B)
+        self:OnSkill2Completed(ActionValue)
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_Skill_3.IA_Skill_3",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnSkill3Started(ActionValue)
+    end
 )
 
-function BP_Player:OnSkill1Started(ActionValue)
-    local WaterBallTag = UE.FGameplayTag.RequestGameplayTag("Nyota.Ability.WaterBall", true)
-    print("WaterBallTag: " .. WaterBallTag:ToString())
+-- local WaterBallTag = UE.FGameplayTag.RequestGameplayTag("Nyota.Ability.WaterBall", true)
+-- print("WaterBallTag: " .. WaterBallTag:ToString())
 
-    self:WaterBallAttack()
-    self:GrabSlamAttack()
+function BP_Player:OnSkill1Started(ActionValue)
+    self:OnSkill_1_Started()
+end
+
+function BP_Player:OnSkill2Started(ActionValue)
+    self:OnSkill_2_Started()
+end
+
+function BP_Player:OnSkill2Completed(ActionValue)
+    self:OnSkill_2_Completed()
+end
+
+function BP_Player:OnSkill3Started(ActionValue)
+    self:OnSkill_3_Started()
 end
 
 return BP_Player
