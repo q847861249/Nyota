@@ -8,6 +8,9 @@ namespace Nyota
 {
 
 // Ability
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_LightAttack);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_LeftLightAttack);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_RightLightAttack);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivateOnGive);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_WaterBall);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_WaterBubble);

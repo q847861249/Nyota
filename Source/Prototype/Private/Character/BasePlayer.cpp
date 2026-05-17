@@ -254,6 +254,45 @@ void ABasePlayer::GrabSlamAttack()
     ASC->TryActivateAbilitiesByTag(Container);
 }
 
+void ABasePlayer::OnLightAttack_Started()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_LightAttack);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::OnLeftLightAttack_Started()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_LeftLightAttack);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::OnRightLightAttack_Started()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_RightLightAttack);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
 void ABasePlayer::OnSkill_1_Started()
 {
     // 水球攻击

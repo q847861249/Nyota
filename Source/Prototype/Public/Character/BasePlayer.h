@@ -43,6 +43,15 @@ protected:
     void GrabSlamAttack();
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnLightAttack_Started();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnLeftLightAttack_Started();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void OnRightLightAttack_Started();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
     void OnSkill_1_Started();
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")

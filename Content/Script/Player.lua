@@ -35,10 +35,34 @@ local BP_Player = UnLua.Class()
 -- 绑定 Input Action 到 Lua 函数
 UnLua.EnhancedInput.BindAction(
     BP_Player,
+    "/Game/Input/InputAction/IA_LightAttack.IA_LightAttack",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnLightAttack_Started()
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_LeftLightAttack.IA_LeftLightAttack",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnLeftLightAttack_Started()
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
+    "/Game/Input/InputAction/IA_RightLightAttack.IA_RightLightAttack",
+    "Started",
+    function(self, ActionValue, A, B)
+        self:OnRightLightAttack_Started()
+    end
+)
+UnLua.EnhancedInput.BindAction(
+    BP_Player,
     "/Game/Input/InputAction/IA_Skill_1.IA_Skill_1",
     "Started",
     function(self, ActionValue, A, B)
-        self:OnSkill1Started(ActionValue)
+        self:OnSkill_1_Started()
     end
 )
 UnLua.EnhancedInput.BindAction(
@@ -46,15 +70,7 @@ UnLua.EnhancedInput.BindAction(
     "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
     "Started",
     function(self, ActionValue, A, B)
-        self:OnSkill2Started(ActionValue)
-    end
-)
-UnLua.EnhancedInput.BindAction(
-    BP_Player,
-    "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
-    "Started",
-    function(self, ActionValue, A, B)
-        self:OnSkill2Started(ActionValue)
+        self:OnSkill_2_Started()
     end
 )
 UnLua.EnhancedInput.BindAction(
@@ -62,7 +78,7 @@ UnLua.EnhancedInput.BindAction(
     "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
     "Completed",
     function(self, ActionValue, A, B)
-        self:OnSkill2Completed(ActionValue)
+        self:OnSkill_2_Completed()
     end
 )
 UnLua.EnhancedInput.BindAction(
@@ -70,7 +86,7 @@ UnLua.EnhancedInput.BindAction(
     "/Game/Input/InputAction/IA_Skill_2.IA_Skill_2",
     "Canceled",
     function(self, ActionValue, A, B)
-        self:OnSkill2Completed(ActionValue)
+        self:OnSkill_2_Completed()
     end
 )
 UnLua.EnhancedInput.BindAction(
@@ -78,27 +94,11 @@ UnLua.EnhancedInput.BindAction(
     "/Game/Input/InputAction/IA_Skill_3.IA_Skill_3",
     "Started",
     function(self, ActionValue, A, B)
-        self:OnSkill3Started(ActionValue)
+        self:OnSkill_3_Started(ActionValue)
     end
 )
 
 -- local WaterBallTag = UE.FGameplayTag.RequestGameplayTag("Nyota.Ability.WaterBall", true)
 -- print("WaterBallTag: " .. WaterBallTag:ToString())
-
-function BP_Player:OnSkill1Started(ActionValue)
-    self:OnSkill_1_Started()
-end
-
-function BP_Player:OnSkill2Started(ActionValue)
-    self:OnSkill_2_Started()
-end
-
-function BP_Player:OnSkill2Completed(ActionValue)
-    self:OnSkill_2_Completed()
-end
-
-function BP_Player:OnSkill3Started(ActionValue)
-    self:OnSkill_3_Started()
-end
 
 return BP_Player
