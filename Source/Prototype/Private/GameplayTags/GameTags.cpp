@@ -20,6 +20,7 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing, "Nyota.Ability.State.Grabbing")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbing.Slam")
 
 // Event
+UE_DEFINE_GAMEPLAY_TAG(Event_Ability_LightAttack, "Nyota.Event.Ability.LightAttack")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_WaterBubbleEnd, "Nyota.Event.Ability.WaterBubbleEnd")
 
 namespace Events::Enemy

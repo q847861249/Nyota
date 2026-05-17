@@ -22,6 +22,7 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_Slam)
 
 // Event
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_LightAttack)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_WaterBubbleEnd)
 
 namespace Events::Enemy
