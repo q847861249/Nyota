@@ -22,4 +22,15 @@ public:
 
     UFUNCTION(BlueprintPure)
     static FName GetHitDirectionName(const EHitDirection &HitDirection);
+
+    UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
+    static TArray<AActor *> HitBoxOverlapTest(
+        UObject *WorldContextObject, AActor *Instigator, float HitBoxRadius, const FVector &ForwardVector,
+        float HitBoxElevationOffset, bool bDrawDebugs
+    );
+
+    static void DrawDebugInformation(
+        UObject *WorldContextObject, const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation,
+        float HitBoxRadius
+    );
 };
