@@ -21,11 +21,9 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbin
 
 // Event
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_LightAttack, "Nyota.Event.Ability.LightAttack")
+UE_DEFINE_GAMEPLAY_TAG(Event_Ability_ShootWaterBall, "Nyota.Event.Ability.ShootWaterBall")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_WaterBubbleEnd, "Nyota.Event.Ability.WaterBubbleEnd")
+UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_HitReact, "Nyota.Event.Enemy.HitReact")
+UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_BoarLanded, "Nyota.Event.Enemy.BoarLanded")
 
-namespace Events::Enemy
-{
-UE_DEFINE_GAMEPLAY_TAG_COMMENT(HitReact, "GameTags.Events.Enemy.HitReact", "Tag for the Enemy HitReact Event.");
-UE_DEFINE_GAMEPLAY_TAG_COMMENT(BoarLanded, "GameTags.Events.Boar.Landed", "Tag for the Boar Landed Event.");
-} // namespace Events::Enemy
 } // namespace Nyota

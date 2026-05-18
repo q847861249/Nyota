@@ -23,11 +23,9 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_Slam)
 
 // Event
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_LightAttack)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_ShootWaterBall)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_WaterBubbleEnd)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Enemy_HitReact)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Enemy_BoarLanded)
 
-namespace Events::Enemy
-{
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(BoarLanded);
-} // namespace Events::Enemy
 } // namespace Nyota

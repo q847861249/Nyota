@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/GA_WaterBubble.h"
+#include "GA/Player/GA_WaterBubble.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -18,12 +19,11 @@ void UGA_WaterBubble::ActivateAbility(
 
     bIsStopping = false;
 
-    UAbilityTask_PlayMontageAndWait *Task =
+    UAbilityTask_PlayMontageAndWait *PlayMontageTask =
         UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("StartMontage"), StartMontage);
-
-    Task->OnCompleted.AddDynamic(this, &ThisClass::OnMontageCompleted);
-    Task->OnBlendOut.AddDynamic(this, &ThisClass::OnMontageCompleted);
-    Task->ReadyForActivation();
+    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnMontageCompleted);
+    PlayMontageTask->OnBlendOut.AddDynamic(this, &ThisClass::OnMontageCompleted);
+    PlayMontageTask->ReadyForActivation();
 }
 
 void UGA_WaterBubble::OnMontageCompleted()
@@ -83,7 +83,6 @@ void UGA_WaterBubble::SpawnWaterBubble()
     Params.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
 
     ABaseProjectile *WaterBubbleActor = World->SpawnActor<ABaseProjectile>(WaterBubbleClass, SpawnTransform, Params);
-
     WaterBubbleActor->OnProjectileHit.AddDynamic(this, &ThisClass::OnWaterBubbleHit);
 }
 
@@ -128,6 +127,10 @@ void UGA_WaterBubble::OnWaterBubbleHit(const FHitResult &HitResult)
     {
         return;
     }
+
+    FGameplayEventData PayloadData;
+    PayloadData.Instigator = GetAvatarActorFromActorInfo();
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, Nyota::Event_Enemy_HitReact, PayloadData);
 
     FGameplayEffectSpecHandle SpecHandle =
         ASC->MakeOutgoingSpec(HitEffectClass, GetAbilityLevel(), FGameplayEffectContextHandle());

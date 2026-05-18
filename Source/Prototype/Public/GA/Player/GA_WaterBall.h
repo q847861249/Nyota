@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA_BaseSkill.h"
-#include "GA_WaterBubble.generated.h"
+#include "GA/GA_BaseSkill.h"
+#include "GA_WaterBall.generated.h"
 
 class ABaseProjectile;
 /**
  *
  */
 UCLASS()
-class PROTOTYPE_API UGA_WaterBubble : public UGA_BaseSkill
+class PROTOTYPE_API UGA_WaterBall : public UGA_BaseSkill
 {
     GENERATED_BODY()
 
@@ -25,38 +25,23 @@ public:
     void OnMontageCompleted();
 
     UFUNCTION()
-    void OnEndMontageCompleted();
+    void OnWaitGameplayEvent(FGameplayEventData EventData);
+
+    UFUNCTION()
+    void SpawnWaterBall();
 
 protected:
     UFUNCTION()
-    void SpawnWaterBubble();
-
-    UFUNCTION()
-    void OnWaterBubbleEnd(FGameplayEventData EventData);
-
-    UFUNCTION()
-    void OnWaterBubbleHit(const FHitResult &HitResult);
-
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    bool bIsStopping;
+    void OnWaterBallHit(const FHitResult &HitResult);
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TObjectPtr<UAnimMontage> StartMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TObjectPtr<UAnimMontage> LoopMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TObjectPtr<UAnimMontage> EndMontage;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    FTimerHandle TimerHandle;
+    TObjectPtr<UAnimMontage> ShootWaterBallMontage;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     FName FireSockName;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TSubclassOf<ABaseProjectile> WaterBubbleClass;
+    TSubclassOf<ABaseProjectile> WaterBallClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> HitEffectClass;

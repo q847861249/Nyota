@@ -91,9 +91,7 @@ void ABaseEnemyWildBoar::OnBoarLanded(const FHitResult &Hit)
     }
 
     // 发送落地事件，使用 GE 处理伤害
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-        this, Nyota::Events::Enemy::BoarLanded, FGameplayEventData()
-    );
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Enemy_BoarLanded, FGameplayEventData());
 
     // 通知蓝图播放落地特效
     OnLanded_Visual();

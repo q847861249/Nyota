@@ -1,5 +1,3 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "GA/GA_Ability_SpeedBoost.h"
-
+#include "GA/Player/GA_SpeedBoost.h"

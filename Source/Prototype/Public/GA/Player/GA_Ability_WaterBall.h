@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA_BaseSkill.h"
+#include "GA/GA_BaseSkill.h"
 #include "GA_Ability_WaterBall.generated.h"
 
 class UNiagaraSystem;

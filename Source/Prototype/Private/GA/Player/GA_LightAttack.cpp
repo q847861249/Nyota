@@ -131,7 +131,7 @@ void UGA_LightAttack::SendHitReactEventToActor(const TArray<AActor *> &HitActors
         FGameplayEventData PayloadData;
         PayloadData.Instigator = GetAvatarActorFromActorInfo();
 
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, Nyota::Events::Enemy::HitReact, PayloadData);
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(HitActor, Nyota::Event_Enemy_HitReact, PayloadData);
     }
 }
 
