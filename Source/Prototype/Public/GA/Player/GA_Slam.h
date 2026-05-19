@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA_LightAttack.h"
-#include "GA_Grab.generated.h"
+#include "GA/GA_BaseSkill.h"
+#include "GA_Slam.generated.h"
 
-class ABaseEnemyWildBoar;
+class ABaseCharacter;
 /**
  *
  */
 UCLASS()
-class PROTOTYPE_API UGA_Grab : public UGA_BaseSkill
+class PROTOTYPE_API UGA_Slam : public UGA_BaseSkill
 {
     GENERATED_BODY()
 
@@ -22,30 +22,21 @@ public:
     ) override;
 
     UFUNCTION()
-    void OnSlamInputReceived(FGameplayEventData EventData);
+    void OnSlamEventReceived(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnGrabEnd(FGameplayEventData EventData);
+    void OnApplySlamDamage(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnMontageCompleted();
-
-    UFUNCTION()
-    void OnGrabTimeout();
+    void OnSlamEnd();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TObjectPtr<UAnimMontage> GrabMontage;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    float HitBoxRadius;
+    TObjectPtr<UAnimMontage> SlamMontage;
 
     UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    TWeakObjectPtr<ABaseEnemyWildBoar> GrabbedEnemy;
+    TWeakObjectPtr<ABaseCharacter> GrabbedCharacter;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    float ThrownForce;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    FTimerHandle TimerHandle;
+    TSubclassOf<UGameplayEffect> SlamEffect;
 };

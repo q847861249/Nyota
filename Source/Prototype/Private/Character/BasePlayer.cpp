@@ -252,6 +252,9 @@ void ABasePlayer::GrabSlamAttack()
     FGameplayTagContainer Container;
     Container.AddTag(Nyota::Ability_Grab_Slam);
     ASC->TryActivateAbilitiesByTag(Container);
+
+    // 通知 Grab 技能开始 Slam
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Ability_GrabSlam, FGameplayEventData());
 }
 
 void ABasePlayer::OnLightAttack_Started()
