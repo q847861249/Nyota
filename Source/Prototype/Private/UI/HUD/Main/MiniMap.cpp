@@ -2,8 +2,8 @@
 
 
 #include "UI/HUD/Main/MiniMap.h"
-
-
+#include "Camera/PlayerCameraManager.h"
+#include "GameFramework/PlayerController.h"
 
 void UMiniMap::NativeTick(const FGeometry &MyGeometry, float InDeltaTime)
 {
@@ -29,11 +29,24 @@ void UMiniMap::NativeTick(const FGeometry &MyGeometry, float InDeltaTime)
     MinimalMapImage->SetRenderTranslation(NewLocation);
     //Set the pointer rotation depend on player rotation
     FRotator PawnRotate = CachedPlayerPawn->GetActorRotation();
-    PointerImage->SetRenderTransformAngle(PawnRotate.Yaw);
+    PointerImage->SetRenderTransformAngle(PawnRotate.Yaw-90.f);
+
+    // APlayerCameraManager* CameraManager = GetOwningPlayer()->PlayerCameraManager;
+    // if (!CameraManager) return;
+
+    // float CameraYaw = CameraManager->GetCameraRotation().Yaw;
+
+    // // 旋转整张小地图背景
+    // MinimalMapImage->SetRenderTransformAngle(-CameraYaw);
+
+    // // MinimalMapImage->SetRenderTransformAngle(-CameraYaw + 90.0f);
+
+    // // 箭头通常保持固定朝上
+    // PointerImage->SetRenderTransformAngle(0.0f);
 
 }
 void UMiniMap::NativeConstruct()
 {
     Super::NativeConstruct();
-
+    UE_LOG(LogTemp, Warning, TEXT("MiniMap"));
 }
