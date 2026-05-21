@@ -43,6 +43,12 @@ protected:
     void GrabSlamAttack();
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void WaterBubbleAttack();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
+    void VortexGripAttack();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota")
     void OnLightAttack_Started();
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")

@@ -27,8 +27,13 @@ void UGA_Grab::ActivateAbility(
 
     UAbilityTask_WaitGameplayEvent *WaitSlam =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabSlam);
-    WaitSlam->EventReceived.AddDynamic(this, &ThisClass::OnSlamInputReceived);
+    WaitSlam->EventReceived.AddDynamic(this, &ThisClass::OnFollowUpInputReceived);
     WaitSlam->Activate();
+
+    UAbilityTask_WaitGameplayEvent *WaitVortexGrip =
+        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabVortexGrip);
+    WaitVortexGrip->EventReceived.AddDynamic(this, &ThisClass::OnFollowUpInputReceived);
+    WaitVortexGrip->Activate();
 
     UAbilityTask_WaitGameplayEvent *GrabEnd =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabEnd);
@@ -36,7 +41,7 @@ void UGA_Grab::ActivateAbility(
     GrabEnd->Activate();
 }
 
-void UGA_Grab::OnSlamInputReceived(FGameplayEventData EventData)
+void UGA_Grab::OnFollowUpInputReceived(FGameplayEventData EventData)
 {
     FGameplayEventData SlamEventData;
     SlamEventData.Target = GrabbedEnemy.Get();

@@ -257,6 +257,52 @@ void ABasePlayer::GrabSlamAttack()
     UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Ability_GrabSlam, FGameplayEventData());
 }
 
+void ABasePlayer::WaterBubbleAttack()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    if (ASC->HasMatchingGameplayTag(Nyota::Ability_WaterBubble))
+    {
+        return;
+    }
+
+    if (ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_WaterBubble);
+    ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::VortexGripAttack()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    if (!ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_Grab_VortexGrip);
+    ASC->TryActivateAbilitiesByTag(Container);
+
+    // 通知 Grab 技能开始 VortexGrip
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        this, Nyota::Event_Ability_GrabVortexGrip, FGameplayEventData()
+    );
+}
+
 void ABasePlayer::OnLightAttack_Started()
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
@@ -307,20 +353,11 @@ void ABasePlayer::OnSkill_1_Started()
 
 void ABasePlayer::OnSkill_2_Started()
 {
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
+    // 水泡攻击
+    WaterBubbleAttack();
 
-    if (ASC->HasMatchingGameplayTag(Nyota::Ability_WaterBubble))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_WaterBubble);
-    ASC->TryActivateAbilitiesByTag(Container);
+    // 抓取旋风钳攻击
+    VortexGripAttack();
 }
 
 void ABasePlayer::OnSkill_2_Completed()

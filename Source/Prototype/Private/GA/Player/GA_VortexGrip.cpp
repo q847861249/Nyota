@@ -1,40 +1,39 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/Player/GA_Slam.h"
+#include "GA/Player/GA_VortexGrip.h"
 
-#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/BaseCharacter.h"
 #include "GameplayTags/GameTags.h"
 
-void UGA_Slam::ActivateAbility(
+void UGA_VortexGrip::ActivateAbility(
     const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
     const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
 )
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    UAbilityTask_PlayMontageAndWait *PlayMontageTask =
-        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
-    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->Activate();
+    UAbilityTask_PlayMontageAndWait *PlayMontage =
+        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("VortexGrip"), VortexGripMontage);
+    PlayMontage->OnCompleted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->OnInterrupted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->OnCancelled.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->Activate();
 
     UAbilityTask_WaitGameplayEvent *Task =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_HasGrabbedEnemy);
-    Task->EventReceived.AddDynamic(this, &ThisClass::OnSlamEventReceived);
+    Task->EventReceived.AddDynamic(this, &ThisClass::OnEventReceived);
     Task->Activate();
 
-    UAbilityTask_WaitGameplayEvent *ApplySlamDamage =
+    UAbilityTask_WaitGameplayEvent *ApplyDamageEvent =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
-    ApplySlamDamage->EventReceived.AddDynamic(this, &ThisClass::OnApplySlamDamage);
-    ApplySlamDamage->Activate();
+    ApplyDamageEvent->EventReceived.AddDynamic(this, &ThisClass::ApplyDamage);
+    ApplyDamageEvent->Activate();
 }
 
-void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
+void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
 {
     GrabbedCharacter = Cast<ABaseCharacter>(const_cast<AActor *>(EventData.Target.Get()));
     if (GrabbedCharacter.IsValid())
@@ -47,7 +46,7 @@ void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
     }
 }
 
-void UGA_Slam::OnApplySlamDamage(FGameplayEventData EventData)
+void UGA_VortexGrip::ApplyDamage(FGameplayEventData EventData)
 {
     if (!GrabbedCharacter.IsValid())
     {
@@ -61,11 +60,11 @@ void UGA_Slam::OnApplySlamDamage(FGameplayEventData EventData)
 
     UAbilitySystemComponent *ASC = GetAbilitySystemComponentFromActorInfo();
     FGameplayEffectSpecHandle SpecHandle =
-        ASC->MakeOutgoingSpec(SlamEffect, EventData.EventMagnitude, FGameplayEffectContextHandle());
+        ASC->MakeOutgoingSpec(VortexGripEffect, EventData.EventMagnitude, FGameplayEffectContextHandle());
     ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GrabbedCharacter->GetAbilitySystemComponent());
 }
 
-void UGA_Slam::OnSlamEnd()
+void UGA_VortexGrip::OnAbilityEnd()
 {
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
