@@ -29,7 +29,7 @@ void UMiniMap::NativeTick(const FGeometry &MyGeometry, float InDeltaTime)
     MinimalMapImage->SetRenderTranslation(NewLocation);
     //Set the pointer rotation depend on player rotation
     FRotator PawnRotate = CachedPlayerPawn->GetActorRotation();
-    PointerImage->SetRenderTransformAngle(PawnRotate.Yaw-90.f);
+    PointerImage->SetRenderTransformAngle(PawnRotate.Yaw);
 
     // APlayerCameraManager* CameraManager = GetOwningPlayer()->PlayerCameraManager;
     // if (!CameraManager) return;
