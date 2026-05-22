@@ -25,13 +25,22 @@ public:
     void OnFollowUpInputReceived(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnGrabEnd(FGameplayEventData EventData);
-
-    UFUNCTION()
     void OnMontageCompleted();
 
     UFUNCTION()
+    void OnGrabEnd(FGameplayEventData EventData);
+
+    UFUNCTION()
     void OnGrabTimeout();
+
+    UFUNCTION()
+    void OnStartGrabTrace(FGameplayEventData EventData);
+
+    UFUNCTION()
+    void OnStopGrabTrace(FGameplayEventData EventData);
+
+    UFUNCTION()
+    void PerformGrabTrace();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
@@ -40,12 +49,31 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float HitBoxRadius;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    TWeakObjectPtr<ABaseEnemyWildBoar> GrabbedEnemy;
-
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float ThrownForce;
 
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float GrabTimerRate = 5.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float GrabTraceRadius = 15.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float GrabTraceRate = 0.01;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    FName LeftHandSocketName;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    FName RightHandSocketName;
+
+    TWeakObjectPtr<ABaseEnemyWildBoar> GrabbedEnemy;
+
     FTimerHandle TimerHandle;
+
+    FVector PrevLeftHandLocation;
+
+    FVector PrevRightHandLocation;
+
+    FTimerHandle GrabTraceTimerHandle;
 };

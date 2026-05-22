@@ -25,6 +25,8 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_VortexGrip, "Nyota.Ability.State.G
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_LightAttack, "Nyota.Event.Ability.LightAttack")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_ShootWaterBall, "Nyota.Event.Ability.ShootWaterBall")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_WaterBubbleEnd, "Nyota.Event.Ability.WaterBubbleEnd")
+UE_DEFINE_GAMEPLAY_TAG(Event_Ability_StartGrabTrace, "Nyota.Event.Ability.StartGrabTrace")
+UE_DEFINE_GAMEPLAY_TAG(Event_Ability_StopGrabTrace, "Nyota.Event.Ability.StopGrabTrace")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_GrabEnd, "Nyota.Event.Ability.GrabEnd")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_GrabSlam, "Nyota.Event.Ability.GrabSlam")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_GrabVortexGrip, "Nyota.Event.Ability.GrabVortexGrip")

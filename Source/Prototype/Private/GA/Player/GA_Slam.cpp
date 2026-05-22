@@ -16,22 +16,15 @@ void UGA_Slam::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    UAbilityTask_PlayMontageAndWait *PlayMontageTask =
-        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
-    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnSlamEnd);
-    PlayMontageTask->Activate();
-
     UAbilityTask_WaitGameplayEvent *Task =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_HasGrabbedEnemy);
     Task->EventReceived.AddDynamic(this, &ThisClass::OnSlamEventReceived);
-    Task->Activate();
+    Task->ReadyForActivation();
 
     UAbilityTask_WaitGameplayEvent *ApplySlamDamage =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
     ApplySlamDamage->EventReceived.AddDynamic(this, &ThisClass::OnApplySlamDamage);
-    ApplySlamDamage->Activate();
+    ApplySlamDamage->ReadyForActivation();
 }
 
 void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
@@ -40,6 +33,13 @@ void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
     if (GrabbedCharacter.IsValid())
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *GrabbedCharacter->GetName());
+
+        UAbilityTask_PlayMontageAndWait *PlayMontageTask =
+            UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
+        PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);
+        PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnSlamEnd);
+        PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnSlamEnd);
+        PlayMontageTask->ReadyForActivation();
     }
     else
     {

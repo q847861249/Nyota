@@ -94,7 +94,7 @@ TArray<AActor *> UBlueprintUtilsLibrary::HitBoxOverlapTest(
     UWorld *World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
     if (!IsValid(World))
     {
-        return TArray<AActor *>();
+        return {};
     }
 
     // ==============================
@@ -135,13 +135,10 @@ TArray<AActor *> UBlueprintUtilsLibrary::HitBoxOverlapTest(
     // 4. 计算 HitBox 位置（角色前方）
     // ==============================
 
-    // 获取角色前方向，并乘以前移距离，如果未设置使用默认获取到的值
-    const FVector Forward = ForwardVector;
-
     // 最终 HitBox 位置：
     // 角色位置 + 前移 + 高度偏移
     const FVector ElevationOffset = FVector(0.0f, 0.0f, HitBoxElevationOffset);
-    const FVector HitBoxLocation = Instigator->GetActorLocation() + Forward + ElevationOffset;
+    const FVector HitBoxLocation = Instigator->GetActorLocation() + ForwardVector + ElevationOffset;
 
     // ==============================
     // 5. 执行 Overlap 检测
@@ -213,4 +210,77 @@ void UBlueprintUtilsLibrary::DrawDebugInformation(
         // 在 Actor 位置画球
         DrawDebugSphere(World, ActorLocation, 30.f, 10, FColor::Green, false, 3.f);
     }
+}
+
+TArray<FHitResult> UBlueprintUtilsLibrary::SocketSweepTest(
+    UObject *WorldContextObject, AActor *Instigator, const FVector &Start, const FVector &End, float Radius,
+    bool bDrawDebugs
+)
+{
+    UWorld *World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
+
+    if (!IsValid(World))
+    {
+        return {};
+    }
+
+    //--------------------------------
+    // Query Params
+    //--------------------------------
+
+    FCollisionQueryParams QueryParams;
+    QueryParams.AddIgnoredActor(Instigator);
+
+    //--------------------------------
+    // Response Params
+    //--------------------------------
+
+    FCollisionResponseParams ResponseParams;
+
+    // 默认忽略所有碰撞通道
+    ResponseParams.CollisionResponse.SetAllChannels(ECR_Ignore);
+
+    // 只检测 Pawn（角色）
+    ResponseParams.CollisionResponse.SetResponse(ECC_Pawn, ECR_Block);
+
+    //--------------------------------
+    // Collision Shape
+    //--------------------------------
+
+    FCollisionShape Shape = FCollisionShape::MakeSphere(Radius);
+
+    //--------------------------------
+    // Hit Results
+    //--------------------------------
+
+    TArray<FHitResult> Hits;
+
+    World->SweepMultiByChannel(Hits, Start, End, FQuat::Identity, ECC_Visibility, Shape, QueryParams, ResponseParams);
+
+    //--------------------------------
+    // Debug
+    //--------------------------------
+
+    if (bDrawDebugs)
+    {
+        FVector Center = (Start + End) * 0.5f;
+
+        float HalfHeight = FVector::Distance(Start, End) * 0.5f;
+
+        FQuat Rotation = FRotationMatrix::MakeFromX(End - Start).ToQuat();
+
+        DrawDebugCapsule(World, Center, HalfHeight, Radius, Rotation, FColor::Red, false, 1.f);
+
+        for (const FHitResult &Hit : Hits)
+        {
+            DrawDebugSphere(World, Hit.ImpactPoint, 12.f, 8, FColor::Green, false, 1.f);
+
+            if (Hit.GetActor())
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *Hit.GetActor()->GetName());
+            }
+        }
+    }
+
+    return Hits;
 }

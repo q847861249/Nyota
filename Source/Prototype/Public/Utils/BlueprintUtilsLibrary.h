@@ -33,4 +33,10 @@ public:
         UObject *WorldContextObject, const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation,
         float HitBoxRadius
     );
+
+    UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
+    static TArray<FHitResult> SocketSweepTest(
+        UObject *WorldContextObject, AActor *Instigator, const FVector &Start, const FVector &End, float Radius,
+        bool bDrawDebugs
+    );
 };

@@ -15,22 +15,15 @@ void UGA_VortexGrip::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    UAbilityTask_PlayMontageAndWait *PlayMontage =
-        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("VortexGrip"), VortexGripMontage);
-    PlayMontage->OnCompleted.AddDynamic(this, &ThisClass::OnAbilityEnd);
-    PlayMontage->OnInterrupted.AddDynamic(this, &ThisClass::OnAbilityEnd);
-    PlayMontage->OnCancelled.AddDynamic(this, &ThisClass::OnAbilityEnd);
-    PlayMontage->Activate();
-
     UAbilityTask_WaitGameplayEvent *Task =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_HasGrabbedEnemy);
     Task->EventReceived.AddDynamic(this, &ThisClass::OnEventReceived);
-    Task->Activate();
+    Task->ReadyForActivation();
 
     UAbilityTask_WaitGameplayEvent *ApplyDamageEvent =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
     ApplyDamageEvent->EventReceived.AddDynamic(this, &ThisClass::ApplyDamage);
-    ApplyDamageEvent->Activate();
+    ApplyDamageEvent->ReadyForActivation();
 }
 
 void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
@@ -39,6 +32,14 @@ void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
     if (GrabbedCharacter.IsValid())
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *GrabbedCharacter->GetName());
+
+        UAbilityTask_PlayMontageAndWait *PlayMontage = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
+            this, FName("VortexGrip"), VortexGripMontage
+        );
+        PlayMontage->OnCompleted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+        PlayMontage->OnInterrupted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+        PlayMontage->OnCancelled.AddDynamic(this, &ThisClass::OnAbilityEnd);
+        PlayMontage->ReadyForActivation();
     }
     else
     {
