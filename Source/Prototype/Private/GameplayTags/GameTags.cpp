@@ -15,6 +15,7 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_WaterBubble, "Nyota.Ability.WaterBubble");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab, "Nyota.Ability.Grab");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
+// UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Primary, "Nyota.Ability.Grab.Primary");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing, "Nyota.Ability.State.Grabbing")
