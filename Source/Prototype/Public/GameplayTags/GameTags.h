@@ -25,6 +25,8 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_Slam)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_VortexGrip)
 
 // Event
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_AttackStart)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_AttackEnd)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_LightAttack)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_ShootWaterBall)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_WaterBubbleEnd)

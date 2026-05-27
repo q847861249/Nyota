@@ -177,7 +177,7 @@ void UGA_Grab::PerformGrabTrace()
     //--------------------------------
 
     TArray<FHitResult> LeftHandHitResults = UBlueprintUtilsLibrary::SocketSweepTest(
-        GetWorld(), Player, PrevLeftHandLocation, CurrentLeftHandLocation, GrabTraceRadius, bDrawDebugs
+        GetWorld(), Player, PrevLeftHandLocation, CurrentLeftHandLocation, GrabTraceRadius, {Player}, bDrawDebugs
     );
 
     //--------------------------------
@@ -185,7 +185,7 @@ void UGA_Grab::PerformGrabTrace()
     //--------------------------------
 
     TArray<FHitResult> RightHandHitResults = UBlueprintUtilsLibrary::SocketSweepTest(
-        GetWorld(), Player, PrevRightHandLocation, CurrentRightHandLocation, GrabTraceRadius, bDrawDebugs
+        GetWorld(), Player, PrevRightHandLocation, CurrentRightHandLocation, GrabTraceRadius, {Player}, bDrawDebugs
     );
 
     // 没有抓到敌人

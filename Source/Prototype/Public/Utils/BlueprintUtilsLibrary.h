@@ -37,6 +37,6 @@ public:
     UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"))
     static TArray<FHitResult> SocketSweepTest(
         UObject *WorldContextObject, AActor *Instigator, const FVector &Start, const FVector &End, float Radius,
-        bool bDrawDebugs
+        const TArray<AActor *> &InIgnoreActors, bool bDrawDebugs
     );
 };

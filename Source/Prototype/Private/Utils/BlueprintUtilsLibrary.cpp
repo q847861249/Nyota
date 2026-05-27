@@ -214,7 +214,7 @@ void UBlueprintUtilsLibrary::DrawDebugInformation(
 
 TArray<FHitResult> UBlueprintUtilsLibrary::SocketSweepTest(
     UObject *WorldContextObject, AActor *Instigator, const FVector &Start, const FVector &End, float Radius,
-    bool bDrawDebugs
+    const TArray<AActor *> &InIgnoreActors, bool bDrawDebugs
 )
 {
     UWorld *World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull);
@@ -230,6 +230,7 @@ TArray<FHitResult> UBlueprintUtilsLibrary::SocketSweepTest(
 
     FCollisionQueryParams QueryParams;
     QueryParams.AddIgnoredActor(Instigator);
+    QueryParams.AddIgnoredActors(InIgnoreActors);
 
     //--------------------------------
     // Response Params

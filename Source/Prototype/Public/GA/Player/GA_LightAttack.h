@@ -33,7 +33,19 @@ public:
     void OnMontageCompleted();
 
     UFUNCTION()
-    void OnLightAttack(FGameplayEventData EventData);
+    void ApplyDamage(const TArray<AActor *> &DamageActors);
+
+    UFUNCTION()
+    void OnAttackEnd(FGameplayEventData EventData);
+
+    UFUNCTION()
+    void OnStartLightAttackTrace(FGameplayEventData EventData);
+
+    UFUNCTION()
+    void OnStopLightAttackTrace();
+
+    UFUNCTION()
+    void PerformLightAttackTrace();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
@@ -41,6 +53,27 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
     TSubclassOf<UGameplayEffect> DamageEffect;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
+    FName LeftHandSocketName;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
+    FName RightHandSocketName;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
+    float TraceRadius = 15.f;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")
+    float TraceRate = 0.01f;
+
+    UPROPERTY()
+    TArray<AActor *> HitActors;
+
+    FVector PrevLeftHandLocation;
+
+    FVector PrevRightHandLocation;
+
+    FTimerHandle TraceTimerHandle;
 
 private:
     void DrawDebugInformation(const TArray<FOverlapResult> &OverlapResults, const FVector &HitBoxLocation) const;
