@@ -21,10 +21,7 @@ public:
     ) override;
 
     UFUNCTION(BlueprintCallable, Category = "Nyota | OverlapTest")
-    TArray<AActor *> HitBoxOverlapTest();
-
-    UFUNCTION(BlueprintCallable, Category = "Nyota | OverlapTest")
-    void SendHitReactEventToActor(const TArray<AActor *> &HitActors);
+    void SendHitReactEventToActor(const TArray<AActor *> &HitActorList);
 
     UFUNCTION(BlueprintCallable, Category = "Nyota | OverlapTest")
     void SetLookAtEnemyRotation(AActor *LookAtActor) const;
@@ -39,13 +36,13 @@ public:
     void OnAttackEnd(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnStartLightAttackTrace(FGameplayEventData EventData);
+    virtual void OnStartLightAttackTrace(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnStopLightAttackTrace();
+    virtual void OnStopLightAttackTrace();
 
     UFUNCTION()
-    void PerformLightAttackTrace();
+    virtual void PerformLightAttackTrace();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | OverlapTest")

@@ -22,11 +22,11 @@ public:
     ABasePlayerState();
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
-    
-    UAttributeSet* GetAttributeSet() const;
+
+    UAttributeSet *GetAttributeSet() const;
 
 private:
-    UPROPERTY(VisibleAnywhere, Category = "Crash|Abilities")
+    UPROPERTY(VisibleAnywhere, Category = "Nyota | Abilities")
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
     UPROPERTY()

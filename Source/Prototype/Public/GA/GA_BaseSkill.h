@@ -22,11 +22,11 @@ public:
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
     ) override;
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Crash | Debug")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota | Debug")
     bool bDrawDebugs = false;
 
 protected:
-    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "OverlapTest")
+    UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Nyota | OverlapTest")
     FVector GetAbilityDetectionDirection() const;
 
     virtual FVector GetAbilityDetectionDirection_Implementation() const;
