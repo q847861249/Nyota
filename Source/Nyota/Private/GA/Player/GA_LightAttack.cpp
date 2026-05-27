@@ -8,6 +8,7 @@
 #include "Engine/OverlapResult.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Character/BasePlayer.h"
+#include "Character/BaseCharacter.h"
 #include "GameplayTags/GameTags.h"
 #include "AbilitySystemComponent.h"
 #include "Utils/BlueprintUtilsLibrary.h"
@@ -103,7 +104,7 @@ void UGA_LightAttack::ApplyDamage(const TArray<AActor *> &DamageActors)
 }
 
 void UGA_LightAttack::OnAttackEnd(FGameplayEventData EventData)
-{
+{    
     OnStopLightAttackTrace();
 
     ApplyDamage(HitActors);
@@ -114,14 +115,15 @@ void UGA_LightAttack::OnAttackEnd(FGameplayEventData EventData)
 
 void UGA_LightAttack::OnStartLightAttackTrace(FGameplayEventData EventData)
 {
-    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+    // ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+    ABaseCharacter* Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
 
-    if (!IsValid(Player))
+    if (!IsValid(Owner))
     {
         return;
     }
 
-    USkeletalMeshComponent *Mesh = Player->GetMesh();
+    USkeletalMeshComponent *Mesh = Owner->GetMesh();
 
     if (!IsValid(Mesh))
     {
@@ -161,13 +163,14 @@ void UGA_LightAttack::OnStopLightAttackTrace()
 
 void UGA_LightAttack::PerformLightAttackTrace()
 {
-    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-    if (!IsValid(Player))
+    // ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+    ABaseCharacter* Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
+    if (!IsValid(Owner))
     {
         return;
     }
 
-    USkeletalMeshComponent *Mesh = Player->GetMesh();
+    USkeletalMeshComponent *Mesh = Owner->GetMesh();
     if (!IsValid(Mesh))
     {
         return;
@@ -194,7 +197,7 @@ void UGA_LightAttack::PerformLightAttackTrace()
     if (!LeftHandSocketName.IsNone())
     {
         LeftHandHitResults = UBlueprintUtilsLibrary::SocketSweepTest(
-            World, Player, PrevLeftHandLocation, CurrentLeftHandLocation, TraceRadius, HitActors, bDrawDebugs
+            World, Owner, PrevLeftHandLocation, CurrentLeftHandLocation, TraceRadius, HitActors, bDrawDebugs
         );
     }
 
@@ -206,7 +209,7 @@ void UGA_LightAttack::PerformLightAttackTrace()
     if (!RightHandSocketName.IsNone())
     {
         RightHandHitResults = UBlueprintUtilsLibrary::SocketSweepTest(
-            World, Player, PrevRightHandLocation, CurrentRightHandLocation, TraceRadius, HitActors, bDrawDebugs
+            World, Owner, PrevRightHandLocation, CurrentRightHandLocation, TraceRadius, HitActors, bDrawDebugs
         );
     }
 
@@ -230,7 +233,7 @@ void UGA_LightAttack::PerformLightAttackTrace()
             continue;
         }
 
-        HitActors.Add(Result.GetActor());
+        HitActors.AddUnique(Result.GetActor());
     }
 
     for (const FHitResult &Result : RightHandHitResults)
@@ -240,7 +243,7 @@ void UGA_LightAttack::PerformLightAttackTrace()
             continue;
         }
 
-        HitActors.Add(Result.GetActor());
+        HitActors.AddUnique(Result.GetActor());
     }
 
     //--------------------------------
