@@ -15,12 +15,13 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_WaterBubble, "Nyota.Ability.WaterBubble");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab, "Nyota.Ability.Grab");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
-// UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Primary, "Nyota.Ability.Grab.Primary");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing, "Nyota.Ability.State.Grabbing")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbing.Slam")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_VortexGrip, "Nyota.Ability.State.Grabbing.VortexGrip")
+
+UE_DEFINE_GAMEPLAY_TAG(Ability_init, "Nyota.Ability.init")
 
 // Event
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_AttackStart, "Nyota.Event.Ability.AttackStart")
@@ -37,5 +38,6 @@ UE_DEFINE_GAMEPLAY_TAG(Event_Ability_ApplyDamage, "Nyota.Event.Ability.ApplyDama
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_HasGrabbedEnemy, "Nyota.Event.Ability.HasGrabbedEnemy")
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_HitReact, "Nyota.Event.Enemy.HitReact")
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_BoarLanded, "Nyota.Event.Enemy.BoarLanded")
+UE_DEFINE_GAMEPLAY_TAG(Event_Item_PickUp, "Nyota.Event.Item.PickUp")
 
 } // namespace Nyota

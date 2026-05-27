@@ -3,7 +3,10 @@
 #include "Character/BaseCharacter.h"
 
 #include "AbilitySystemComponent.h"
-
+#include "AbilitySystemComponent.h"
+#include "Abilities/GameplayAbility.h"
+#include "GameplayTagContainer.h"
+#include "GameplayTags/GameTags.h"
 ABaseCharacter::ABaseCharacter()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -31,15 +34,30 @@ void ABaseCharacter::SetAlive(bool bAliveStatus)
 
 void ABaseCharacter::GiveDefaultAbility()
 {
-    if (!IsValid(GetAbilitySystemComponent()))
+    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+
+    if (!IsValid(ASC))
     {
         return;
     }
 
+    // if (!IsValid(GetAbilitySystemComponent()))
+    // {
+    //     return;
+    // }
+
     for (const auto &Ability : GAClass)
     {
         FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
-        GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+        ASC->GiveAbility(AbilitySpec);
+
+        //判断技能是否有init标签，有的直接激活
+        const UGameplayAbility* AbilityObj = Ability->GetDefaultObject<UGameplayAbility>();
+
+        if (AbilityObj && AbilityObj->AbilityTags.HasTagExact(Nyota::Ability_init))
+        {
+            ASC->TryActivateAbility(AbilitySpec.Handle);
+        }
     }
 }
 

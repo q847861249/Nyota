@@ -40,6 +40,12 @@ public:
 
     UFUNCTION()
     void OnRep_MaxMana(const FGameplayAttributeData &OldValue);
+
+    UFUNCTION()
+    void OnRep_Coin(const FGameplayAttributeData &OldValue);
+
+    UFUNCTION()
+    void OnRep_MaxCoin(const FGameplayAttributeData &OldValue);
     
     UFUNCTION()
     void OnRep_AttributesInitialized();
@@ -59,6 +65,14 @@ public:
     UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana)
     FGameplayAttributeData MaxMana;
     ATTRIBUTE_ACCESSORS(ThisClass, MaxMana);
+
+    UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Coin)
+    FGameplayAttributeData Coin;
+    ATTRIBUTE_ACCESSORS(ThisClass, Coin);
+
+    UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxCoin)
+    FGameplayAttributeData MaxCoin;
+    ATTRIBUTE_ACCESSORS(ThisClass, MaxCoin);
     
     UPROPERTY(ReplicatedUsing = OnRep_AttributesInitialized)
     bool bAttributesInitialized = false;

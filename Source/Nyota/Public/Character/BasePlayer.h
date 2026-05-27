@@ -31,6 +31,8 @@ public:
 
     virtual void Tick(float DeltaSeconds) override;
 
+    virtual void BeginPlay() override;
+
 protected:
     void MoveInput(const FInputActionValue &Value);
 
@@ -68,6 +70,12 @@ protected:
 
     UFUNCTION(BlueprintCallable, Category = "Nyota")
     void OnSkill_3_Started();
+
+
+    /**玩家角色的捕获体触发碰撞后执行 */
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult);
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Nyota | Input")
     UInputMappingContext *InputMappingContext;

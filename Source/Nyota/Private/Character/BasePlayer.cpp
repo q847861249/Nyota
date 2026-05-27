@@ -9,6 +9,8 @@
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Character/BasePlayerState.h"
 #include "GameplayTags/GameTags.h"
+#include "Components/CapsuleComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
@@ -146,6 +148,15 @@ void ABasePlayer::Tick(float DeltaSeconds)
     FRotator NewRotation =
         FMath::RInterpTo(CurrentRotation, FRotator(0, TargetYaw, 0), DeltaSeconds, RotationInterpSpeed);
     SetActorRotation(NewRotation);
+}
+
+void ABasePlayer::BeginPlay()
+{
+    Super::BeginPlay();
+    if (GetCapsuleComponent())
+    {
+        GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ABasePlayer::OnOverlapBegin);
+    }
 }
 
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
@@ -384,4 +395,18 @@ void ABasePlayer::OnSkill_3_Started()
     FGameplayTagContainer Container;
     Container.AddTag(Nyota::Ability_Grab);
     ASC->TryActivateAbilitiesByTag(Container);
+}
+
+void ABasePlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
+    int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+{
+    // Check if the actor has specific tag
+    if (OtherActor && OtherActor->ActorHasTag(FName("Coin")))
+    {
+        FGameplayEventData Payload;
+        Payload.Instigator = this;
+        Payload.Target = OtherActor;
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Event_Item_PickUp,Payload);
+    }
+    
 }
