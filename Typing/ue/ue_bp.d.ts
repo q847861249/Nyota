@@ -20,7 +20,7 @@ declare module "ue" {
     }
 
 // __TYPE_DECL_END
-// __TYPE_DECL_START: E470AF2745A901563283E2A11609DD3E
+// __TYPE_DECL_START: F340BA664EA3F9B4C76AC3829ED5F228
     namespace Game.Blueprints.Common.GameplayEffect.GE_InitializeAttributes {
         class GE_InitializeAttributes_C extends UE.GameplayEffect {
             constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
@@ -92,7 +92,7 @@ declare module "ue" {
     }
 
 // __TYPE_DECL_END
-// __TYPE_DECL_START: 2C46C531432BC741A2E7A097B9DEAA96
+// __TYPE_DECL_START: 71C154454187A487D550CEB1EDC422C1
     namespace Game.Blueprints.Player.GA.BPGA_LightAttack {
         class BPGA_LightAttack_C extends UE.GA_LightAttack {
             constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
@@ -683,6 +683,7 @@ declare module "ue" {
         class BP_TestPuerTS_C extends UE.Actor {
             constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
             DefaultSceneRoot: UE.SceneComponent;
+            ReceiveBeginPlay() : void;
             static StaticClass(): Class;
             static Find(OrigInName: string, Outer?: Object): BP_TestPuerTS_C;
             static Load(InName: string): BP_TestPuerTS_C;
@@ -5195,7 +5196,7 @@ declare module "ue" {
     }
 
 // __TYPE_DECL_END
-// __TYPE_DECL_START: B7ABD78F422B8886C42870A70D4E8978
+// __TYPE_DECL_START: 58AAF7D7432EFE6874A78FB24D22DF91
     namespace Game.Blueprints.BP_NyotaGameInstance {
         class BP_NyotaGameInstance_C extends UE.NyotaGameInstance {
             constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
@@ -12439,6 +12440,93 @@ declare module "ue" {
             static Load(InName: string): WidgetLibrary_OnGameWindowCloseButtonClickedDelegate__PythonCallable;
         
             __tid_WidgetLibrary_OnGameWindowCloseButtonClickedDelegate__PythonCallable_0__: boolean;
+        }
+        
+    }
+
+// __TYPE_DECL_END
+// __TYPE_DECL_START: ASSOCIATION
+    namespace Engine.PythonTypes {
+        class OnCoinDestroy__PythonCallable extends UE.PythonCallableForDelegate {
+            constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+            static StaticClass(): Class;
+            static Find(OrigInName: string, Outer?: Object): OnCoinDestroy__PythonCallable;
+            static Load(InName: string): OnCoinDestroy__PythonCallable;
+        
+            __tid_OnCoinDestroy__PythonCallable_0__: boolean;
+        }
+        
+    }
+
+// __TYPE_DECL_END
+// __TYPE_DECL_START: 99C89B9F4DC2871DC948F89E9E8817C3
+    namespace Game.Blueprints.Common.Actor.BP_Coin {
+        class BP_Coin_C extends UE.Coin {
+            constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+            Capsule: UE.CapsuleComponent;
+            StaticMesh: UE.StaticMeshComponent;
+            static StaticClass(): Class;
+            static Find(OrigInName: string, Outer?: Object): BP_Coin_C;
+            static Load(InName: string): BP_Coin_C;
+        
+            __tid_BP_Coin_C_0__: boolean;
+        }
+        
+    }
+
+// __TYPE_DECL_END
+// __TYPE_DECL_START: D06E56414F8DB1487B17C99956F74A5B
+    namespace Game.Blueprints.Common.Actor.BP_CoinManager {
+        class BP_CoinManager_C extends UE.CoinManager {
+            constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+            DefaultSceneRoot: UE.SceneComponent;
+            static StaticClass(): Class;
+            static Find(OrigInName: string, Outer?: Object): BP_CoinManager_C;
+            static Load(InName: string): BP_CoinManager_C;
+        
+            __tid_BP_CoinManager_C_0__: boolean;
+        }
+        
+    }
+
+// __TYPE_DECL_END
+// __TYPE_DECL_START: 608949FB4774625A2842EEA0B110566C
+    namespace Game.Blueprints.Player.GA.BPGA_PickUp {
+        class BPGA_PickUp_C extends UE.GA_PickUp {
+            constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+            UberGraphFrame: UE.PointerToUberGraphFrame;
+            EventReceived_40698E3544B62A18C368548EC9633198(Payload: UE.GameplayEventData) : void;
+            ExecuteUbergraph_BPGA_PickUp(EntryPoint: number) : void;
+            /*
+             *The main function that defines what an ability does.
+             * -Child classes will want to override this
+             * -This function graph should call CommitAbility
+             * -This function graph should call EndAbility
+             *
+             * Latent_async actions are ok in this graph. Note that Commit and EndAbility calling requirements speak to the K2_ActivateAbility graph.
+             * In C++, the call to K2_ActivateAbility() may return without CommitAbility or EndAbility having been called. But it is expected that this
+             * will only occur when latent_async actions are pending. When K2_ActivateAbility logically finishes, then we will expect Commit_End to have been called.
+             */
+            K2_ActivateAbility() : void;
+            static StaticClass(): Class;
+            static Find(OrigInName: string, Outer?: Object): BPGA_PickUp_C;
+            static Load(InName: string): BPGA_PickUp_C;
+        
+            __tid_BPGA_PickUp_C_0__: boolean;
+        }
+        
+    }
+
+// __TYPE_DECL_END
+// __TYPE_DECL_START: B9E5EF1E4166F49CC70A71B143A0C01C
+    namespace Game.Blueprints.Common.GameplayEffect.GE_Coin {
+        class GE_Coin_C extends UE.GameplayEffect {
+            constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+            static StaticClass(): Class;
+            static Find(OrigInName: string, Outer?: Object): GE_Coin_C;
+            static Load(InName: string): GE_Coin_C;
+        
+            __tid_GE_Coin_C_0__: boolean;
         }
         
     }

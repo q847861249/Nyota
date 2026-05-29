@@ -59486,11 +59486,15 @@ declare module "ue" {
         MaxHealth: UE.GameplayAttributeData;
         Mana: UE.GameplayAttributeData;
         MaxMana: UE.GameplayAttributeData;
+        Coin: UE.GameplayAttributeData;
+        MaxCoin: UE.GameplayAttributeData;
         bAttributesInitialized: boolean;
         OnAttributesInitialized: $MulticastDelegate<() => void>;
         OnRep_AttributesInitialized() : void;
+        OnRep_Coin(OldValue: UE.GameplayAttributeData) : void;
         OnRep_Health(OldValue: UE.GameplayAttributeData) : void;
         OnRep_Mana(OldValue: UE.GameplayAttributeData) : void;
+        OnRep_MaxCoin(OldValue: UE.GameplayAttributeData) : void;
         OnRep_MaxHealth(OldValue: UE.GameplayAttributeData) : void;
         OnRep_MaxMana(OldValue: UE.GameplayAttributeData) : void;
         static StaticClass(): Class;
@@ -60187,6 +60191,10 @@ declare module "ue" {
         GrabSlamAttack() : void;
         OnLeftLightAttack_Started() : void;
         OnLightAttack_Started() : void;
+        /*
+         *玩家角色的捕获体触发碰撞后执行
+         */
+        OnOverlapBegin(OverlappedComponent: $Nullable<UE.PrimitiveComponent>, OtherActor: $Nullable<UE.Actor>, OtherComp: $Nullable<UE.PrimitiveComponent>, OtherBodyIndex: number, bFromSweep: boolean, SweepResult: UE.HitResult) : void;
         OnRightLightAttack_Started() : void;
         OnSkill_1_Started() : void;
         OnSkill_2_Completed() : void;
@@ -64012,6 +64020,57 @@ declare module "ue" {
         __tid_BoxToMeshDataflowNode_0__: boolean;
     }
     
+    class Coin extends UE.Actor {
+        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+        LifeTime: number;
+        static StaticClass(): Class;
+        static Find(OrigInName: string, Outer?: Object): Coin;
+        static Load(InName: string): Coin;
+    
+        __tid_Coin_0__: boolean;
+    }
+    
+    class CoinManager extends UE.Actor {
+        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+        MaxCount: number;
+        SpawnRate: number;
+        SpawnRadius: number;
+        CoinClass: UE.Class;
+        OnCoinDestroy() : void;
+        static StaticClass(): Class;
+        static Find(OrigInName: string, Outer?: Object): CoinManager;
+        static Load(InName: string): CoinManager;
+    
+        __tid_CoinManager_0__: boolean;
+    }
+    
+    class DataTableRowHandle {
+        constructor();
+        constructor(DataTable: UE.DataTable, RowName: string);
+        DataTable: UE.DataTable;
+        RowName: string;
+        /**
+         * @deprecated use StaticStruct instead.
+         */
+        static StaticClass(): ScriptStruct;
+        static StaticStruct(): ScriptStruct;
+        __tid_DataTableRowHandle_0__: boolean;
+    }
+    
+    class CommonUIInputData extends UE.Object {
+        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+        DefaultClickAction: UE.DataTableRowHandle;
+        DefaultBackAction: UE.DataTableRowHandle;
+        DefaultHoldData: TSoftClassPtr<UE.CommonUIHoldData>;
+        EnhancedInputClickAction: UE.InputAction;
+        EnhancedInputBackAction: UE.InputAction;
+        static StaticClass(): Class;
+        static Find(OrigInName: string, Outer?: Object): CommonUIInputData;
+        static Load(InName: string): CommonUIInputData;
+    
+        __tid_CommonUIInputData_0__: boolean;
+    }
+    
     class EnemyController extends UE.AIController {
         constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
         BehaviorTreeAsset: UE.BehaviorTree;
@@ -64249,6 +64308,19 @@ declare module "ue" {
         static Load(InName: string): HUD_Layout;
     
         __tid_HUD_Layout_0__: boolean;
+    }
+    
+    class NyotaGameInstance extends UE.GameInstance {
+        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+        bEnableDebugger: boolean;
+        bWaitDebugger: boolean;
+        DebuggerPort: number;
+        ModuleName: string;
+        static StaticClass(): Class;
+        static Find(OrigInName: string, Outer?: Object): NyotaGameInstance;
+        static Load(InName: string): NyotaGameInstance;
+    
+        __tid_NyotaGameInstance_0__: boolean;
     }
     
     class SpringArmComponent extends UE.SceneComponent {
@@ -74080,19 +74152,6 @@ declare module "ue" {
         __tid_CommonActionHandlerInterface_0__: boolean;
     }
     
-    class DataTableRowHandle {
-        constructor();
-        constructor(DataTable: UE.DataTable, RowName: string);
-        DataTable: UE.DataTable;
-        RowName: string;
-        /**
-         * @deprecated use StaticStruct instead.
-         */
-        static StaticClass(): ScriptStruct;
-        static StaticStruct(): ScriptStruct;
-        __tid_DataTableRowHandle_0__: boolean;
-    }
-    
     class CommonActionWidget extends UE.Widget {
         constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
         OnInputMethodChanged: $MulticastDelegate<(bUsingGamepad: boolean) => void>;
@@ -76321,20 +76380,6 @@ declare module "ue" {
         static Load(InName: string): CommonUIHoldData;
     
         __tid_CommonUIHoldData_0__: boolean;
-    }
-    
-    class CommonUIInputData extends UE.Object {
-        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
-        DefaultClickAction: UE.DataTableRowHandle;
-        DefaultBackAction: UE.DataTableRowHandle;
-        DefaultHoldData: TSoftClassPtr<UE.CommonUIHoldData>;
-        EnhancedInputClickAction: UE.InputAction;
-        EnhancedInputBackAction: UE.InputAction;
-        static StaticClass(): Class;
-        static Find(OrigInName: string, Outer?: Object): CommonUIInputData;
-        static Load(InName: string): CommonUIInputData;
-    
-        __tid_CommonUIInputData_0__: boolean;
     }
     
     class UITag extends UE.GameplayTag {
@@ -106697,6 +106742,17 @@ declare module "ue" {
         static Load(InName: string): GA_Ability_WaterBall;
     
         __tid_GA_Ability_WaterBall_0__: boolean;
+    }
+    
+    class GA_PickUp extends UE.GA_BaseSkill {
+        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
+        PickUpCoinEffectClass: UE.Class;
+        PickUpCoin(PickUpItem: $Nullable<UE.Actor>) : void;
+        static StaticClass(): Class;
+        static Find(OrigInName: string, Outer?: Object): GA_PickUp;
+        static Load(InName: string): GA_PickUp;
+    
+        __tid_GA_PickUp_0__: boolean;
     }
     
     class GA_SpeedBoost extends UE.GA_BaseSkill {
@@ -165071,18 +165127,6 @@ declare module "ue" {
         static Load(InName: string): NullNavSysConfig;
     
         __tid_NullNavSysConfig_0__: boolean;
-    }
-    
-    class NyotaGameInstance extends UE.GameInstance {
-        constructor(Outer?: Object, Name?: string, ObjectFlags?: number);
-        bEnableDebugger: boolean;
-        bWaitDebugger: boolean;
-        DebuggerPort: number;
-        static StaticClass(): Class;
-        static Find(OrigInName: string, Outer?: Object): NyotaGameInstance;
-        static Load(InName: string): NyotaGameInstance;
-    
-        __tid_NyotaGameInstance_0__: boolean;
     }
     
     class ObjectElementAssetDataInterface extends UE.Object {

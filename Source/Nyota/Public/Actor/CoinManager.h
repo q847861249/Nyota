@@ -9,7 +9,7 @@
 class ACoin;
 class ANyota_GameState;
 UCLASS()
-class PROTOTYPE_API ACoinManager : public AActor
+class NYOTA_API ACoinManager : public AActor
 {
 	GENERATED_BODY()
 	

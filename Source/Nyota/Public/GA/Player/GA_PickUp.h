@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class PROTOTYPE_API UGA_PickUp : public UGA_BaseSkill
+class NYOTA_API UGA_PickUp : public UGA_BaseSkill
 {
 	GENERATED_BODY()
 private:

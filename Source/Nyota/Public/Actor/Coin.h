@@ -8,7 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCoinDestroy);
 UCLASS()
-class PROTOTYPE_API ACoin : public AActor
+class NYOTA_API ACoin : public AActor
 {
 	GENERATED_BODY()
 	
