@@ -23,7 +23,7 @@ public:
      * @brief 取消抓取
      */
     UFUNCTION(BlueprintCallable)
-    void OnReleased();
+    void OnBoarReleased();
 
     /**
      * @brief 摔出

@@ -1,0 +1,12 @@
+{
+    "name": "tsproj",
+    "version": "1.0.0",
+    "description": "ts project",
+    "devDependencies": {
+        "typescript": "^4.4.4"
+    },
+	"scripts": {
+		"build": "tsc",
+		"watch": "tsc -w"
+	}
+}

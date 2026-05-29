@@ -11,11 +11,13 @@ public class Nyota : ModuleRules
 		PublicDependencyModuleNames.AddRange(new[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "UMG", "AIModule",
-			"NavigationSystem", "UnLua"
+			"NavigationSystem", "UnLua", "Puerts", "JsEnv"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]
-			{ "GameplayAbilities", "GameplayTags", "AnimGraphRuntime", "GameplayTasks","CommonUI","CommonInput" });
+		{
+			"GameplayAbilities", "GameplayTags", "AnimGraphRuntime", "GameplayTasks", "CommonUI", "CommonInput"
+		});
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

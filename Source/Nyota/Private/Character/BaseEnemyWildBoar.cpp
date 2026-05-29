@@ -35,7 +35,7 @@ void ABaseEnemyWildBoar::OnGrabbed(ACharacter *Grabber)
     OnGrabbed_Visual();
 }
 
-void ABaseEnemyWildBoar::OnReleased()
+void ABaseEnemyWildBoar::OnBoarReleased()
 {
     bIsGrabbed = false;
 

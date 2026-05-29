@@ -1,0 +1,12 @@
+D:\Projects\Unreal\External\Nyota\Binaries\DotNET\UnrealBuildTool\Plugins\CSharpParamDefaultValueMetas\CSharpParamDefaultValueMetas.deps.json
+D:\Projects\Unreal\External\Nyota\Binaries\DotNET\UnrealBuildTool\Plugins\CSharpParamDefaultValueMetas\CSharpParamDefaultValueMetas.dll
+D:\Projects\Unreal\External\Nyota\Binaries\DotNET\UnrealBuildTool\Plugins\CSharpParamDefaultValueMetas\ref\CSharpParamDefaultValueMetas.dll
+D:\Projects\Unreal\External\Nyota\Binaries\DotNET\UnrealBuildTool\Plugins\CSharpParamDefaultValueMetas\CSharpParamDefaultValueMetas.pdb
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.ubtplugin.csproj.AssemblyReference.cache
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.ubtplugin.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.ubtplugin.csproj.CoreCompileInputs.cache
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.dll
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\refint\CSharpParamDefaultValueMetas.dll
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.pdb
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpParamDefaultValueMetas.ubtplugin.sourcelink.json
+D:\Projects\Unreal\External\Nyota\Plugins\Puerts\Source\CSharpParamDefaultValueMetas\obj\Development\CSharpPa.E71C88CE.Up2Date
