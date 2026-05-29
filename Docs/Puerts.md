@@ -11,7 +11,9 @@
 ## 编写 TS 脚本
 
 - 启动`Editor`，在`/Game/Blueprints`路径下（也可以是其他路径下）创建蓝图`BP_TestPuerTS`，然后点击![图标](./PuertsIcon.png)生成对应的`TS`智能提示文件
-- 在项目根目录下的`TypeScript`文件夹下面创建脚本文件，命名自己去想，我这边举例子使用`TestPuerTS.ts`，放在了`Blueprints`文件夹下面了，然后里面编写有固定格式，参考[TestPuerTS.ts](../TypeScript/Blueprints/TestPuerTS.ts)，官方文档`https://puerts.github.io/en/docs/puerts/unreal/mixin`
+- 在项目根目录下的`TypeScript`文件夹下面创建脚本文件，命名自己去想，我这边举例子使用[TestPuerTS.ts](../TypeScript/Blueprints/TestPuerTS.ts)，然后里面编写有固定格式，参考官方文档`https://puerts.github.io/en/docs/puerts/unreal/mixin`
+
+- 在[Main.ts](../TypeScript/Main.ts)中`import "./Blueprints/TestPuerTS"`使用该脚本，这样做的原因是入口在[Main.ts](../TypeScript/Main.ts)
 - 写完脚本后，再次命令行进入项目根目录下，运行`npx tsc`或者`npm start`命令将`TS`脚本编译
 - 最后打开`Editor`，启动`Game`测试，`console.log`打印的日志都在日志控制台里面：![OutputLog](./OutputLog.png)
 
