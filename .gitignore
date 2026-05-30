@@ -84,5 +84,9 @@ Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/build
 Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/lib-c
 Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
 
+# Puerts
+# Plugins/Puerts/Source/CSharpParamDefaultValueMetas/obj
+# Plugins/Puerts/ThirdParty/v8_9.4.146.24
+
 # Other
 *.code-workspace
