@@ -21,12 +21,13 @@ void UGA_WaterBubble::ActivateAbility(
 
     UAbilityTask_PlayMontageAndWait *PlayMontageTask =
         UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("StartMontage"), StartMontage);
-    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnMontageCompleted);
-    PlayMontageTask->OnBlendOut.AddDynamic(this, &ThisClass::OnMontageCompleted);
+    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnStartMontageCompleted);
+    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnStartMontageInterrupted);
+    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnStartMontageInterrupted);
     PlayMontageTask->ReadyForActivation();
 }
 
-void UGA_WaterBubble::OnMontageCompleted()
+void UGA_WaterBubble::OnStartMontageCompleted()
 {
     UWorld *World = GetWorld();
     if (!IsValid(GetWorld()))
@@ -34,9 +35,11 @@ void UGA_WaterBubble::OnMontageCompleted()
         return;
     }
 
-    UAbilityTask_PlayMontageAndWait *Task =
+    UAbilityTask_PlayMontageAndWait *PlayMontageTask =
         UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("LoopMontage"), LoopMontage);
-    Task->ReadyForActivation();
+    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnStartMontageInterrupted);
+    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnStartMontageInterrupted);
+    PlayMontageTask->ReadyForActivation();
 
     // Set Timer
     World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::SpawnWaterBubble, 0.15f, true);
@@ -86,6 +89,11 @@ void UGA_WaterBubble::SpawnWaterBubble()
     WaterBubbleActor->OnProjectileHit.AddDynamic(this, &ThisClass::OnWaterBubbleHit);
 }
 
+void UGA_WaterBubble::OnStartMontageInterrupted()
+{
+    OnWaterBubbleEnd({});
+}
+
 void UGA_WaterBubble::OnWaterBubbleEnd(FGameplayEventData EventData)
 {
     UWorld *World = GetWorld();
@@ -103,7 +111,6 @@ void UGA_WaterBubble::OnWaterBubbleEnd(FGameplayEventData EventData)
     UAbilityTask_PlayMontageAndWait *Task =
         UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("EndMontage"), EndMontage);
     Task->OnCompleted.AddDynamic(this, &ThisClass::OnEndMontageCompleted);
-    Task->OnBlendOut.AddDynamic(this, &ThisClass::OnEndMontageCompleted);
     Task->OnCancelled.AddDynamic(this, &ThisClass::OnEndMontageCompleted);
     Task->OnInterrupted.AddDynamic(this, &ThisClass::OnEndMontageCompleted);
     Task->ReadyForActivation();

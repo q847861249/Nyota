@@ -21,15 +21,18 @@ public:
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
     ) override;
 
+protected:
     UFUNCTION()
-    void OnMontageCompleted();
+    void OnStartMontageCompleted();
 
     UFUNCTION()
     void OnEndMontageCompleted();
-
-protected:
+    
     UFUNCTION()
     void SpawnWaterBubble();
+
+    UFUNCTION()
+    void OnStartMontageInterrupted();
 
     UFUNCTION()
     void OnWaterBubbleEnd(FGameplayEventData EventData);

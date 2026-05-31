@@ -21,7 +21,6 @@ void UGA_WaterBall::ActivateAbility(
         this, FName("ShootWaterBall"), ShootWaterBallMontage
     );
     PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnMontageCompleted);
-    PlayMontageTask->OnBlendOut.AddDynamic(this, &ThisClass::OnMontageCompleted);
     PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnMontageCompleted);
     PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnMontageCompleted);
     PlayMontageTask->ReadyForActivation();
