@@ -1,3 +1,5 @@
+
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/BasePlayer.h"
@@ -291,6 +293,19 @@ void ABasePlayer::WaterBubbleAttack()
     ASC->TryActivateAbilitiesByTag(Container);
 }
 
+void ABasePlayer::WaterBubbleAttackEnd()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+        GetPlayerState(), Nyota::Event_Ability_WaterBubbleEnd, FGameplayEventData()
+    );
+}
+
 void ABasePlayer::VortexGripAttack()
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
@@ -312,6 +327,19 @@ void ABasePlayer::VortexGripAttack()
     UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
         this, Nyota::Event_Ability_GrabVortexGrip, FGameplayEventData()
     );
+}
+
+void ABasePlayer::GrabAttack()
+{
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Nyota::Ability_Grab);
+    ASC->TryActivateAbilitiesByTag(Container);
 }
 
 void ABasePlayer::OnLightAttack_Started()
@@ -355,50 +383,47 @@ void ABasePlayer::OnRightLightAttack_Started()
 
 void ABasePlayer::OnSkill_1_Started()
 {
-    // 水球攻击
-    WaterBallAttack();
+    SkillActivateLogic(Skill_1_OnGrabBeforeTag, Skill_1_OnGrabAfterTag);
+}
 
-    // 抓取砸地攻击
-    GrabSlamAttack();
+void ABasePlayer::OnSkill_1_Completed()
+{
+    if (Skill_1_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
+    {
+        WaterBubbleAttackEnd();
+    }
 }
 
 void ABasePlayer::OnSkill_2_Started()
 {
-    // 水泡攻击
-    WaterBubbleAttack();
-
-    // 抓取旋风钳攻击
-    VortexGripAttack();
+    SkillActivateLogic(Skill_2_OnGrabBeforeTag, Skill_2_OnGrabAfterTag);
 }
 
 void ABasePlayer::OnSkill_2_Completed()
 {
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
+    if (Skill_2_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
     {
-        return;
+        WaterBubbleAttackEnd();
     }
-
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-        GetPlayerState(), Nyota::Event_Ability_WaterBubbleEnd, FGameplayEventData()
-    );
 }
 
 void ABasePlayer::OnSkill_3_Started()
 {
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_Grab);
-    ASC->TryActivateAbilitiesByTag(Container);
+    SkillActivateLogic(Skill_3_OnGrabBeforeTag, Skill_3_OnGrabAfterTag);
 }
 
-void ABasePlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, 
-    int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+void ABasePlayer::OnSkill_3_Completed()
+{
+    if (Skill_3_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
+    {
+        WaterBubbleAttackEnd();
+    }
+}
+
+void ABasePlayer::OnOverlapBegin(
+    UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex,
+    bool bFromSweep, const FHitResult &SweepResult
+)
 {
     // Check if the actor has specific tag
     if (OtherActor && OtherActor->ActorHasTag(FName("Coin")))
@@ -406,7 +431,31 @@ void ABasePlayer::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
         FGameplayEventData Payload;
         Payload.Instigator = this;
         Payload.Target = OtherActor;
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this,Nyota::Event_Item_PickUp,Payload);
+        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Item_PickUp, Payload);
     }
-    
+}
+
+void ABasePlayer::SkillActivateLogic(const FGameplayTag &OnGrabBeforeTag, const FGameplayTag &OnGrabAfterTag)
+{
+    if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBall))
+    {
+        WaterBallAttack();
+    }
+    else if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
+    {
+        WaterBubbleAttack();
+    }
+    else if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_Grab))
+    {
+        GrabAttack();
+    }
+
+    if (OnGrabAfterTag.MatchesTagExact(Nyota::Ability_Grab_Slam))
+    {
+        GrabSlamAttack();
+    }
+    else if (OnGrabAfterTag.MatchesTagExact(Nyota::Ability_Grab_VortexGrip))
+    {
+        VortexGripAttack();
+    }
 }
