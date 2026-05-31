@@ -44,6 +44,7 @@ void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Grabbed Target Is Null !!!"));
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
     }
 }
 
