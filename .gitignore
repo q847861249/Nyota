@@ -86,7 +86,9 @@ Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
 
 # Puerts
 Plugins/Puerts/Source/CSharpParamDefaultValueMetas/obj
+Plugins/Puerts/Source/CSharpParamDefaultValueMetas/CSharpParamDefaultValueMetas.ubtplugin.csproj.props
 Plugins/Puerts/ThirdParty/v8_9.4.146.24
 
 # Other
 *.code-workspace
+.DS_Store
