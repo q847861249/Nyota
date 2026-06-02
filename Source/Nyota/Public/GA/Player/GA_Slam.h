@@ -22,7 +22,7 @@ public:
     ) override;
 
     UFUNCTION()
-    void OnSlamEventReceived(FGameplayEventData EventData);
+    void StartSlam();
 
     UFUNCTION()
     void OnApplySlamDamage(FGameplayEventData EventData);
@@ -33,9 +33,6 @@ public:
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TObjectPtr<UAnimMontage> SlamMontage;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    TWeakObjectPtr<ABaseCharacter> GrabbedCharacter;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> SlamEffect;

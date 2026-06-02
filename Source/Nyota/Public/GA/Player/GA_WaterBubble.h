@@ -27,7 +27,7 @@ protected:
 
     UFUNCTION()
     void OnEndMontageCompleted();
-    
+
     UFUNCTION()
     void SpawnWaterBubble();
 
@@ -35,7 +35,7 @@ protected:
     void OnStartMontageInterrupted();
 
     UFUNCTION()
-    void OnWaterBubbleEnd(FGameplayEventData EventData);
+    void OnWaterBubbleEnd(float TimeHeld);
 
     UFUNCTION()
     void OnWaterBubbleHit(const FHitResult &HitResult);

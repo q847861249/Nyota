@@ -161,6 +161,21 @@ void ABasePlayer::BeginPlay()
     }
 }
 
+void ABasePlayer::SetGrabbedEnemy(ABaseCharacter *Character)
+{
+    GrabbedEnemy = Character;
+}
+
+ABaseCharacter *ABasePlayer::GetGrabbedEnemy() const
+{
+    return GrabbedEnemy.Get();
+}
+
+void ABasePlayer::ResetGrabbedEnemy()
+{
+    GrabbedEnemy.Reset();
+}
+
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
 {
     if (!Controller)
@@ -231,117 +246,6 @@ void ABasePlayer::LookInput(const FInputActionValue &Value)
     AddControllerPitchInput(LookVector2D.Y);
 }
 
-void ABasePlayer::WaterBallAttack()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    if (ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_WaterBall);
-    ASC->TryActivateAbilitiesByTag(Container);
-}
-
-void ABasePlayer::GrabSlamAttack()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    if (!ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_Grab_Slam);
-    ASC->TryActivateAbilitiesByTag(Container);
-
-    // 通知 Grab 技能开始 Slam
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Ability_GrabSlam, FGameplayEventData());
-}
-
-void ABasePlayer::WaterBubbleAttack()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    if (ASC->HasMatchingGameplayTag(Nyota::Ability_WaterBubble))
-    {
-        return;
-    }
-
-    if (ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_WaterBubble);
-    ASC->TryActivateAbilitiesByTag(Container);
-}
-
-void ABasePlayer::WaterBubbleAttackEnd()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-        GetPlayerState(), Nyota::Event_Ability_WaterBubbleEnd, FGameplayEventData()
-    );
-}
-
-void ABasePlayer::VortexGripAttack()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    if (!ASC->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_Grab_VortexGrip);
-    ASC->TryActivateAbilitiesByTag(Container);
-
-    // 通知 Grab 技能开始 VortexGrip
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-        this, Nyota::Event_Ability_GrabVortexGrip, FGameplayEventData()
-    );
-}
-
-void ABasePlayer::GrabAttack()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    FGameplayTagContainer Container;
-    Container.AddTag(Nyota::Ability_Grab);
-    ASC->TryActivateAbilitiesByTag(Container);
-}
-
 void ABasePlayer::OnLightAttack_Started()
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
@@ -383,41 +287,53 @@ void ABasePlayer::OnRightLightAttack_Started()
 
 void ABasePlayer::OnSkill_1_Started()
 {
-    SkillActivateLogic(Skill_1_OnGrabBeforeTag, Skill_1_OnGrabAfterTag);
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Skill_1_Tag);
+    ASC->TryActivateAbilitiesByTag(Container);
 }
 
 void ABasePlayer::OnSkill_1_Completed()
 {
-    if (Skill_1_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
-    {
-        WaterBubbleAttackEnd();
-    }
 }
 
 void ABasePlayer::OnSkill_2_Started()
 {
-    SkillActivateLogic(Skill_2_OnGrabBeforeTag, Skill_2_OnGrabAfterTag);
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Skill_2_Tag);
+    ASC->TryActivateAbilitiesByTag(Container);
 }
 
 void ABasePlayer::OnSkill_2_Completed()
 {
-    if (Skill_2_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
-    {
-        WaterBubbleAttackEnd();
-    }
 }
 
 void ABasePlayer::OnSkill_3_Started()
 {
-    SkillActivateLogic(Skill_3_OnGrabBeforeTag, Skill_3_OnGrabAfterTag);
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
+    if (!IsValid(ASC))
+    {
+        return;
+    }
+
+    FGameplayTagContainer Container;
+    Container.AddTag(Skill_3_Tag);
+    ASC->TryActivateAbilitiesByTag(Container);
 }
 
 void ABasePlayer::OnSkill_3_Completed()
 {
-    if (Skill_3_OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
-    {
-        WaterBubbleAttackEnd();
-    }
 }
 
 void ABasePlayer::OnOverlapBegin(
@@ -432,30 +348,5 @@ void ABasePlayer::OnOverlapBegin(
         Payload.Instigator = this;
         Payload.Target = OtherActor;
         UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Item_PickUp, Payload);
-    }
-}
-
-void ABasePlayer::SkillActivateLogic(const FGameplayTag &OnGrabBeforeTag, const FGameplayTag &OnGrabAfterTag)
-{
-    if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBall))
-    {
-        WaterBallAttack();
-    }
-    else if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_WaterBubble))
-    {
-        WaterBubbleAttack();
-    }
-    else if (OnGrabBeforeTag.MatchesTagExact(Nyota::Ability_Grab))
-    {
-        GrabAttack();
-    }
-
-    if (OnGrabAfterTag.MatchesTagExact(Nyota::Ability_Grab_Slam))
-    {
-        GrabSlamAttack();
-    }
-    else if (OnGrabAfterTag.MatchesTagExact(Nyota::Ability_Grab_VortexGrip))
-    {
-        VortexGripAttack();
     }
 }

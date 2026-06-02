@@ -6,6 +6,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/BaseCharacter.h"
+#include "Character/BasePlayer.h"
 #include "GameplayTags/GameTags.h"
 
 void UGA_VortexGrip::ActivateAbility(
@@ -15,10 +16,7 @@ void UGA_VortexGrip::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    UAbilityTask_WaitGameplayEvent *Task =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_HasGrabbedEnemy);
-    Task->EventReceived.AddDynamic(this, &ThisClass::OnEventReceived);
-    Task->ReadyForActivation();
+    StartVortexGrip();
 
     UAbilityTask_WaitGameplayEvent *ApplyDamageEvent =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
@@ -26,12 +24,18 @@ void UGA_VortexGrip::ActivateAbility(
     ApplyDamageEvent->ReadyForActivation();
 }
 
-void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
+void UGA_VortexGrip::StartVortexGrip()
 {
-    GrabbedCharacter = Cast<ABaseCharacter>(const_cast<AActor *>(EventData.Target.Get()));
-    if (GrabbedCharacter.IsValid())
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *GrabbedCharacter->GetName());
+        return;
+    }
+
+    if (IsValid(Player->GetGrabbedEnemy()))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
         UAbilityTask_PlayMontageAndWait *PlayMontage = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
             this, FName("VortexGrip"), VortexGripMontage
@@ -50,12 +54,21 @@ void UGA_VortexGrip::OnEventReceived(FGameplayEventData EventData)
 
 void UGA_VortexGrip::ApplyDamage(FGameplayEventData EventData)
 {
-    if (!GrabbedCharacter.IsValid())
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
     {
         return;
     }
 
-    if (!IsValid(GrabbedCharacter->GetAbilitySystemComponent()))
+    ABaseCharacter *GrabbedEnemy = Player->GetGrabbedEnemy();
+
+    if (!IsValid(GrabbedEnemy))
+    {
+        return;
+    }
+
+    if (!IsValid(GrabbedEnemy->GetAbilitySystemComponent()))
     {
         return;
     }
@@ -63,7 +76,7 @@ void UGA_VortexGrip::ApplyDamage(FGameplayEventData EventData)
     UAbilitySystemComponent *ASC = GetAbilitySystemComponentFromActorInfo();
     FGameplayEffectSpecHandle SpecHandle =
         ASC->MakeOutgoingSpec(VortexGripEffect, EventData.EventMagnitude, FGameplayEffectContextHandle());
-    ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GrabbedCharacter->GetAbilitySystemComponent());
+    ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GrabbedEnemy->GetAbilitySystemComponent());
 }
 
 void UGA_VortexGrip::OnAbilityEnd()

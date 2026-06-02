@@ -25,16 +25,6 @@ void UGA_Grab::ActivateAbility(
     PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnGrabTimeout);
     PlayMontageTask->ReadyForActivation();
 
-    UAbilityTask_WaitGameplayEvent *WaitSlam =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabSlam);
-    WaitSlam->EventReceived.AddDynamic(this, &ThisClass::OnFollowUpInputReceived);
-    WaitSlam->ReadyForActivation();
-
-    UAbilityTask_WaitGameplayEvent *WaitVortexGrip =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabVortexGrip);
-    WaitVortexGrip->EventReceived.AddDynamic(this, &ThisClass::OnFollowUpInputReceived);
-    WaitVortexGrip->ReadyForActivation();
-
     UAbilityTask_WaitGameplayEvent *StartGrabTrace =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_StartGrabTrace);
     StartGrabTrace->EventReceived.AddDynamic(this, &ThisClass::OnStartGrabTrace);
@@ -51,19 +41,17 @@ void UGA_Grab::ActivateAbility(
     GrabEnd->ReadyForActivation();
 }
 
-void UGA_Grab::OnFollowUpInputReceived(FGameplayEventData EventData)
-{
-    FGameplayEventData SlamEventData;
-    SlamEventData.Target = GrabbedEnemy.Get();
-    UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
-        GetAvatarActorFromActorInfo(), Nyota::Event_Ability_HasGrabbedEnemy, SlamEventData
-    );
-}
-
 void UGA_Grab::OnMontageCompleted()
 {
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
+    {
+        return;
+    }
+
     // 没有抓到敌人则结束该技能
-    if (!GrabbedEnemy.IsValid())
+    if (!IsValid(Player->GetGrabbedEnemy()))
     {
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
     }
@@ -77,14 +65,29 @@ void UGA_Grab::OnGrabEnd(FGameplayEventData EventData)
 void UGA_Grab::OnGrabTimeout()
 {
     UWorld *World = GetWorld();
+
     if (!IsValid(World))
     {
         return;
     }
 
-    GrabbedEnemy->OnThrown(GetAvatarActorFromActorInfo()->GetActorForwardVector(), ThrownForce);
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
 
-    GrabbedEnemy.Reset();
+    if (!IsValid(Player))
+    {
+        return;
+    }
+
+    ABaseEnemyWildBoar *WildBoar = Cast<ABaseEnemyWildBoar>(Player->GetGrabbedEnemy());
+
+    if (!IsValid(WildBoar))
+    {
+        return;
+    }
+
+    WildBoar->OnThrown(GetAvatarActorFromActorInfo()->GetActorForwardVector(), ThrownForce);
+
+    Player->ResetGrabbedEnemy();
 
     World->GetTimerManager().ClearTimer(TimerHandle);
 
@@ -140,15 +143,15 @@ void UGA_Grab::OnStopGrabTrace(FGameplayEventData EventData)
 
 void UGA_Grab::PerformGrabTrace()
 {
-    // 如果有抓取到的敌人则不执行检测
-    if (GrabbedEnemy.IsValid())
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
     {
         return;
     }
 
-    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-
-    if (!IsValid(Player))
+    // 如果有抓取到的敌人则不执行检测
+    if (IsValid(Player->GetGrabbedEnemy()))
     {
         return;
     }
@@ -212,10 +215,13 @@ void UGA_Grab::PerformGrabTrace()
         HitActor = RightHandHitResults[0].GetActor();
     }
 
-    GrabbedEnemy = Cast<ABaseEnemyWildBoar>(HitActor);
+    ABaseEnemyWildBoar *GrabbedEnemy = Cast<ABaseEnemyWildBoar>(HitActor);
 
-    if (GrabbedEnemy.IsValid())
+    if (IsValid(GrabbedEnemy))
     {
+        // 抓取到敌人缓存到 Player 中
+        Player->SetGrabbedEnemy(GrabbedEnemy);
+
         // 敌人 Attach 到玩家抓取位置 Socket
         GrabbedEnemy->OnGrabbed(Player);
 

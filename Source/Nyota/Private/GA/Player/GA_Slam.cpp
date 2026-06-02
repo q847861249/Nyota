@@ -7,6 +7,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/BaseCharacter.h"
+#include "Character/BasePlayer.h"
 #include "GameplayTags/GameTags.h"
 
 void UGA_Slam::ActivateAbility(
@@ -16,10 +17,7 @@ void UGA_Slam::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    UAbilityTask_WaitGameplayEvent *Task =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_HasGrabbedEnemy);
-    Task->EventReceived.AddDynamic(this, &ThisClass::OnSlamEventReceived);
-    Task->ReadyForActivation();
+    StartSlam();
 
     UAbilityTask_WaitGameplayEvent *ApplySlamDamage =
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
@@ -27,12 +25,18 @@ void UGA_Slam::ActivateAbility(
     ApplySlamDamage->ReadyForActivation();
 }
 
-void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
+void UGA_Slam::StartSlam()
 {
-    GrabbedCharacter = Cast<ABaseCharacter>(const_cast<AActor *>(EventData.Target.Get()));
-    if (GrabbedCharacter.IsValid())
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
     {
-        UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *GrabbedCharacter->GetName());
+        return;
+    }
+
+    if (IsValid(Player->GetGrabbedEnemy()))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
         UAbilityTask_PlayMontageAndWait *PlayMontageTask =
             UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
@@ -49,12 +53,21 @@ void UGA_Slam::OnSlamEventReceived(FGameplayEventData EventData)
 
 void UGA_Slam::OnApplySlamDamage(FGameplayEventData EventData)
 {
-    if (!GrabbedCharacter.IsValid())
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (!IsValid(Player))
     {
         return;
     }
 
-    if (!IsValid(GrabbedCharacter->GetAbilitySystemComponent()))
+    ABaseCharacter *GrabbedEnemy = Player->GetGrabbedEnemy();
+
+    if (!IsValid(GrabbedEnemy))
+    {
+        return;
+    }
+
+    if (!IsValid(GrabbedEnemy->GetAbilitySystemComponent()))
     {
         return;
     }
@@ -62,7 +75,7 @@ void UGA_Slam::OnApplySlamDamage(FGameplayEventData EventData)
     UAbilitySystemComponent *ASC = GetAbilitySystemComponentFromActorInfo();
     FGameplayEffectSpecHandle SpecHandle =
         ASC->MakeOutgoingSpec(SlamEffect, EventData.EventMagnitude, FGameplayEffectContextHandle());
-    ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GrabbedCharacter->GetAbilitySystemComponent());
+    ASC->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GrabbedEnemy->GetAbilitySystemComponent());
 }
 
 void UGA_Slam::OnSlamEnd()

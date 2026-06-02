@@ -22,7 +22,7 @@ public:
     ) override;
 
     UFUNCTION()
-    void OnEventReceived(FGameplayEventData EventData);
+    void StartVortexGrip();
 
     UFUNCTION()
     void ApplyDamage(FGameplayEventData EventData);
@@ -33,9 +33,6 @@ public:
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TObjectPtr<UAnimMontage> VortexGripMontage;
-
-    UPROPERTY(BlueprintReadOnly, Category = "Nyota")
-    TWeakObjectPtr<ABaseCharacter> GrabbedCharacter;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> VortexGripEffect;

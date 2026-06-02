@@ -22,9 +22,6 @@ public:
     ) override;
 
     UFUNCTION()
-    void OnFollowUpInputReceived(FGameplayEventData EventData);
-
-    UFUNCTION()
     void OnMontageCompleted();
 
     UFUNCTION()
@@ -66,8 +63,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     FName RightHandSocketName;
-
-    TWeakObjectPtr<ABaseEnemyWildBoar> GrabbedEnemy;
 
     FTimerHandle TimerHandle;
 

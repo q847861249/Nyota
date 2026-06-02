@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Abilities/Tasks/AbilityTask_WaitInputRelease.h"
 #include "Actor/BaseProjectile.h"
 #include "Character/BaseCharacter.h"
 #include "GameplayTags/GameTags.h"
@@ -45,10 +46,9 @@ void UGA_WaterBubble::OnStartMontageCompleted()
     World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::SpawnWaterBubble, 0.15f, true);
 
     // Wait Event
-    UAbilityTask_WaitGameplayEvent *WaitGameplayEventTask =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_WaterBubbleEnd);
-    WaitGameplayEventTask->EventReceived.AddDynamic(this, &ThisClass::OnWaterBubbleEnd);
-    WaitGameplayEventTask->ReadyForActivation();
+    UAbilityTask_WaitInputRelease *WaitRelease = UAbilityTask_WaitInputRelease::WaitInputRelease(this);
+    WaitRelease->OnRelease.AddDynamic(this, &ThisClass::OnWaterBubbleEnd);
+    WaitRelease->ReadyForActivation();
 }
 
 void UGA_WaterBubble::OnEndMontageCompleted()
@@ -91,10 +91,10 @@ void UGA_WaterBubble::SpawnWaterBubble()
 
 void UGA_WaterBubble::OnStartMontageInterrupted()
 {
-    OnWaterBubbleEnd({});
+    OnWaterBubbleEnd(0.f);
 }
 
-void UGA_WaterBubble::OnWaterBubbleEnd(FGameplayEventData EventData)
+void UGA_WaterBubble::OnWaterBubbleEnd(float TimeHeld)
 {
     UWorld *World = GetWorld();
     if (!IsValid(GetWorld()))
