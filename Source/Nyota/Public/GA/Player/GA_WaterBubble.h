@@ -7,6 +7,7 @@
 #include "GA_WaterBubble.generated.h"
 
 class ABaseProjectile;
+class UInputAction;
 /**
  *
  */
@@ -42,6 +43,9 @@ protected:
 
     UPROPERTY(BlueprintReadOnly, Category = "Nyota")
     bool bIsStopping;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota | Input")
+    TObjectPtr<UInputAction> InputAction;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TObjectPtr<UAnimMontage> StartMontage;

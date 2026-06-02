@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "Abilities/Tasks/AbilityTask_WaitInputRelease.h"
+#include "GA/Tasks/AbilityTask_WaitInputActionReleased.h"
 #include "Actor/BaseProjectile.h"
 #include "Character/BaseCharacter.h"
 #include "GameplayTags/GameTags.h"
@@ -45,10 +45,14 @@ void UGA_WaterBubble::OnStartMontageCompleted()
     // Set Timer
     World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::SpawnWaterBubble, 0.15f, true);
 
-    // Wait Event
-    UAbilityTask_WaitInputRelease *WaitRelease = UAbilityTask_WaitInputRelease::WaitInputRelease(this);
-    WaitRelease->OnRelease.AddDynamic(this, &ThisClass::OnWaterBubbleEnd);
-    WaitRelease->ReadyForActivation();
+    // Wait Input Release — 使用自定义 Task 桥接增强输入系统
+    UAbilityTask_WaitInputActionReleased *WaitRelease =
+        UAbilityTask_WaitInputActionReleased::WaitInputActionReleased(this, InputAction);
+    if (WaitRelease)
+    {
+        WaitRelease->OnRelease.AddDynamic(this, &ThisClass::OnWaterBubbleEnd);
+        WaitRelease->ReadyForActivation();
+    }
 }
 
 void UGA_WaterBubble::OnEndMontageCompleted()
