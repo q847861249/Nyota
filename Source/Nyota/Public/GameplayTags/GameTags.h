@@ -23,7 +23,14 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_Slam)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_VortexGrip)
 
-UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_init);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Behavior_SurvivesDeath);
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_InputBlocked);
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_Spawned);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_DataAvailable);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_DataInitialized);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_GameplayReady);
 
 // Event
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Ability_AttackStart)

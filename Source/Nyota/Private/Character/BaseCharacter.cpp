@@ -34,30 +34,17 @@ void ABaseCharacter::SetAlive(bool bAliveStatus)
 
 void ABaseCharacter::GiveDefaultAbility()
 {
-    UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
 
     if (!IsValid(ASC))
     {
         return;
     }
 
-    // if (!IsValid(GetAbilitySystemComponent()))
-    // {
-    //     return;
-    // }
-
     for (const auto &Ability : GAClass)
     {
         FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
         ASC->GiveAbility(AbilitySpec);
-
-        //判断技能是否有init标签，有的直接激活
-        const UGameplayAbility* AbilityObj = Ability->GetDefaultObject<UGameplayAbility>();
-
-        if (AbilityObj && AbilityObj->AbilityTags.HasTagExact(Nyota::Ability_init))
-        {
-            ASC->TryActivateAbility(AbilitySpec.Handle);
-        }
     }
 }
 

@@ -16,12 +16,17 @@ ABasePlayerState::ABasePlayerState()
     AttributeSet = CreateDefaultSubobject<UBaseAttributeSet>("AttributeSet");
 }
 
-UAbilitySystemComponent *ABasePlayerState::GetAbilitySystemComponent() const
+UCustomAbilitySystemComponent *ABasePlayerState::GetNyotaAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
 }
 
-UAttributeSet * ABasePlayerState::GetAttributeSet() const
+UAbilitySystemComponent *ABasePlayerState::GetAbilitySystemComponent() const
+{
+    return GetNyotaAbilitySystemComponent();
+}
+
+UAttributeSet *ABasePlayerState::GetAttributeSet() const
 {
     return AttributeSet;
 }

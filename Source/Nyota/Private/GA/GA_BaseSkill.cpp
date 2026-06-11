@@ -22,6 +22,11 @@ void UGA_BaseSkill::ActivateAbility(
     }
 }
 
+ENyotaAbilityActivatePolicy UGA_BaseSkill::GetActivatePolicy() const
+{
+    return ActivationPolicy;
+}
+
 FVector UGA_BaseSkill::GetAbilityDetectionDirection_Implementation() const
 {
     AActor *AvatarActor = GetAvatarActorFromActorInfo();

@@ -18,6 +18,10 @@
 	],
 	"Plugins": [
 		{
+			"Name": "ModularGameplay",
+			"Enabled": true
+		},
+		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true,
 			"TargetAllowList": [

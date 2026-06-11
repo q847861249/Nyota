@@ -3,7 +3,15 @@
 #include "GA/CustomAbilitySystemComponent.h"
 
 #include "Abilities/GameplayAbility.h"
+#include "GA/GA_BaseSkill.h"
 #include "GameplayTags/GameTags.h"
+
+UCustomAbilitySystemComponent::UCustomAbilitySystemComponent(const FObjectInitializer &ObjectInitializer)
+{
+    InputPressedSpecHandles.Reset();
+    InputReleasedSpecHandles.Reset();
+    InputHeldSpecHandles.Reset();
+}
 
 void UCustomAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec &AbilitySpec)
 {
@@ -21,6 +29,36 @@ void UCustomAbilitySystemComponent::OnRep_ActivateAbilities()
     for (const FGameplayAbilitySpec &AbilitySpec : GetActivatableAbilities())
     {
         HandleAutoActivateAbility(AbilitySpec);
+    }
+}
+
+void UCustomAbilitySystemComponent::InitAbilityActorInfo(AActor *InOwnerActor, AActor *InAvatarActor)
+{
+    FGameplayAbilityActorInfo *ActorInfo = AbilityActorInfo.Get();
+
+    check(ActorInfo);
+    check(InOwnerActor);
+
+    const bool bHasNewPawnAvatar = Cast<APawn>(InAvatarActor) && InAvatarActor != ActorInfo->AvatarActor;
+
+    Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
+
+    if (bHasNewPawnAvatar)
+    {
+        // Notify all abilities that a new pawn avatar has been set
+        for (const FGameplayAbilitySpec &AbilitySpec : ActivatableAbilities.Items)
+        {
+            PRAGMA_DISABLE_DEPRECATION_WARNINGS
+            ensureMsgf(
+                AbilitySpec.Ability &&
+                    AbilitySpec.Ability->GetInstancingPolicy() != EGameplayAbilityInstancingPolicy::NonInstanced,
+                TEXT(
+                    "InitAbilityActorInfo: All Abilities should be Instanced (NonInstanced is being deprecated due to "
+                    "usability issues)."
+                )
+            );
+            PRAGMA_ENABLE_DEPRECATION_WARNINGS
+        }
     }
 }
 
@@ -79,6 +117,201 @@ UGameplayAbility *UCustomAbilitySystemComponent::GetActivatableAbilitySpecByTag(
     }
 
     return nullptr;
+}
+
+void UCustomAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag &InputTag)
+{
+    if (!InputTag.IsValid())
+    {
+        return;
+    }
+
+    for (const FGameplayAbilitySpec &AbilitySpec : ActivatableAbilities.Items)
+    {
+        if (AbilitySpec.Ability && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+        {
+            InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
+            InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
+        }
+    }
+}
+
+void UCustomAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &InputTag)
+{
+    if (!InputTag.IsValid())
+    {
+        return;
+    }
+
+    for (const FGameplayAbilitySpec &AbilitySpec : ActivatableAbilities.Items)
+    {
+        if (AbilitySpec.Ability && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+        {
+            InputReleasedSpecHandles.AddUnique(AbilitySpec.Handle);
+            InputHeldSpecHandles.Remove(AbilitySpec.Handle);
+        }
+    }
+}
+
+void UCustomAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
+{
+    if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked))
+    {
+        ClearAbilityInput();
+
+        return;
+    }
+
+    static TArray<FGameplayAbilitySpecHandle> AbilitiesToActivate;
+    AbilitiesToActivate.Reset();
+
+    /*
+     * 处理所有在按住输入时激活的技能。
+     */
+    for (const FGameplayAbilitySpecHandle &SpecHandle : InputHeldSpecHandles)
+    {
+        const FGameplayAbilitySpec *AbilitySpec = FindAbilitySpecFromHandle(SpecHandle);
+        if (!AbilitySpec)
+        {
+            continue;
+        }
+
+        if (!AbilitySpec->Ability)
+        {
+            continue;
+        }
+
+        if (!AbilitySpec->IsActive())
+        {
+            const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
+            if (NyotaAbilityCDO &&
+                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivatePolicy::WhileInputActive)
+            {
+                AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
+            }
+        }
+    }
+
+    /*
+     * 处理所有在本帧被按下输入的能力。
+     */
+    for (const FGameplayAbilitySpecHandle &SpecHandle : InputPressedSpecHandles)
+    {
+        FGameplayAbilitySpec *AbilitySpec = FindAbilitySpecFromHandle(SpecHandle);
+        if (!AbilitySpec)
+        {
+            continue;
+        }
+
+        if (!AbilitySpec->Ability)
+        {
+            continue;
+        }
+
+        AbilitySpec->InputPressed = true;
+
+        if (AbilitySpec->IsActive())
+        {
+            AbilitySpecInputPressed(*AbilitySpec);
+        }
+        else
+        {
+            const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
+            if (NyotaAbilityCDO &&
+                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivatePolicy::OnInputTriggered)
+            {
+                AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
+            }
+        }
+    }
+
+    /*
+     * Try to activate all the abilities that are from presses and holds.
+     */
+    for (const FGameplayAbilitySpecHandle &AbilitySpecHandle : AbilitiesToActivate)
+    {
+        TryActivateAbility(AbilitySpecHandle);
+    }
+
+    /*
+     * Process all abilities that had their input released this frame.
+     */
+    for (const FGameplayAbilitySpecHandle &AbilitySpecHandle : InputReleasedSpecHandles)
+    {
+        FGameplayAbilitySpec *AbilitySpec = FindAbilitySpecFromHandle(AbilitySpecHandle);
+        if (!AbilitySpec)
+        {
+            continue;
+        }
+
+        if (!AbilitySpec->Ability)
+        {
+            continue;
+        }
+
+        AbilitySpec->InputPressed = false;
+
+        if (AbilitySpec->IsActive())
+        {
+            AbilitySpecInputReleased(*AbilitySpec);
+        }
+    }
+
+    /*
+     * Clear the cached ability handles.
+     */
+    InputPressedSpecHandles.Reset();
+    InputReleasedSpecHandles.Reset();
+}
+
+void UCustomAbilitySystemComponent::ClearAbilityInput()
+{
+    InputPressedSpecHandles.Reset();
+    InputReleasedSpecHandles.Reset();
+    InputHeldSpecHandles.Reset();
+}
+
+void UCustomAbilitySystemComponent::SetTagRelationshipMapping(UNyotaAbilityTagRelationshipMapping *NewMapping)
+{
+    TagRelationshipMapping = NewMapping;
+}
+
+void UCustomAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec &Spec)
+{
+    Super::AbilitySpecInputPressed(Spec);
+
+    if (Spec.IsActive())
+    {
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
+
+        const UGameplayAbility *Instance = Spec.GetPrimaryInstance();
+        const FPredictionKey &PredictionKey = Instance
+                                                  ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey()
+                                                  : Spec.ActivationInfo.GetActivationPredictionKey();
+
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
+
+        InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, PredictionKey);
+    }
+}
+
+void UCustomAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec &Spec)
+{
+    Super::AbilitySpecInputReleased(Spec);
+
+    if (Spec.IsActive())
+    {
+        PRAGMA_DISABLE_DEPRECATION_WARNINGS
+
+        const UGameplayAbility *Instance = Spec.GetPrimaryInstance();
+        const FPredictionKey &PredictionKey = Instance
+                                                  ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey()
+                                                  : Spec.ActivationInfo.GetActivationPredictionKey();
+
+        PRAGMA_ENABLE_DEPRECATION_WARNINGS
+
+        InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, PredictionKey);
+    }
 }
 
 void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)

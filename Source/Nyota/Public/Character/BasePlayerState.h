@@ -8,6 +8,7 @@
 
 #include "BasePlayerState.generated.h"
 
+class UCustomAbilitySystemComponent;
 class UAttributeSet;
 
 /**
@@ -21,13 +22,15 @@ class NYOTA_API ABasePlayerState : public APlayerState, public IAbilitySystemInt
 public:
     ABasePlayerState();
 
+    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
+
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
     UAttributeSet *GetAttributeSet() const;
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Nyota | Abilities")
-    TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
 
     UPROPERTY()
     TObjectPtr<UAttributeSet> AttributeSet;
