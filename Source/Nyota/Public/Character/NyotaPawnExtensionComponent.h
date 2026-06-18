@@ -50,7 +50,18 @@ public:
     NYOTA_API virtual void CheckDefaultInitialization() override;
     // ~ End IGameFrameworkInitStateInterface interface
 
+    template <class T> const T *GetPawnData() const
+    {
+        return Cast<T>(PawnData);
+    }
+
     NYOTA_API void SetPawnData(const UNyotaPawnData *InPawnData);
+
+    UFUNCTION(BlueprintPure, Category = "Nyota | Pawn")
+    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const
+    {
+        return AbilitySystemComponent;
+    }
 
 protected:
     NYOTA_API virtual void OnRegister() override;
