@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/HUD/Main/MainUI.h"
-#include "UI/HUD/Main/InfoPanel.h"
+#include "DataAsset/PlayerCharacterDataAsset.h"
+#include "Components/Image.h"
