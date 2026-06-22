@@ -6,31 +6,35 @@
 #include "Character/BasePlayer.h"
 #include "DataAsset/PlayerCharacterDataAsset.h"
 #include "UI/HUD/Main/SkillTooltip.h"
+#include "Abilities/GameplayAbility.h"
+#include "CommonBorder.h"
+#include "Components/TextBlock.h"
+#include "AbilitySystemComponent.h"
+#include "Components/HorizontalBox.h"
+#include "UI/HUD/Main/SkillSlot.h"
 void USkillBar::Init(ABasePlayer* BasePlayer)
 {
     if (!TooltipClass) return;
+    if(!SkillSlotClass) return;
 
     UPlayerCharacterDataAsset* DataAsset = BasePlayer->GetConfig();
     if(!DataAsset) return;
 
-    //设置被动UI信息
-    PassiveImage->SetBrushFromTexture(DataAsset->PassiveIcon);
-    USkillTooltip* PassiveTooltip = CreateWidget<USkillTooltip>( GetOwningPlayer(), TooltipClass ); 
-    if (!PassiveTooltip) return;
-    PassiveTooltip->InitTooltip(DataAsset->PassiveName,DataAsset->PassiveDesc); 
-    PassiveImage->SetToolTip(PassiveTooltip);
+    ASC = BasePlayer->GetAbilitySystemComponent();
+    if(!ASC) return;
 
-    //设置Q技能UI信息
-    Q_Image->SetBrushFromTexture(DataAsset->Q_Icon);
-    USkillTooltip* Q_Tooltip = CreateWidget<USkillTooltip>( GetOwningPlayer(), TooltipClass ); 
-    if (!Q_Tooltip) return;
-    Q_Tooltip->InitTooltip(DataAsset->Q_Name,DataAsset->Q_Desc); 
-    Q_Image->SetToolTip(Q_Tooltip);
+    for(FSkillUIData SkillData: DataAsset->Skills)
+    {
+        USkillTooltip* Tooltip = CreateWidget<USkillTooltip>( GetOwningPlayer(), TooltipClass ); 
+        if (!Tooltip) continue;
+        Tooltip->InitTooltip(SkillData.AbilityName,SkillData.AbilityDesc);
+        USkillSlot* SkillSlot = CreateWidget<USkillSlot>( GetOwningPlayer(), SkillSlotClass );
+        if(!SkillSlot) continue;
+        SkillSlot->Init(ASC,SkillData);
+        SkillSlot->Icon->SetToolTip(Tooltip);
+        AbilityUIBar->AddChild(SkillSlot);
+    }
 
-    //设置E技能UI信息
-    E_Image->SetBrushFromTexture(DataAsset->E_Icon);
-    USkillTooltip* E_Tooltip = CreateWidget<USkillTooltip>( GetOwningPlayer(), TooltipClass ); 
-    if (!E_Tooltip) return;
-    E_Tooltip->InitTooltip(DataAsset->E_Name,DataAsset->E_Desc); 
-    E_Image->SetToolTip(E_Tooltip);
 }
+
+

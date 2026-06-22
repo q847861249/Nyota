@@ -38,6 +38,13 @@ UE_DEFINE_GAMEPLAY_TAG_COMMENT(InitState_DataAvailable, "Nyota.InitState.DataAva
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(InitState_DataInitialized, "Nyota.InitState.DataInitialized", "3: The available data has been initialized for this actor/component, but it is not ready for full gameplay");
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(InitState_GameplayReady, "Nyota.InitState.GameplayReady", "4: The actor/component is fully ready for active gameplay");
 
+// Cooldown
+UE_DEFINE_GAMEPLAY_TAG(CooldownDuration, "Nyota.Ability.CooldownDuration");
+UE_DEFINE_GAMEPLAY_TAG(Passive_Cooldown, "Nyota.Ability.Passive_Cooldown");
+UE_DEFINE_GAMEPLAY_TAG(Q_Cooldown, "Nyota.Ability.Q_Cooldown");
+UE_DEFINE_GAMEPLAY_TAG(E_Cooldown, "Nyota.Ability.E_Cooldown");
+UE_DEFINE_GAMEPLAY_TAG(R_Cooldown, "Nyota.Ability.R_Cooldown");
+
 // Event
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_AttackStart, "Nyota.Event.Ability.AttackStart")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_AttackEnd, "Nyota.Event.Ability.AttackEnd")

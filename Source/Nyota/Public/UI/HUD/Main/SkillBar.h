@@ -12,25 +12,28 @@
 class UImage;
 class ABasePlayer;
 class USkillTooltip;
+class UGameplayAbility;
+class UCommonBorder;
+class UTextBlock;
+class UAbilitySystemComponent;
+class UHorizontalBox;
+class USkillSlot;
 UCLASS()
 class NYOTA_API USkillBar : public UCommonUserWidget
 {
 	GENERATED_BODY()
 private:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> PassiveImage;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> Q_Image;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> E_Image;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> R_Image;
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USkillTooltip> TooltipClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<USkillSlot> SkillSlotClass;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UHorizontalBox> AbilityUIBar;
+
+	TObjectPtr<UAbilitySystemComponent> ASC;
+
 public:
 	void Init(ABasePlayer* BasePlayer);
 };

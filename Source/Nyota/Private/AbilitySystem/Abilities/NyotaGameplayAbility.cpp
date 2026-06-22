@@ -3,6 +3,7 @@
 #include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 
 #include "Character/BasePlayer.h"
+#include "GameplayTags/GameTags.h"
 
 UNyotaGameplayAbility::UNyotaGameplayAbility(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -49,4 +50,22 @@ FVector UNyotaGameplayAbility::GetAbilityDetectionDirection_Implementation() con
     }
 
     return BaseDirection;
+}
+
+void UNyotaGameplayAbility::ApplyCooldown(
+    const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
+    const FGameplayAbilityActivationInfo ActivationInfo
+) const
+{
+    if (!CooldownGameplayEffectClass)
+    {
+        return;
+    }
+
+    FGameplayEffectSpecHandle SpecHandle =
+        MakeOutgoingGameplayEffectSpec(CooldownGameplayEffectClass, GetAbilityLevel());
+
+    SpecHandle.Data->SetSetByCallerMagnitude(Nyota::CooldownDuration, CooldownDuration);
+
+    ApplyGameplayEffectSpecToOwner(Handle, ActorInfo, ActivationInfo, SpecHandle);
 }

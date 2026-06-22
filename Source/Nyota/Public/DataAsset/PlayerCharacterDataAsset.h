@@ -6,7 +6,30 @@
 #include "Engine/DataAsset.h"
 #include "PlayerCharacterDataAsset.generated.h"
 
+
 class UTexture2D;
+class UGameplayAbility;
+USTRUCT(BlueprintType)
+struct FSkillUIData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FText SlotName;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    TObjectPtr<UTexture2D> AbilityIcon;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    FText AbilityName;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(MultiLine="true"))
+    FText AbilityDesc;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    TSubclassOf<UGameplayAbility> AbilityClass;
+};
 UCLASS()
 class NYOTA_API UPlayerCharacterDataAsset : public UDataAsset
 {
@@ -16,40 +39,18 @@ public:
     TObjectPtr<UTexture2D> Avatar;
 
 	UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UTexture2D> PassiveIcon;
+    TArray<FSkillUIData> Skills;
+    // UPROPERTY(EditDefaultsOnly, Category="Skills")
+    // FSkillUIData Passive;
 
-	UPROPERTY(EditDefaultsOnly)
-	FText PassiveName;	
+    // UPROPERTY(EditDefaultsOnly, Category="Skills")
+    // FSkillUIData Q;
 
-	UPROPERTY(EditDefaultsOnly)
-	FText PassiveDesc;	
+    // UPROPERTY(EditDefaultsOnly, Category="Skills")
+    // FSkillUIData E;
 
-	UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UTexture2D> Q_Icon;
-
-	UPROPERTY(EditDefaultsOnly)
-	FText Q_Name;	
-
-	UPROPERTY(EditDefaultsOnly)
-	FText Q_Desc;	
-
-	UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UTexture2D> E_Icon;
-
-	UPROPERTY(EditDefaultsOnly)
-	FText E_Name;	
-
-	UPROPERTY(EditDefaultsOnly)
-	FText E_Desc;
-
-	UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<UTexture2D> R_Icon;
-
-	UPROPERTY(EditDefaultsOnly)
-	FText R_Name;	
-
-	UPROPERTY(EditDefaultsOnly)
-	FText R_Desc;
+    // UPROPERTY(EditDefaultsOnly, Category="Skills")
+    // FSkillUIData R;
 
 
 };

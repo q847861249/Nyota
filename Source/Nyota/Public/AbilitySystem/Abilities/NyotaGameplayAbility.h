@@ -51,4 +51,12 @@ protected:
     // 定义如何激活这种能力。
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota | Ability Activation")
     ENyotaAbilityActivationPolicy ActivationPolicy;
+
+    virtual void ApplyCooldown(
+        const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
+        const FGameplayAbilityActivationInfo ActivationInfo
+    ) const override;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    float CooldownDuration;
 };

@@ -17,6 +17,12 @@ void UGA_WaterBubble::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+    if (!CommitAbility(Handle, ActorInfo, ActivationInfo))
+    {
+        EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
+        return;
+    }
+    
     bIsStopping = false;
 
     UAbilityTask_PlayMontageAndWait *PlayMontageTask =
