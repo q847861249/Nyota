@@ -18,6 +18,7 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponen
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+    /*
     APlayerController *PlayerController = Cast<APlayerController>(GetController());
     if (!PlayerController)
     {
@@ -39,7 +40,9 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponen
     {
         UE_LOG(LogTemp, Warning, TEXT("%s: InputMappingContext Is Null."), *GetNameSafe(this));
     }
+    */
 
+    /*
     if (UEnhancedInputComponent *EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
     {
         if (LookAction)
@@ -64,6 +67,7 @@ void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponen
     {
         UE_LOG(LogTemp, Error, TEXT("%s: EnhancedInputComponent Is Null."), *GetNameSafe(this));
     }
+    */
 }
 
 UAbilitySystemComponent *ABasePlayer::GetAbilitySystemComponent() const

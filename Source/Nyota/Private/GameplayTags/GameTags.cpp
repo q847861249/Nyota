@@ -5,6 +5,12 @@
 namespace Nyota
 {
 // clang-format off
+
+// Input
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Move, "Nyota.InputTag.Move", "Move input.");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look_Mouse, "Nyota.InputTag.Look.Mouse", "Look (mouse) input.");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look_Stick, "Nyota.InputTag.Look.Stick", "Look (stick) input.");
+
 // Ability
 UE_DEFINE_GAMEPLAY_TAG(Ability_LightAttack, "Nyota.Ability.Attack.Light");
 UE_DEFINE_GAMEPLAY_TAG(Ability_LeftLightAttack, "Nyota.Ability.Attack.LeftLight");
@@ -43,5 +49,6 @@ UE_DEFINE_GAMEPLAY_TAG(Event_Ability_ApplyDamage, "Nyota.Event.Ability.ApplyDama
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_HitReact, "Nyota.Event.Enemy.HitReact")
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_BoarLanded, "Nyota.Event.Enemy.BoarLanded")
 UE_DEFINE_GAMEPLAY_TAG(Event_Item_PickUp, "Nyota.Event.Item.PickUp")
+
 // clang-format on
 } // namespace Nyota

@@ -2,8 +2,10 @@
 
 #include "System/NyotaAssetManager.h"
 
+#include "AbilitySystem/NyotaGameplayCueManager.h"
 #include "Character/NyotaPawnData.h"
 #include "System/NyotaAssetManagerStartupJob.h"
+#include "System/NyotaGameData.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(NyotaAssetManager)
 
@@ -116,7 +118,7 @@ void UNyotaAssetManager::StartInitialLoading()
     Super::StartInitialLoading();
 
     STARTUP_JOB(InitializeGameplayCueManager());
-    
+
     {
         // Load base game data asset
         STARTUP_JOB_WEIGHTED(GetGameData(), 25.f);
@@ -126,25 +128,166 @@ void UNyotaAssetManager::StartInitialLoading()
     DoAllStartupJobs();
 }
 
+#if WITH_EDITOR
 void UNyotaAssetManager::PreBeginPIE(bool bStartSimulate)
 {
     Super::PreBeginPIE(bStartSimulate);
+
+    {
+        FScopedSlowTask SlowTask(0, NSLOCTEXT("LyraEditor", "BeginLoadingPIEData", "Loading PIE Data"));
+        constexpr bool bShowCancelButton = false;
+        constexpr bool bAllowInPIE = true;
+        SlowTask.MakeDialog(bShowCancelButton, bAllowInPIE);
+
+        const UNyotaGameData &LocalGameDataCommon = GetGameData();
+
+        // 刻意放在 GetGameData() 之后，避免 GameData 加载耗时被计入此计时器
+        SCOPE_LOG_TIME_IN_SECONDS(TEXT("PreBeginPIE asset preloading complete"), nullptr)
+    }
 }
+#endif
 
 UPrimaryDataAsset *UNyotaAssetManager::LoadGameDataOfClass(
     TSubclassOf<UPrimaryDataAsset> DataClass, const TSoftObjectPtr<UPrimaryDataAsset> &DataClassPath,
     FPrimaryAssetType PrimaryAssetType
 )
 {
-    return nullptr;
+    UPrimaryDataAsset *Asset = nullptr;
+
+    DECLARE_SCOPE_CYCLE_COUNTER(TEXT("Loading GameData Object"), STAT_GameData, STATGROUP_LoadTime);
+
+    if (!DataClassPath.IsNull())
+    {
+#if WITH_EDITOR
+        FScopedSlowTask SlowTask(
+            0,
+            FText::Format(
+                NSLOCTEXT("LyraEditor", "BeginLoadingGameDataTask", "Loading GameData {0}"),
+                FText::FromName(DataClass->GetFName())
+            )
+        );
+        constexpr bool bShowCancelButton = false;
+        constexpr bool bAllowInPIE = true;
+        SlowTask.MakeDialog(bShowCancelButton, bAllowInPIE);
+#endif
+
+        UE_LOG(LogTemp, Log, TEXT("Loading GameData: %s ..."), *DataClassPath.ToString());
+
+        SCOPE_LOG_TIME_IN_SECONDS(TEXT("    ... GameData loaded!"), nullptr)
+
+        if (GIsEditor)
+        {
+            // ──── 编辑器路径 ────
+            Asset = DataClassPath.LoadSynchronous();     // 1: 同步加载主资产
+            LoadPrimaryAssetsWithType(PrimaryAssetType); // 2: 异步加载关联资产组
+        }
+        else
+        {
+            // ──── 运行时路径 ────
+            TSharedPtr<FStreamableHandle> Handle = LoadPrimaryAssetsWithType(PrimaryAssetType); // 1: 异步加载全部
+
+            if (Handle.IsValid())
+            {
+                Handle->WaitUntilComplete(0.0f, false); // 2: 等待完成
+
+                Asset = Cast<UPrimaryDataAsset>(Handle->GetLoadedAsset()); // 3: 取出主资产
+            }
+        }
+    }
+
+    if (Asset)
+    {
+        GameDataMap.Add(DataClass, Asset);
+    }
+    else
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT(
+                "Failed to load GameData asset at %s. Type %s. This is not recoverable and likely means you do not "
+                "have the correct data to run %s."
+            ),
+            *DataClassPath.ToString(),
+            *PrimaryAssetType.ToString(),
+            FApp::GetProjectName()
+        );
+    }
+
+    return Asset;
 }
 
 void UNyotaAssetManager::DoAllStartupJobs()
 {
+    SCOPED_BOOT_TIMING("UNyotaAssetManager::DoAllStartupJobs");
+
+    const double AllStartupJobsStartTime = FPlatformTime::Seconds();
+
+    if (IsRunningDedicatedServer())
+    {
+        // 不需要周期性进度更新，直接执行任务
+        for (const FNyotaAssetManagerStartupJob &StartupJob : StartupJobs)
+        {
+            StartupJob.DoJob();
+        }
+    }
+    else
+    {
+        if (StartupJobs.Num() > 0)
+        {
+            float TotalJobValue = 0.f;
+
+            for (const FNyotaAssetManagerStartupJob &StartupJob : StartupJobs)
+            {
+                TotalJobValue += StartupJob.JobWeight;
+            }
+
+            float AccumulatedJobValue = 0.0f;
+            for (FNyotaAssetManagerStartupJob &StartupJob : StartupJobs)
+            {
+                const float JobValue = StartupJob.JobWeight;
+                StartupJob.SubstepProgressDelegate.BindLambda(
+                    [This = this, AccumulatedJobValue, JobValue, TotalJobValue](float NewProgress) {
+                        const float SubstepAdjustment = FMath::Clamp(NewProgress, 0.0f, 1.0f) * JobValue;
+                        const float OverallPercentWithSubstep =
+                            (AccumulatedJobValue + SubstepAdjustment) / TotalJobValue;
+
+                        This->UpdateInitialGameContentLoadPercent(OverallPercentWithSubstep);
+                    }
+                );
+
+                StartupJob.DoJob();
+
+                StartupJob.SubstepProgressDelegate.Unbind();
+
+                AccumulatedJobValue += JobValue;
+
+                UpdateInitialGameContentLoadPercent(AccumulatedJobValue / TotalJobValue);
+            }
+        }
+        else
+        {
+            UpdateInitialGameContentLoadPercent(1.0f);
+        }
+    }
+
+    StartupJobs.Empty();
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("All startup jobs took %.2f seconds to complete"),
+        FPlatformTime::Seconds() - AllStartupJobsStartTime
+    );
 }
 
 void UNyotaAssetManager::InitializeGameplayCueManager()
 {
+    SCOPED_BOOT_TIMING("ULyraAssetManager::InitializeGameplayCueManager");
+
+    UNyotaGameplayCueManager *GCM = UNyotaGameplayCueManager::Get();
+    check(GCM);
+    GCM->LoadAlwaysLoadedCues();
 }
 
 void UNyotaAssetManager::UpdateInitialGameContentLoadPercent(float GameContentPercent)
