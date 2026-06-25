@@ -18,6 +18,7 @@ UNyotaPawnExtensionComponent::UNyotaPawnExtensionComponent(const FObjectInitiali
 
     SetIsReplicatedByDefault(true);
 
+    PawnData = nullptr;
     AbilitySystemComponent = nullptr;
 }
 
@@ -107,9 +108,34 @@ void UNyotaPawnExtensionComponent::UninitializeAbilitySystem()
             // If the ASC doesn't have a valid owner, we need to clear *all* actor info, not just the avatar pairing
             AbilitySystemComponent->ClearActorInfo();
         }
+
+        OnAbilitySystemUninitialized.Broadcast();
     }
 
     AbilitySystemComponent = nullptr;
+}
+
+void UNyotaPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(
+    FSimpleMulticastDelegate::FDelegate Delegate
+)
+{
+    if (!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
+    {
+        OnAbilitySystemInitialized.Add(Delegate);
+    }
+
+    if (AbilitySystemComponent)
+    {
+        Delegate.Execute();
+    }
+}
+
+void UNyotaPawnExtensionComponent::OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate)
+{
+    if (!OnAbilitySystemUninitialized.IsBoundToObject(Delegate.GetUObject()))
+    {
+        OnAbilitySystemUninitialized.Add(Delegate);
+    }
 }
 
 FName UNyotaPawnExtensionComponent::GetFeatureName() const

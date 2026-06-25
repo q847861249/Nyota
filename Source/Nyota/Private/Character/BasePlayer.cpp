@@ -13,6 +13,19 @@
 #include "GameplayTags/GameTags.h"
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Character/NyotaPawnExtensionComponent.h"
+#include "GA/CustomAbilitySystemComponent.h"
+
+ABasePlayer::ABasePlayer(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
+{
+    PawnExtensionComponent = CreateDefaultSubobject<UNyotaPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+    PawnExtensionComponent->OnAbilitySystemInitialized_RegisterAndCall(
+        FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized)
+    );
+    PawnExtensionComponent->OnAbilitySystemUninitialized_Register(
+        FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemUninitialized)
+    );
+}
 
 void ABasePlayer::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 {
@@ -178,6 +191,11 @@ ABaseCharacter *ABasePlayer::GetGrabbedEnemy() const
 void ABasePlayer::ResetGrabbedEnemy()
 {
     GrabbedEnemy.Reset();
+}
+
+UCustomAbilitySystemComponent *ABasePlayer::GetNyotaAbilitySystemComponent() const
+{
+    return Cast<UCustomAbilitySystemComponent>(GetAbilitySystemComponent());
 }
 
 void ABasePlayer::MoveInput(const FInputActionValue &Value)
@@ -353,4 +371,14 @@ void ABasePlayer::OnOverlapBegin(
         Payload.Target = OtherActor;
         UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Item_PickUp, Payload);
     }
+}
+
+void ABasePlayer::OnAbilitySystemInitialized()
+{
+    UCustomAbilitySystemComponent *NyotaASC = GetNyotaAbilitySystemComponent();
+    check(NyotaASC);
+}
+
+void ABasePlayer::OnAbilitySystemUninitialized()
+{
 }

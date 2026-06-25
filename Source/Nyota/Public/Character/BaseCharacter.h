@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Abilities/GameplayAbility.h"
 #include "Enums/PlayerType.h"
+#include "ModularCharacter.h"
 
 #include "BaseCharacter.generated.h"
 
@@ -15,12 +15,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComp
 class UGameplayEffect;
 
 UCLASS()
-class NYOTA_API ABaseCharacter : public ACharacter, public IAbilitySystemInterface
+class NYOTA_API ABaseCharacter : public AModularCharacter, public IAbilitySystemInterface
 {
     GENERATED_BODY()
 
 public:
-    ABaseCharacter();
+    ABaseCharacter(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/GameFrameworkInitStateInterface.h"
 #include "Components/PawnComponent.h"
 #include "NyotaHeroComponent.generated.h"
 
@@ -10,8 +11,8 @@ struct FInputActionValue;
 struct FInputMappingContextAndPriority;
 struct FGameplayTag;
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class NYOTA_API UNyotaHeroComponent : public UPawnComponent
+UCLASS(Blueprintable, Meta = (BlueprintSpawnableComponent))
+class NYOTA_API UNyotaHeroComponent : public UPawnComponent, public IGameFrameworkInitStateInterface
 {
     GENERATED_BODY()
 
@@ -24,7 +25,32 @@ public:
 
     static const FName NAME_ActorFeatureName;
 
+    //~ Begin IGameFrameworkInitStateInterface interface
+    virtual FName GetFeatureName() const override
+    {
+        return NAME_ActorFeatureName;
+    }
+
+    virtual bool CanChangeInitState(
+        UGameFrameworkComponentManager *Manager, FGameplayTag CurrentState, FGameplayTag DesiredState
+    ) const override;
+
+    virtual void HandleChangeInitState(
+        UGameFrameworkComponentManager *Manager, FGameplayTag CurrentState, FGameplayTag DesiredState
+    ) override;
+
+    virtual void OnActorInitStateChanged(const FActorInitStateChangedParams &Params) override;
+
+    virtual void CheckDefaultInitialization() override;
+    //~ End IGameFrameworkInitStateInterface interface
+
 protected:
+    virtual void OnRegister() override;
+
+    virtual void BeginPlay() override;
+
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
     void InitializePlayerInput(UInputComponent *PlayerInputComponent);
 
     void Input_AbilityInputTagPressed(const FGameplayTag &InputTag);

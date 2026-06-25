@@ -28,9 +28,29 @@ public:
     UFUNCTION(BlueprintPure, Category = "Nyota | Pawn")
     static UNyotaPawnExtensionComponent *FindPawnExtensionComponent(const AActor *Actor);
 
+    /**
+     * @brief 让当前 Pawn 成为 ASC 的 AvatarActor
+     * @param InASC
+     * @param InOwnerActor
+     */
     NYOTA_API void InitializeAbilitySystem(UCustomAbilitySystemComponent *InASC, AActor *InOwnerActor);
 
+    /**
+     * @brief 取消当前 Pawn 作为 ASC 的 AvatarActor
+     */
     NYOTA_API void UninitializeAbilitySystem();
+
+    /**
+     * @brief 注册 ASC 初始化回调（若已初始化则立即广播）
+     * @param Delegate
+     */
+    NYOTA_API void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
+
+    /**
+     * @brief 注册 ASC 反初始化回调
+     * @param Delegate
+     */
+    NYOTA_API void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate);
 
     static NYOTA_API const FName NAME_ActorFeatureName;
 

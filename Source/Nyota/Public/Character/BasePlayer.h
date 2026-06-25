@@ -10,15 +10,19 @@
 
 #include "BasePlayer.generated.h"
 
+class UCustomAbilitySystemComponent;
+class UNyotaPawnExtensionComponent;
 /**
  *
  */
-UCLASS()
+UCLASS(Config = Game, Meta = (ShortTooltip = "The base character pawn class used by this project."))
 class NYOTA_API ABasePlayer : public ABaseCharacter
 {
     GENERATED_BODY()
 
 public:
+    ABasePlayer(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
+
     virtual void SetupPlayerInputComponent(UInputComponent *PlayerInputComponent) override;
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
@@ -38,6 +42,9 @@ public:
     ABaseCharacter *GetGrabbedEnemy() const;
 
     void ResetGrabbedEnemy();
+
+    UFUNCTION(BlueprintCallable, Category = "Nyota | Character")
+    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
 protected:
     void MoveInput(const FInputActionValue &Value);
@@ -89,6 +96,10 @@ protected:
 
     float TargetYaw; // 记录目标朝向
 
+    virtual void OnAbilitySystemInitialized();
+
+    virtual void OnAbilitySystemUninitialized();
+
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
     float RotationInterpSpeed;
@@ -121,4 +132,7 @@ private:
     FGameplayTag Skill_3_Tag;
 
     TWeakObjectPtr<ABaseCharacter> GrabbedEnemy;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Nyota | Character", meta = (AllowPrivateAccess = "true"))
+    TObjectPtr<UNyotaPawnExtensionComponent> PawnExtensionComponent;
 };
