@@ -10,8 +10,8 @@ public class Nyota : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "Niagara", "UMG", "AIModule",
-			"NavigationSystem", "ModularGameplay", "GameFeatures", "UnLua", "Puerts", "JsEnv", "ModularGameplayActors"
+			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "NetCore", "Niagara", "UMG", "AIModule",
+			"NavigationSystem", "ModularGameplay", "GameFeatures", "UnLua", "Puerts", "JsEnv", "ModularGameplayActors", "GameplayAbilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]

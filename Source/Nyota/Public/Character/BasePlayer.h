@@ -33,8 +33,6 @@ public:
 
     virtual UAttributeSet *GetAttributeSet() const override;
 
-    virtual void Tick(float DeltaSeconds) override;
-
     virtual void BeginPlay() override;
 
     void SetGrabbedEnemy(ABaseCharacter *Character);
@@ -47,10 +45,6 @@ public:
     UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
 protected:
-    void MoveInput(const FInputActionValue &Value);
-
-    void LookInput(const FInputActionValue &Value);
-
     UFUNCTION(BlueprintCallable, Category = "Nyota")
     void OnLightAttack_Started();
 
@@ -101,27 +95,6 @@ protected:
     virtual void OnAbilitySystemUninitialized();
 
 private:
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float RotationInterpSpeed;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_Forward = 90.f; // 纯前后
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_Side = 0.f; // 纯左右
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_ForwardLeft = 45.f; // W+A
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_ForwardRight = -45.f; // W+D
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_BackLeft = -45.f; // S+A
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Movement | Rotation")
-    float YawOffset_BackRight = 45.f; // S+D
-
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | Tag")
     FGameplayTag Skill_1_Tag;
 

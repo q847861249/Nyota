@@ -165,6 +165,12 @@ bool UNyotaPawnExtensionComponent::CanChangeInitState(
     {
         if (!PawnData)
         {
+            UE_LOG(
+                LogTemp,
+                Warning,
+                TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState Spawned→DataAvailable: FAIL - no PawnData"),
+                *GetNameSafe(Pawn)
+            );
             return false;
         }
 
@@ -175,17 +181,33 @@ bool UNyotaPawnExtensionComponent::CanChangeInitState(
         {
             if (!GetController<AController>())
             {
+                UE_LOG(
+                    LogTemp,
+                    Warning,
+                    TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState Spawned→DataAvailable: FAIL - no Controller"),
+                    *GetNameSafe(Pawn)
+                );
                 return false;
             }
         }
 
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState Spawned→DataAvailable: PASS"),
+            *GetNameSafe(Pawn)
+        );
         return true;
     }
 
-    // DataAvailable → DataInitialized：⭐ 关键！等所有 Feature 都到 DataAvailable
+    // DataAvailable → DataInitialized：各 Feature 的初始化已通过 OnActorInitStateChanged 保证时序，
+    // HeroComponent 的 InitializePlayerInput / InitializeAbilitySystem 在自身的 HandleChangeInitState 中执行。
+    // PawnExtComp 的 HandleChangeInitState(DataInitialized) 为空，此处直接放行。
     if (CurrentState == Nyota::InitState_DataAvailable && DesiredState == Nyota::InitState_DataInitialized)
     {
-        return Manager->HaveAllFeaturesReachedInitState(Pawn, Nyota::InitState_DataAvailable);
+        UE_LOG(LogTemp, Warning, TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState DataAvailable→DataInitialized: PASS (auto)"),
+            *GetNameSafe(Pawn));
+        return true;
     }
 
     // DataInitialized → GameplayReady：自动放行
@@ -291,6 +313,7 @@ void UNyotaPawnExtensionComponent::OnRegister()
 
     // 把自己注册到 ComponentManager
     RegisterInitStateFeature();
+    bHasRegisteredInitState = true;
 }
 
 void UNyotaPawnExtensionComponent::BeginPlay()
@@ -300,17 +323,37 @@ void UNyotaPawnExtensionComponent::BeginPlay()
     // 监听所有其他 Feature 的状态变化（NAME_None = 监听全部）
     BindOnActorInitStateChanged(NAME_None, FGameplayTag(), false);
 
+    // Controller 绑定时重新触发 InitState 检查（Controller 可能晚于 BeginPlay 才绑定）
+    if (APawn *Pawn = GetPawn<APawn>())
+    {
+        Pawn->ReceiveControllerChangedDelegate.AddDynamic(this, &ThisClass::OnPawnControllerChanged);
+    }
+
     // 推进到 Spawned，然后尝试继续推进
     ensure(TryToChangeInitState(Nyota::InitState_Spawned));
 
     CheckDefaultInitialization();
 }
 
+void UNyotaPawnExtensionComponent::OnPawnControllerChanged(
+    APawn *Pawn, AController *OldController, AController *NewController
+)
+{
+    if (NewController != nullptr)
+    {
+        CheckDefaultInitialization();
+    }
+}
+
 void UNyotaPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
     UninitializeAbilitySystem();
 
-    UnregisterInitStateFeature();
+    if (bHasRegisteredInitState)
+    {
+        UnregisterInitStateFeature();
+        bHasRegisteredInitState = false;
+    }
 
     Super::EndPlay(EndPlayReason);
 }

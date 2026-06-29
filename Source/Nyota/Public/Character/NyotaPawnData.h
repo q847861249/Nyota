@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "NyotaPawnData.generated.h"
 
+class UNyotaAbilitySet;
 class UNyotaInputConfig;
 class UNyotaAbilityTagRelationshipMapping;
 class UBaseAttributeSet;
@@ -28,7 +29,7 @@ public:
     TSubclassOf<APawn> PawnClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota | Abilities")
-    TArray<TObjectPtr<UBaseAttributeSet>> AbilitySets;
+    TArray<TObjectPtr<UNyotaAbilitySet>> AbilitySets;
 
     // 该 Pawn 执行 Action 时应使用哪套 Ability Tag 映射关系。
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota | Abilities")

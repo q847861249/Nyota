@@ -10,6 +10,12 @@
 
 struct FNyotaAssetManagerStartupJob;
 class UNyotaPawnData;
+
+struct FNyotaBundles
+{
+    static const FName Equipped;
+};
+
 /**
  *
  */

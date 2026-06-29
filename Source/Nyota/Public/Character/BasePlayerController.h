@@ -11,7 +11,7 @@ class UCustomAbilitySystemComponent;
 /**
  *
  */
-UCLASS()
+UCLASS(Config = Game)
 class NYOTA_API ABasePlayerController : public APlayerController
 {
     GENERATED_BODY()
@@ -22,4 +22,10 @@ public:
     UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
     virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+};
+
+UCLASS()
+class ABaseReplayPlayerController : public ABasePlayerController
+{
+    GENERATED_BODY()
 };

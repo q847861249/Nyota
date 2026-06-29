@@ -91,6 +91,9 @@ protected:
     NYOTA_API virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     UFUNCTION()
+    void OnPawnControllerChanged(APawn *Pawn, AController *OldController, AController *NewController);
+
+    UFUNCTION()
     void OnRep_PawnData();
 
     // 当我们的 Pawn 成为 Ability System 的 Avatar Actor 时触发的代理
@@ -105,4 +108,6 @@ protected:
 
     UPROPERTY(Transient)
     TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+
+    bool bHasRegisteredInitState = false;
 };

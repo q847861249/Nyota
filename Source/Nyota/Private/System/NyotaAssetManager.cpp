@@ -9,6 +9,8 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(NyotaAssetManager)
 
+const FName FNyotaBundles::Equipped(TEXT("Equipped"));
+
 //////////////////////////////////////////////////////////////////////
 
 #define STARTUP_JOB_WEIGHTED(JobFunc, JobWeight)                                                                       \
@@ -119,6 +121,7 @@ void UNyotaAssetManager::StartInitialLoading()
 
     STARTUP_JOB(InitializeGameplayCueManager());
 
+    if (NyotaGameDataPath.IsValid())
     {
         // Load base game data asset
         STARTUP_JOB_WEIGHTED(GetGameData(), 25.f);
@@ -133,13 +136,14 @@ void UNyotaAssetManager::PreBeginPIE(bool bStartSimulate)
 {
     Super::PreBeginPIE(bStartSimulate);
 
+    if (NyotaGameDataPath.IsValid())
     {
-        FScopedSlowTask SlowTask(0, NSLOCTEXT("LyraEditor", "BeginLoadingPIEData", "Loading PIE Data"));
+        FScopedSlowTask SlowTask(0, NSLOCTEXT("NyotaEditor", "BeginLoadingPIEData", "Loading PIE Data"));
         constexpr bool bShowCancelButton = false;
         constexpr bool bAllowInPIE = true;
         SlowTask.MakeDialog(bShowCancelButton, bAllowInPIE);
 
-        const UNyotaGameData &LocalGameDataCommon = GetGameData();
+        GetGameData();
 
         // 刻意放在 GetGameData() 之后，避免 GameData 加载耗时被计入此计时器
         SCOPE_LOG_TIME_IN_SECONDS(TEXT("PreBeginPIE asset preloading complete"), nullptr)
@@ -162,7 +166,7 @@ UPrimaryDataAsset *UNyotaAssetManager::LoadGameDataOfClass(
         FScopedSlowTask SlowTask(
             0,
             FText::Format(
-                NSLOCTEXT("LyraEditor", "BeginLoadingGameDataTask", "Loading GameData {0}"),
+                NSLOCTEXT("NyotaEditor", "BeginLoadingGameDataTask", "Loading GameData {0}"),
                 FText::FromName(DataClass->GetFName())
             )
         );
@@ -283,10 +287,21 @@ void UNyotaAssetManager::DoAllStartupJobs()
 
 void UNyotaAssetManager::InitializeGameplayCueManager()
 {
-    SCOPED_BOOT_TIMING("ULyraAssetManager::InitializeGameplayCueManager");
+    SCOPED_BOOT_TIMING("UNyotaAssetManager::InitializeGameplayCueManager");
 
     UNyotaGameplayCueManager *GCM = UNyotaGameplayCueManager::Get();
-    check(GCM);
+    if (!GCM)
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT(
+                "GlobalGameplayCueManagerClass is not set to NyotaGameplayCueManager in "
+                "DefaultGame.ini. GameplayCue preloading skipped."
+            )
+        );
+        return;
+    }
     GCM->LoadAlwaysLoadedCues();
 }
 

@@ -14,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComp
 
 class UGameplayEffect;
 
-UCLASS()
+UCLASS(Config = Game)
 class NYOTA_API ABaseCharacter : public AModularCharacter, public IAbilitySystemInterface
 {
     GENERATED_BODY()
@@ -31,6 +31,10 @@ public:
     void SetAlive(bool bAliveStatus);
 
     virtual void OnRespawn();
+
+    virtual void PawnClientRestart() override;
+
+    virtual UInputComponent *CreatePlayerInputComponent() override;
 
     EPlayerType GetPlayerType() const;
 
