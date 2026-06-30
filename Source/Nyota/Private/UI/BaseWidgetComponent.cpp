@@ -5,7 +5,7 @@
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Blueprint/WidgetTree.h"
 #include "Character/BaseCharacter.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "UI/BaseAttributeWidget.h"
 
 void UBaseWidgetComponent::BeginPlay()

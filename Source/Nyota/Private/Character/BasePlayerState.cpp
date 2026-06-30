@@ -7,7 +7,7 @@
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Character/NyotaPawnData.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "GameModes/NyotaExperienceManagerComponent.h"
 #include "GameModes/NyotaGameMode.h"
 #include "Net/UnrealNetwork.h"

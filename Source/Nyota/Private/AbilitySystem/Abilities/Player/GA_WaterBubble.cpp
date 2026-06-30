@@ -1,13 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/Player/GA_WaterBubble.h"
+#include "AbilitySystem/Abilities/Player/GA_WaterBubble.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
-#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Abilities/Tasks/AbilityTask_WaitInputRelease.h"
-#include "GA/Tasks/AbilityTask_WaitInputActionReleased.h"
 #include "Actor/BaseProjectile.h"
 #include "Character/BaseCharacter.h"
 #include "GameplayTags/GameTags.h"

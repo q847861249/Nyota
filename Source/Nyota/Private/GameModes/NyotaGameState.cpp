@@ -2,7 +2,7 @@
 
 #include "GameModes/NyotaGameState.h"
 
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "GameModes/NyotaExperienceManagerComponent.h"
 
 ANyotaGameState::ANyotaGameState(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)

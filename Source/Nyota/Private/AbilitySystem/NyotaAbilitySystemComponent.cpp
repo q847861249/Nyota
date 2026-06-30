@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 
 #include "Abilities/GameplayAbility.h"
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 #include "GameplayTags/GameTags.h"
 
 UNyotaAbilitySystemComponent::UNyotaAbilitySystemComponent(const FObjectInitializer &ObjectInitializer)
@@ -184,7 +184,7 @@ void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGa
 
         if (!AbilitySpec->IsActive())
         {
-            const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
+            const UNyotaGameplayAbility *NyotaAbilityCDO = Cast<UNyotaGameplayAbility>(AbilitySpec->Ability);
             if (NyotaAbilityCDO &&
                 NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivationPolicy::WhileInputActive)
             {
@@ -217,7 +217,7 @@ void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGa
         }
         else
         {
-            const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
+            const UNyotaGameplayAbility *NyotaAbilityCDO = Cast<UNyotaGameplayAbility>(AbilitySpec->Ability);
             if (NyotaAbilityCDO &&
                 NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivationPolicy::OnInputTriggered)
             {

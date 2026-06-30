@@ -3,7 +3,7 @@
 #include "Character/BasePlayerController.h"
 
 #include "Character/BasePlayerState.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 
 ABasePlayerState *ABasePlayerController::GetNyotaPlayerState() const
 {

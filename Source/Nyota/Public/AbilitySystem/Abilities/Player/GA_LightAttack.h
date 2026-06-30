@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 #include "GA_LightAttack.generated.h"
 
 /**
  *
  */
 UCLASS()
-class NYOTA_API UGA_LightAttack : public UGA_BaseSkill
+class NYOTA_API UGA_LightAttack : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 

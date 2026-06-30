@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "GA_BaseSkill.generated.h"
+#include "NyotaGameplayAbility.generated.h"
 
 UENUM(BlueprintType)
 enum class ENyotaAbilityActivationPolicy : uint8
@@ -22,15 +22,15 @@ enum class ENyotaAbilityActivationPolicy : uint8
 /**
  *
  */
-UCLASS()
-class NYOTA_API UGA_BaseSkill : public UGameplayAbility
+UCLASS(Abstract)
+class NYOTA_API UNyotaGameplayAbility : public UGameplayAbility
 {
     GENERATED_BODY()
 
     friend class UNyotaAbilitySystemComponent;
 
 public:
-    UGA_BaseSkill(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
+    UNyotaGameplayAbility(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void ActivateAbility(
         const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,

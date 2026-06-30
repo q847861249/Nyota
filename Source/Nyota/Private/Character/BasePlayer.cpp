@@ -14,7 +14,7 @@
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Character/NyotaPawnExtensionComponent.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {

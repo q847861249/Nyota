@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 #include "GA_Ability_WaterBall.generated.h"
 
 class UNiagaraSystem;
@@ -12,7 +12,7 @@ class UNiagaraSystem;
  *
  */
 UCLASS()
-class NYOTA_API UGA_Ability_WaterBall : public UGA_BaseSkill
+class NYOTA_API UGA_Ability_WaterBall : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 };

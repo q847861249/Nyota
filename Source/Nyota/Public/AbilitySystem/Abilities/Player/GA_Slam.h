@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA/GA_BaseSkill.h"
-#include "GA_VortexGrip.generated.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
+#include "GA_Slam.generated.h"
 
 class ABaseCharacter;
 /**
  *
  */
 UCLASS()
-class NYOTA_API UGA_VortexGrip : public UGA_BaseSkill
+class NYOTA_API UGA_Slam : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 
@@ -22,18 +22,18 @@ public:
     ) override;
 
     UFUNCTION()
-    void StartVortexGrip();
+    void StartSlam();
 
     UFUNCTION()
-    void ApplyDamage(FGameplayEventData EventData);
+    void OnApplySlamDamage(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnAbilityEnd();
+    void OnSlamEnd();
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TObjectPtr<UAnimMontage> VortexGripMontage;
+    TObjectPtr<UAnimMontage> SlamMontage;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    TSubclassOf<UGameplayEffect> VortexGripEffect;
+    TSubclassOf<UGameplayEffect> SlamEffect;
 };

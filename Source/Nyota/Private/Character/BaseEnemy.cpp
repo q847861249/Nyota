@@ -3,7 +3,7 @@
 #include "Character/BaseEnemy.h"
 
 #include "AttributeSet/BaseAttributeSet.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 
 ABaseEnemy::ABaseEnemy()
 {

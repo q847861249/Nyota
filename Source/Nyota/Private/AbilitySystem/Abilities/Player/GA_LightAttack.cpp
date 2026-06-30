@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/Player/GA_LightAttack.h"
+#include "AbilitySystem/Abilities/Player/GA_LightAttack.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
@@ -104,7 +104,7 @@ void UGA_LightAttack::ApplyDamage(const TArray<AActor *> &DamageActors)
 }
 
 void UGA_LightAttack::OnAttackEnd(FGameplayEventData EventData)
-{    
+{
     OnStopLightAttackTrace();
 
     ApplyDamage(HitActors);
@@ -116,7 +116,7 @@ void UGA_LightAttack::OnAttackEnd(FGameplayEventData EventData)
 void UGA_LightAttack::OnStartLightAttackTrace(FGameplayEventData EventData)
 {
     // ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-    ABaseCharacter* Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
+    ABaseCharacter *Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
 
     if (!IsValid(Owner))
     {
@@ -164,7 +164,7 @@ void UGA_LightAttack::OnStopLightAttackTrace()
 void UGA_LightAttack::PerformLightAttackTrace()
 {
     // ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-    ABaseCharacter* Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
+    ABaseCharacter *Owner = Cast<ABaseCharacter>(GetAvatarActorFromActorInfo());
     if (!IsValid(Owner))
     {
         return;

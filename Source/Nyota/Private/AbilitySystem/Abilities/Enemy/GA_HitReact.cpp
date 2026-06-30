@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/Enemy/GA_HitReact.h"
+#include "AbilitySystem/Abilities/Enemy/GA_HitReact.h"
 
 void UGA_HitReact::CacheHitDirectionVectors(AActor *Instigator)
 {

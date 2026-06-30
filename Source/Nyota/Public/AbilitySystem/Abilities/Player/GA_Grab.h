@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA_LightAttack.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 #include "GA_Grab.generated.h"
 
 class ABaseEnemyWildBoar;
@@ -11,7 +11,7 @@ class ABaseEnemyWildBoar;
  *
  */
 UCLASS()
-class NYOTA_API UGA_Grab : public UGA_BaseSkill
+class NYOTA_API UGA_Grab : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 

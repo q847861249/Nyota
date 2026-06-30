@@ -10,7 +10,7 @@
 #include "Character/NyotaPawnData.h"
 #include "Character/NyotaPawnExtensionComponent.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "GameFeatures/GameFeatureAction_AddInputContextMapping.h"
 #include "GameplayTags/GameTags.h"
 #include "Input/NyotaInputComponent.h"

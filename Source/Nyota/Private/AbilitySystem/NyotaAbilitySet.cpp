@@ -2,9 +2,9 @@
 
 #include "AbilitySystem/NyotaAbilitySet.h"
 
-#include "GA/NyotaAbilitySystemComponent.h"
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "GameplayAbilitySpec.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 
 void FNyotaAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle &Handle)
 {
@@ -123,7 +123,7 @@ void UNyotaAbilitySet::GiveToAbilitySystem(
             continue;
         }
 
-        UGA_BaseSkill *AbilityCDO = AbilityToGrant.Ability->GetDefaultObject<UGA_BaseSkill>();
+        UNyotaGameplayAbility *AbilityCDO = AbilityToGrant.Ability->GetDefaultObject<UNyotaGameplayAbility>();
 
         FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityToGrant.AbilityLevel);
         AbilitySpec.SourceObject = SourceObject;

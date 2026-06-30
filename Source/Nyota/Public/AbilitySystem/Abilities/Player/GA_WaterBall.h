@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 #include "GA_WaterBall.generated.h"
 
 class ABaseProjectile;
@@ -11,7 +11,7 @@ class ABaseProjectile;
  *
  */
 UCLASS()
-class NYOTA_API UGA_WaterBall : public UGA_BaseSkill
+class NYOTA_API UGA_WaterBall : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 

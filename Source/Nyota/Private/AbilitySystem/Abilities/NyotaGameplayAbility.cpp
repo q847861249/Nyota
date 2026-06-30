@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/GA_BaseSkill.h"
+#include "AbilitySystem/Abilities/NyotaGameplayAbility.h"
 
 #include "Character/BasePlayer.h"
 
-UGA_BaseSkill::UGA_BaseSkill(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
+UNyotaGameplayAbility::UNyotaGameplayAbility(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 
     ActivationPolicy = ENyotaAbilityActivationPolicy::OnInputTriggered;
 }
 
-void UGA_BaseSkill::ActivateAbility(
+void UNyotaGameplayAbility::ActivateAbility(
     const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
     const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
 )
@@ -24,12 +24,12 @@ void UGA_BaseSkill::ActivateAbility(
     }
 }
 
-ENyotaAbilityActivationPolicy UGA_BaseSkill::GetActivatePolicy() const
+ENyotaAbilityActivationPolicy UNyotaGameplayAbility::GetActivatePolicy() const
 {
     return ActivationPolicy;
 }
 
-FVector UGA_BaseSkill::GetAbilityDetectionDirection_Implementation() const
+FVector UNyotaGameplayAbility::GetAbilityDetectionDirection_Implementation() const
 {
     AActor *AvatarActor = GetAvatarActorFromActorInfo();
 

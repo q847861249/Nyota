@@ -4,7 +4,7 @@
 
 #include "Character/NyotaPawnData.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/NyotaAbilitySystemComponent.h"
+#include "AbilitySystem/NyotaAbilitySystemComponent.h"
 #include "GameplayTags/GameTags.h"
 #include "Net/UnrealNetwork.h"
 

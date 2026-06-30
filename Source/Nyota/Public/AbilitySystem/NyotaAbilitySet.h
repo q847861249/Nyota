@@ -7,8 +7,8 @@
 #include "Engine/DataAsset.h"
 #include "NyotaAbilitySet.generated.h"
 
+class UNyotaGameplayAbility;
 class UGameplayEffect;
-class UGA_BaseSkill;
 class UAttributeSet;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
@@ -26,7 +26,7 @@ struct FNyotaAbilitySet_GameplayAbility
 
     // Gameplay ability to grant.
     UPROPERTY(EditDefaultsOnly)
-    TSubclassOf<UGA_BaseSkill> Ability;
+    TSubclassOf<UNyotaGameplayAbility> Ability;
 
     // Level of ability to grant.
     UPROPERTY(EditDefaultsOnly)
