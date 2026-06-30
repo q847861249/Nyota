@@ -8,7 +8,7 @@
 
 #include "NyotaGameState.generated.h"
 
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 class UNyotaExperienceManagerComponent;
 /**
  *
@@ -27,7 +27,7 @@ public:
 
 private:
     UPROPERTY(VisibleAnywhere, Category = "Nyota | GameState")
-    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+    TObjectPtr<UNyotaAbilitySystemComponent> AbilitySystemComponent;
 
     UPROPERTY(VisibleAnywhere, Category = "Nyota | GameState")
     TObjectPtr<UNyotaExperienceManagerComponent> ExperienceManagerComponent;

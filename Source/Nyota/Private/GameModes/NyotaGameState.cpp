@@ -2,13 +2,13 @@
 
 #include "GameModes/NyotaGameState.h"
 
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "GameModes/NyotaExperienceManagerComponent.h"
 
 ANyotaGameState::ANyotaGameState(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
     AbilitySystemComponent =
-        ObjectInitializer.CreateDefaultSubobject<UCustomAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
+        ObjectInitializer.CreateDefaultSubobject<UNyotaAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 

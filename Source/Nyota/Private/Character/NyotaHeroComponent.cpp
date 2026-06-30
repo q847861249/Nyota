@@ -10,7 +10,7 @@
 #include "Character/NyotaPawnData.h"
 #include "Character/NyotaPawnExtensionComponent.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "GameFeatures/GameFeatureAction_AddInputContextMapping.h"
 #include "GameplayTags/GameTags.h"
 #include "Input/NyotaInputComponent.h"
@@ -512,7 +512,7 @@ void UNyotaHeroComponent::Input_AbilityInputTagPressed(const FGameplayTag &Input
         return;
     }
 
-    if (UCustomAbilitySystemComponent *NyotaASC = PawnExtComp->GetNyotaAbilitySystemComponent())
+    if (UNyotaAbilitySystemComponent *NyotaASC = PawnExtComp->GetNyotaAbilitySystemComponent())
     {
         NyotaASC->AbilityInputTagPressed(InputTag);
     }
@@ -532,7 +532,7 @@ void UNyotaHeroComponent::Input_AbilityInputTagReleased(const FGameplayTag &Inpu
         return;
     }
 
-    if (UCustomAbilitySystemComponent *NyotaASC = PawnExtComp->GetNyotaAbilitySystemComponent())
+    if (UNyotaAbilitySystemComponent *NyotaASC = PawnExtComp->GetNyotaAbilitySystemComponent())
     {
         NyotaASC->AbilityInputTagReleased(InputTag);
     }

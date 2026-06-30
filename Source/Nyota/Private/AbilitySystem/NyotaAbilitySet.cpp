@@ -2,7 +2,7 @@
 
 #include "AbilitySystem/NyotaAbilitySet.h"
 
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "GA/GA_BaseSkill.h"
 #include "GameplayAbilitySpec.h"
 
@@ -27,7 +27,7 @@ void FNyotaAbilitySet_GrantedHandles::AddAttributeSet(UAttributeSet *Set)
     GrantedAttributeSets.Add(Set);
 }
 
-void FNyotaAbilitySet_GrantedHandles::TakeFromAbilitySystem(UCustomAbilitySystemComponent *NyotaASC)
+void FNyotaAbilitySet_GrantedHandles::TakeFromAbilitySystem(UNyotaAbilitySystemComponent *NyotaASC)
 {
     check(NyotaASC);
 
@@ -68,7 +68,7 @@ UNyotaAbilitySet::UNyotaAbilitySet(const FObjectInitializer &ObjectInitializer) 
 }
 
 void UNyotaAbilitySet::GiveToAbilitySystem(
-    UCustomAbilitySystemComponent *NyotaASC, FNyotaAbilitySet_GrantedHandles *OutGrantedHandles, UObject *SourceObject
+    UNyotaAbilitySystemComponent *NyotaASC, FNyotaAbilitySet_GrantedHandles *OutGrantedHandles, UObject *SourceObject
 ) const
 {
 

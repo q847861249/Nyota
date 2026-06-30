@@ -34,22 +34,6 @@ void ABaseCharacter::SetAlive(bool bAliveStatus)
     bAlive = bAliveStatus;
 }
 
-void ABaseCharacter::GiveDefaultAbility()
-{
-    UAbilitySystemComponent *ASC = GetAbilitySystemComponent();
-
-    if (!IsValid(ASC))
-    {
-        return;
-    }
-
-    for (const auto &Ability : GAClass)
-    {
-        FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
-        ASC->GiveAbility(AbilitySpec);
-    }
-}
-
 void ABaseCharacter::InitializeAttributes() const
 {
     checkf(InitializeAttributesEffect, TEXT("InitializeAttributesEffect not set."));
@@ -80,11 +64,7 @@ void ABaseCharacter::OnDeath()
 
 UInputComponent *ABaseCharacter::CreatePlayerInputComponent()
 {
-    return NewObject<UNyotaInputComponent>(
-        this,
-        UNyotaInputComponent::StaticClass(),
-        TEXT("NyotaInputComponent0")
-    );
+    return NewObject<UNyotaInputComponent>(this, UNyotaInputComponent::StaticClass(), TEXT("NyotaInputComponent0"));
 }
 
 void ABaseCharacter::PawnClientRestart()
@@ -109,14 +89,17 @@ void ABaseCharacter::PawnClientRestart()
         // 上面的调用可能因为 re-entrancy 导致 PawnExtComp 自己没能推进到 DataInitialized。
         // 延迟一帧再试一次——此时 HeroComponent 的 DI 状态已完全提交，条件全部满足。
         FTSTicker::GetCoreTicker().AddTicker(
-            FTickerDelegate::CreateWeakLambda(this, [this](float) -> bool {
-                if (UNyotaPawnExtensionComponent *ExtComp =
-                        UNyotaPawnExtensionComponent::FindPawnExtensionComponent(this))
-                {
-                    ExtComp->CheckDefaultInitialization();
+            FTickerDelegate::CreateWeakLambda(
+                this,
+                [this](float) -> bool {
+                    if (UNyotaPawnExtensionComponent *ExtComp =
+                            UNyotaPawnExtensionComponent::FindPawnExtensionComponent(this))
+                    {
+                        ExtComp->CheckDefaultInitialization();
+                    }
+                    return false; // 只执行一次
                 }
-                return false; // 只执行一次
-            }),
+            ),
             0.0f
         );
     }

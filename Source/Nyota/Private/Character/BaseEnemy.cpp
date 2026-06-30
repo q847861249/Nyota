@@ -3,13 +3,13 @@
 #include "Character/BaseEnemy.h"
 
 #include "AttributeSet/BaseAttributeSet.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 
 ABaseEnemy::ABaseEnemy()
 {
     PrimaryActorTick.bCanEverTick = false;
 
-    AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
+    AbilitySystemComponent = CreateDefaultSubobject<UNyotaAbilitySystemComponent>("AbilitySystemComponent");
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
@@ -33,8 +33,6 @@ void ABaseEnemy::BeginPlay()
     {
         return;
     }
-
-    GiveDefaultAbility();
 
     InitializeAttributes();
 

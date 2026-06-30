@@ -7,7 +7,7 @@
 #include "BasePlayerController.generated.h"
 
 class ABasePlayerState;
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 /**
  *
  */
@@ -19,7 +19,7 @@ class NYOTA_API ABasePlayerController : public APlayerController
 public:
     ABasePlayerState *GetNyotaPlayerState() const;
 
-    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
+    UNyotaAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
     virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 };

@@ -5,7 +5,7 @@
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Blueprint/WidgetTree.h"
 #include "Character/BaseCharacter.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "UI/BaseAttributeWidget.h"
 
 void UBaseWidgetComponent::BeginPlay()
@@ -28,7 +28,7 @@ void UBaseWidgetComponent::InitAbilitySystemData()
 {
     BaseCharacter = Cast<ABaseCharacter>(GetOwner());
     BaseAttributeSet = Cast<UBaseAttributeSet>(BaseCharacter->GetAttributeSet());
-    BaseAbilitySystemComponent = Cast<UCustomAbilitySystemComponent>(BaseCharacter->GetAbilitySystemComponent());
+    BaseAbilitySystemComponent = Cast<UNyotaAbilitySystemComponent>(BaseCharacter->GetAbilitySystemComponent());
 }
 
 bool UBaseWidgetComponent::IsASCInitialized() const
@@ -75,7 +75,7 @@ void UBaseWidgetComponent::BindWidgetToAttributeChange(
 
 void UBaseWidgetComponent::OnASCInitialized(UAbilitySystemComponent *ASC, UAttributeSet *AS)
 {
-    BaseAbilitySystemComponent = Cast<UCustomAbilitySystemComponent>(ASC);
+    BaseAbilitySystemComponent = Cast<UNyotaAbilitySystemComponent>(ASC);
     BaseAttributeSet = Cast<UBaseAttributeSet>(AS);
 
     if (!IsASCInitialized())

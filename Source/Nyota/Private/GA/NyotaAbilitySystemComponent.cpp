@@ -1,26 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 
 #include "Abilities/GameplayAbility.h"
 #include "GA/GA_BaseSkill.h"
 #include "GameplayTags/GameTags.h"
 
-UCustomAbilitySystemComponent::UCustomAbilitySystemComponent(const FObjectInitializer &ObjectInitializer)
+UNyotaAbilitySystemComponent::UNyotaAbilitySystemComponent(const FObjectInitializer &ObjectInitializer)
+    : Super(ObjectInitializer)
 {
     InputPressedSpecHandles.Reset();
     InputReleasedSpecHandles.Reset();
     InputHeldSpecHandles.Reset();
 }
 
-void UCustomAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec &AbilitySpec)
+void UNyotaAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec &AbilitySpec)
 {
     Super::OnGiveAbility(AbilitySpec);
 
     HandleAutoActivateAbility(AbilitySpec);
 }
 
-void UCustomAbilitySystemComponent::OnRep_ActivateAbilities()
+void UNyotaAbilitySystemComponent::OnRep_ActivateAbilities()
 {
     Super::OnRep_ActivateAbilities();
 
@@ -32,7 +33,7 @@ void UCustomAbilitySystemComponent::OnRep_ActivateAbilities()
     }
 }
 
-void UCustomAbilitySystemComponent::InitAbilityActorInfo(AActor *InOwnerActor, AActor *InAvatarActor)
+void UNyotaAbilitySystemComponent::InitAbilityActorInfo(AActor *InOwnerActor, AActor *InAvatarActor)
 {
     FGameplayAbilityActorInfo *ActorInfo = AbilityActorInfo.Get();
 
@@ -62,7 +63,7 @@ void UCustomAbilitySystemComponent::InitAbilityActorInfo(AActor *InOwnerActor, A
     }
 }
 
-void UCustomAbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
+void UNyotaAbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
 {
     if (IsValid(GetAvatarActor()) && !GetAvatarActor()->HasAuthority())
     {
@@ -77,7 +78,7 @@ void UCustomAbilitySystemComponent::SetAbilityLevel(TSubclassOf<UGameplayAbility
     }
 }
 
-void UCustomAbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
+void UNyotaAbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbility> GameplayAbility, int32 Level)
 {
     if (IsValid(GetAvatarActor()) && !GetAvatarActor()->HasAuthority())
     {
@@ -92,7 +93,7 @@ void UCustomAbilitySystemComponent::AddToAbilityLevel(TSubclassOf<UGameplayAbili
     }
 }
 
-UGameplayAbility *UCustomAbilitySystemComponent::GetActivatableAbilitySpecByTag(const FGameplayTag &AbilityTag)
+UGameplayAbility *UNyotaAbilitySystemComponent::GetActivatableAbilitySpecByTag(const FGameplayTag &AbilityTag)
 {
     TArray<FGameplayAbilitySpec> MatchingGameplayAbilities = GetActivatableAbilities();
 
@@ -119,7 +120,7 @@ UGameplayAbility *UCustomAbilitySystemComponent::GetActivatableAbilitySpecByTag(
     return nullptr;
 }
 
-void UCustomAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag &InputTag)
+void UNyotaAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag &InputTag)
 {
     if (!InputTag.IsValid())
     {
@@ -136,7 +137,7 @@ void UCustomAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag &I
     }
 }
 
-void UCustomAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &InputTag)
+void UNyotaAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &InputTag)
 {
     if (!InputTag.IsValid())
     {
@@ -153,7 +154,7 @@ void UCustomAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &
     }
 }
 
-void UCustomAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
+void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
     if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked))
     {
@@ -264,19 +265,19 @@ void UCustomAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bG
     InputReleasedSpecHandles.Reset();
 }
 
-void UCustomAbilitySystemComponent::ClearAbilityInput()
+void UNyotaAbilitySystemComponent::ClearAbilityInput()
 {
     InputPressedSpecHandles.Reset();
     InputReleasedSpecHandles.Reset();
     InputHeldSpecHandles.Reset();
 }
 
-void UCustomAbilitySystemComponent::SetTagRelationshipMapping(UNyotaAbilityTagRelationshipMapping *NewMapping)
+void UNyotaAbilitySystemComponent::SetTagRelationshipMapping(UNyotaAbilityTagRelationshipMapping *NewMapping)
 {
     TagRelationshipMapping = NewMapping;
 }
 
-void UCustomAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec &Spec)
+void UNyotaAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec &Spec)
 {
     Super::AbilitySpecInputPressed(Spec);
 
@@ -295,7 +296,7 @@ void UCustomAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec
     }
 }
 
-void UCustomAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec &Spec)
+void UNyotaAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec &Spec)
 {
     Super::AbilitySpecInputReleased(Spec);
 
@@ -314,7 +315,7 @@ void UCustomAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpe
     }
 }
 
-void UCustomAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)
+void UNyotaAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbilitySpec &AbilitySpec)
 {
     if (!IsValid(AbilitySpec.Ability))
     {

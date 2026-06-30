@@ -10,7 +10,7 @@
 
 class UNyotaExperienceDefinition;
 class UNyotaPawnData;
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 class UAttributeSet;
 
 /**
@@ -22,7 +22,7 @@ class NYOTA_API ABasePlayerState : public AModularPlayerState, public IAbilitySy
     GENERATED_BODY()
 
 public:
-    ABasePlayerState();
+    ABasePlayerState(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     //~AActor interface
     virtual void PreInitializeComponents() override;
@@ -30,7 +30,7 @@ public:
     virtual void PostInitializeComponents() override;
     //~End of AActor interface
 
-    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
+    UNyotaAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
@@ -56,7 +56,7 @@ private:
     void OnExperienceLoaded(const UNyotaExperienceDefinition *CurrentExperience);
 
     UPROPERTY(VisibleAnywhere, Category = "Nyota | Abilities")
-    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+    TObjectPtr<UNyotaAbilitySystemComponent> AbilitySystemComponent;
 
     UPROPERTY()
     TObjectPtr<UAttributeSet> AttributeSet;

@@ -10,7 +10,7 @@
 
 #include "BasePlayer.generated.h"
 
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 class UNyotaPawnExtensionComponent;
 /**
  *
@@ -42,7 +42,7 @@ public:
     void ResetGrabbedEnemy();
 
     UFUNCTION(BlueprintCallable, Category = "Nyota | Character")
-    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
+    UNyotaAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 
 protected:
     UFUNCTION(BlueprintCallable, Category = "Nyota")

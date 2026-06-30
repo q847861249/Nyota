@@ -14,7 +14,7 @@
 #include "Components/CapsuleComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Character/NyotaPawnExtensionComponent.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -56,8 +56,6 @@ void ABasePlayer::PossessedBy(AController *NewController)
     GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 
     OnASCInitialized.Broadcast(GetAbilitySystemComponent(), GetAttributeSet());
-
-    GiveDefaultAbility();
 
     InitializeAttributes();
 
@@ -132,9 +130,9 @@ void ABasePlayer::ResetGrabbedEnemy()
     GrabbedEnemy.Reset();
 }
 
-UCustomAbilitySystemComponent *ABasePlayer::GetNyotaAbilitySystemComponent() const
+UNyotaAbilitySystemComponent *ABasePlayer::GetNyotaAbilitySystemComponent() const
 {
-    return Cast<UCustomAbilitySystemComponent>(GetAbilitySystemComponent());
+    return Cast<UNyotaAbilitySystemComponent>(GetAbilitySystemComponent());
 }
 
 void ABasePlayer::OnLightAttack_Started()
@@ -244,7 +242,7 @@ void ABasePlayer::OnOverlapBegin(
 
 void ABasePlayer::OnAbilitySystemInitialized()
 {
-    UCustomAbilitySystemComponent *NyotaASC = GetNyotaAbilitySystemComponent();
+    UNyotaAbilitySystemComponent *NyotaASC = GetNyotaAbilitySystemComponent();
     check(NyotaASC);
 }
 

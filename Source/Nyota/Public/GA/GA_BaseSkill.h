@@ -27,7 +27,7 @@ class NYOTA_API UGA_BaseSkill : public UGameplayAbility
 {
     GENERATED_BODY()
 
-    friend class UCustomAbilitySystemComponent;
+    friend class UNyotaAbilitySystemComponent;
 
 public:
     UGA_BaseSkill();

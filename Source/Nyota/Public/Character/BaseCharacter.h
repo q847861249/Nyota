@@ -44,16 +44,11 @@ public:
     FASCInitialized OnASCInitialized;
 
 protected:
-    void GiveDefaultAbility();
-
     void InitializeAttributes() const;
 
     void OnHealthChange(const FOnAttributeChangeData &AttributeChangeData);
 
     virtual void OnDeath();
-
-    UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Crash | Abilities")
-    TArray<TSubclassOf<UGameplayAbility>> GAClass;
 
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Crash | Effects")

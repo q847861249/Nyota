@@ -11,7 +11,7 @@
 class UAbilitySystemComponent;
 class UBaseAttributeSet;
 class ABaseCharacter;
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class NYOTA_API UBaseWidgetComponent : public UWidgetComponent
@@ -40,7 +40,7 @@ private:
 
     TWeakObjectPtr<ABaseCharacter> BaseCharacter;
     TWeakObjectPtr<UBaseAttributeSet> BaseAttributeSet;
-    TWeakObjectPtr<UCustomAbilitySystemComponent> BaseAbilitySystemComponent;
+    TWeakObjectPtr<UNyotaAbilitySystemComponent> BaseAbilitySystemComponent;
 
     UPROPERTY(EditAnywhere)
     TMap<FGameplayAttribute, FGameplayAttribute> AttributeMap;

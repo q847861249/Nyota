@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "CustomAbilitySystemComponent.generated.h"
+#include "NyotaAbilitySystemComponent.generated.h"
 
 class UNyotaAbilityTagRelationshipMapping;
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class NYOTA_API UCustomAbilitySystemComponent : public UAbilitySystemComponent
+class NYOTA_API UNyotaAbilitySystemComponent : public UAbilitySystemComponent
 {
     GENERATED_BODY()
 
 public:
-    UCustomAbilitySystemComponent(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
+    UNyotaAbilitySystemComponent(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void OnGiveAbility(FGameplayAbilitySpec &AbilitySpec) override;
 

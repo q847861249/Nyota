@@ -3,14 +3,14 @@
 #include "Character/BasePlayerController.h"
 
 #include "Character/BasePlayerState.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 
 ABasePlayerState *ABasePlayerController::GetNyotaPlayerState() const
 {
     return CastChecked<ABasePlayerState>(PlayerState, ECastCheckedType::NullAllowed);
 }
 
-UCustomAbilitySystemComponent *ABasePlayerController::GetNyotaAbilitySystemComponent() const
+UNyotaAbilitySystemComponent *ABasePlayerController::GetNyotaAbilitySystemComponent() const
 {
     const ABasePlayerState *NyotaPlayerState = GetNyotaPlayerState();
 
@@ -19,7 +19,7 @@ UCustomAbilitySystemComponent *ABasePlayerController::GetNyotaAbilitySystemCompo
 
 void ABasePlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
 {
-    if (UCustomAbilitySystemComponent *NyotaASC = GetNyotaAbilitySystemComponent())
+    if (UNyotaAbilitySystemComponent *NyotaASC = GetNyotaAbilitySystemComponent())
     {
         NyotaASC->ProcessAbilityInput(DeltaTime, bGamePaused);
     }

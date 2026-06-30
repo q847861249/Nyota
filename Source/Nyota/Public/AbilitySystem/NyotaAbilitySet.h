@@ -12,7 +12,7 @@ class UGA_BaseSkill;
 class UAttributeSet;
 struct FActiveGameplayEffectHandle;
 struct FGameplayAbilitySpecHandle;
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 
 /**
  * FNyotaAbilitySet_GameplayAbility
@@ -85,7 +85,7 @@ struct FNyotaAbilitySet_GrantedHandles
     void AddGameplayEffectHandle(const FActiveGameplayEffectHandle &Handle);
     void AddAttributeSet(UAttributeSet *Set);
 
-    void TakeFromAbilitySystem(UCustomAbilitySystemComponent *NyotaASC);
+    void TakeFromAbilitySystem(UNyotaAbilitySystemComponent *NyotaASC);
 
 protected:
     // Handles to the granted abilities.
@@ -115,7 +115,7 @@ public:
     // Grants the ability set to the specified ability system component.
     // The returned handles can be used later to take away anything that was granted.
     void GiveToAbilitySystem(
-        UCustomAbilitySystemComponent *NyotaASC, FNyotaAbilitySet_GrantedHandles *OutGrantedHandles,
+        UNyotaAbilitySystemComponent *NyotaASC, FNyotaAbilitySet_GrantedHandles *OutGrantedHandles,
         UObject *SourceObject = nullptr
     ) const;
 

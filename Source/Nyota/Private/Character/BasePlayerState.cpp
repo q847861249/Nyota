@@ -7,18 +7,18 @@
 #include "AttributeSet/BaseAttributeSet.h"
 #include "Character/NyotaPawnData.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "GameModes/NyotaExperienceManagerComponent.h"
 #include "GameModes/NyotaGameMode.h"
 #include "Net/UnrealNetwork.h"
 
 const FName ABasePlayerState::NAME_NyotaAbilityReady("NyotaAbilitiesReady");
 
-ABasePlayerState::ABasePlayerState()
+ABasePlayerState::ABasePlayerState(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
     NetUpdateFrequency = 100.0f;
 
-    AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
+    AbilitySystemComponent = CreateDefaultSubobject<UNyotaAbilitySystemComponent>("AbilitySystemComponent");
     AbilitySystemComponent->SetIsReplicated(true);
     AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
@@ -51,7 +51,7 @@ void ABasePlayerState::PostInitializeComponents()
     }
 }
 
-UCustomAbilitySystemComponent *ABasePlayerState::GetNyotaAbilitySystemComponent() const
+UNyotaAbilitySystemComponent *ABasePlayerState::GetNyotaAbilitySystemComponent() const
 {
     return AbilitySystemComponent;
 }

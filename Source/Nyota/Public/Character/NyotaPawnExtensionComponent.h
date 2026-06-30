@@ -9,7 +9,7 @@
 #include "NyotaPawnExtensionComponent.generated.h"
 
 class UNyotaPawnData;
-class UCustomAbilitySystemComponent;
+class UNyotaAbilitySystemComponent;
 
 /**
  * 核心思想：把"Actor 初始化"拆成多个独立注册的 Feature，每个 Feature 管理自己的状态转移条件。
@@ -33,7 +33,7 @@ public:
      * @param InASC
      * @param InOwnerActor
      */
-    NYOTA_API void InitializeAbilitySystem(UCustomAbilitySystemComponent *InASC, AActor *InOwnerActor);
+    NYOTA_API void InitializeAbilitySystem(UNyotaAbilitySystemComponent *InASC, AActor *InOwnerActor);
 
     /**
      * @brief 取消当前 Pawn 作为 ASC 的 AvatarActor
@@ -78,7 +78,7 @@ public:
     NYOTA_API void SetPawnData(const UNyotaPawnData *InPawnData);
 
     UFUNCTION(BlueprintPure, Category = "Nyota | Pawn")
-    UCustomAbilitySystemComponent *GetNyotaAbilitySystemComponent() const
+    UNyotaAbilitySystemComponent *GetNyotaAbilitySystemComponent() const
     {
         return AbilitySystemComponent;
     }
@@ -107,7 +107,7 @@ protected:
     TObjectPtr<const UNyotaPawnData> PawnData;
 
     UPROPERTY(Transient)
-    TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+    TObjectPtr<UNyotaAbilitySystemComponent> AbilitySystemComponent;
 
     bool bHasRegisteredInitState = false;
 };

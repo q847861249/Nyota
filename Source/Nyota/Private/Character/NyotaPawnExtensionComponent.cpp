@@ -4,7 +4,7 @@
 
 #include "Character/NyotaPawnData.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "GA/CustomAbilitySystemComponent.h"
+#include "GA/NyotaAbilitySystemComponent.h"
 #include "GameplayTags/GameTags.h"
 #include "Net/UnrealNetwork.h"
 
@@ -27,7 +27,7 @@ UNyotaPawnExtensionComponent *UNyotaPawnExtensionComponent::FindPawnExtensionCom
     return Actor ? Actor->FindComponentByClass<UNyotaPawnExtensionComponent>() : nullptr;
 }
 
-void UNyotaPawnExtensionComponent::InitializeAbilitySystem(UCustomAbilitySystemComponent *InASC, AActor *InOwnerActor)
+void UNyotaPawnExtensionComponent::InitializeAbilitySystem(UNyotaAbilitySystemComponent *InASC, AActor *InOwnerActor)
 {
     check(InASC);
     check(InOwnerActor);
@@ -205,8 +205,12 @@ bool UNyotaPawnExtensionComponent::CanChangeInitState(
     // PawnExtComp 的 HandleChangeInitState(DataInitialized) 为空，此处直接放行。
     if (CurrentState == Nyota::InitState_DataAvailable && DesiredState == Nyota::InitState_DataInitialized)
     {
-        UE_LOG(LogTemp, Warning, TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState DataAvailable→DataInitialized: PASS (auto)"),
-            *GetNameSafe(Pawn));
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("[InitTrace] PawnExtComp %s: CanChangeInitState DataAvailable→DataInitialized: PASS (auto)"),
+            *GetNameSafe(Pawn)
+        );
         return true;
     }
 
