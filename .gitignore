@@ -79,11 +79,6 @@ DerivedDataCache/*
 .vs
 .vscode
 
-# UnLua
-Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/build
-Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/lib-c
-Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin
-
 # Puerts
 Plugins/Puerts/Source/CSharpParamDefaultValueMetas/obj
 Plugins/Puerts/Source/CSharpParamDefaultValueMetas/CSharpParamDefaultValueMetas.ubtplugin.csproj.props
