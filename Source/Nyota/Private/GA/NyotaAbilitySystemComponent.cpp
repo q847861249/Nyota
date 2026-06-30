@@ -186,7 +186,7 @@ void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGa
         {
             const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
             if (NyotaAbilityCDO &&
-                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivatePolicy::WhileInputActive)
+                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivationPolicy::WhileInputActive)
             {
                 AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
             }
@@ -219,7 +219,7 @@ void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGa
         {
             const UGA_BaseSkill *NyotaAbilityCDO = Cast<UGA_BaseSkill>(AbilitySpec->Ability);
             if (NyotaAbilityCDO &&
-                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivatePolicy::OnInputTriggered)
+                NyotaAbilityCDO->GetActivatePolicy() == ENyotaAbilityActivationPolicy::OnInputTriggered)
             {
                 AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
             }

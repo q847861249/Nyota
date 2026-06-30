@@ -4,9 +4,11 @@
 
 #include "Character/BasePlayer.h"
 
-UGA_BaseSkill::UGA_BaseSkill()
+UGA_BaseSkill::UGA_BaseSkill(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+
+    ActivationPolicy = ENyotaAbilityActivationPolicy::OnInputTriggered;
 }
 
 void UGA_BaseSkill::ActivateAbility(
@@ -22,7 +24,7 @@ void UGA_BaseSkill::ActivateAbility(
     }
 }
 
-ENyotaAbilityActivatePolicy UGA_BaseSkill::GetActivatePolicy() const
+ENyotaAbilityActivationPolicy UGA_BaseSkill::GetActivatePolicy() const
 {
     return ActivationPolicy;
 }
