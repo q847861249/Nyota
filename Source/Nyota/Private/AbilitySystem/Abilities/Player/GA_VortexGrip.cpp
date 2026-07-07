@@ -37,6 +37,8 @@ void UGA_VortexGrip::StartVortexGrip()
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
+        Player->PendingThrownForce = VortexGripForce;
+
         UAbilityTask_PlayMontageAndWait *PlayMontage = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
             this, FName("VortexGrip"), VortexGripMontage
         );

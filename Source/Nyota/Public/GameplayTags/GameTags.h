@@ -22,16 +22,21 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_WaterBubble);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_Slam);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_VortexGrip);
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_PressureBlast);
 
+// Grab State
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_Slam)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_VortexGrip)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_State_Grabbing_PressureBlast)
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Behavior_SurvivesDeath);
 
+// Block All Other Ability
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_InputBlocked);
 
+// Init State
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_Spawned);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_DataAvailable);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(InitState_DataInitialized);

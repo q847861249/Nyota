@@ -38,6 +38,8 @@ void UGA_Slam::StartSlam()
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
+        Player->PendingThrownForce = SlamForce;
+
         UAbilityTask_PlayMontageAndWait *PlayMontageTask =
             UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
         PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);

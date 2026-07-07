@@ -21,11 +21,13 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_WaterBubble, "Nyota.Ability.WaterBubble");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab, "Nyota.Ability.Grab");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
+UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PressureBlast, "Nyota.Ability.Grab.PressureBlast");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing, "Nyota.Ability.State.Grabbing")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbing.Slam")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_VortexGrip, "Nyota.Ability.State.Grabbing.VortexGrip")
+UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_PressureBlast, "Nyota.Ability.State.Grabbing.PressureBlast")
 
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Behavior_SurvivesDeath, "Nyota.Ability.Behavior.SurvivesDeath", "An ability with this type tag should not be canceled due to death.");
 

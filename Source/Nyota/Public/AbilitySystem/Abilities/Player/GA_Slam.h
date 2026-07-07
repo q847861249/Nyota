@@ -36,4 +36,7 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> SlamEffect;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float SlamForce = 400.f;
 };

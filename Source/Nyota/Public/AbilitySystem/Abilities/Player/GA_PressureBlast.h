@@ -19,4 +19,23 @@ public:
         const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
     ) override;
+
+    UFUNCTION()
+    void Execute();
+
+    UFUNCTION()
+    void Terminate();
+
+    UFUNCTION()
+    void OnApplyDamage(FGameplayEventData Payload);
+
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    TObjectPtr<UAnimMontage> PressureBlastMontage;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    TSubclassOf<UGameplayEffect> PressureBlastEffect;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float PressureBlastForce = 500.f;
 };

@@ -41,6 +41,9 @@ public:
 
     void ResetGrabbedEnemy();
 
+    /** 子技能（Slam/PressureBlast等）在触发 GrabEnd 前设定，GA_Grab::OnGrabTimeout 读取。<=0 时使用 GA_Grab 默认 ThrownForce */
+    float PendingThrownForce = -1.f;
+
     UFUNCTION(BlueprintCallable, Category = "Nyota | Character")
     UNyotaAbilitySystemComponent *GetNyotaAbilitySystemComponent() const;
 

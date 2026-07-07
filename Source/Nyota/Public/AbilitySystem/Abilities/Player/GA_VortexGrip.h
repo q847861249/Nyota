@@ -36,4 +36,7 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> VortexGripEffect;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float VortexGripForce = 300.f;
 };

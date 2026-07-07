@@ -8,7 +8,6 @@
 #include "Character/BaseEnemyWildBoar.h"
 #include "Character/BasePlayer.h"
 #include "GameplayTags/GameTags.h"
-#include "PhysicsEngine/PhysicsAsset.h"
 #include "Utils/BlueprintUtilsLibrary.h"
 
 void UGA_Grab::ActivateAbility(
@@ -85,8 +84,12 @@ void UGA_Grab::OnGrabTimeout()
         return;
     }
 
-    WildBoar->OnThrown(GetAvatarActorFromActorInfo()->GetActorForwardVector(), ThrownForce);
+    WildBoar->OnThrown(
+        GetAvatarActorFromActorInfo()->GetActorForwardVector(),
+        Player->PendingThrownForce > 0.f ? Player->PendingThrownForce : ThrownForce
+    );
 
+    Player->PendingThrownForce = -1.f;
     Player->ResetGrabbedEnemy();
 
     World->GetTimerManager().ClearTimer(TimerHandle);
