@@ -40,17 +40,4 @@ public:
 
 	UPROPERTY(EditDefaultsOnly)
     TArray<FSkillUIData> Skills;
-    // UPROPERTY(EditDefaultsOnly, Category="Skills")
-    // FSkillUIData Passive;
-
-    // UPROPERTY(EditDefaultsOnly, Category="Skills")
-    // FSkillUIData Q;
-
-    // UPROPERTY(EditDefaultsOnly, Category="Skills")
-    // FSkillUIData E;
-
-    // UPROPERTY(EditDefaultsOnly, Category="Skills")
-    // FSkillUIData R;
-
-
 };
