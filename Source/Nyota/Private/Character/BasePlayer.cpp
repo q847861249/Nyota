@@ -15,6 +15,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Character/NyotaPawnExtensionComponent.h"
 #include "AbilitySystem/NyotaAbilitySystemComponent.h"
+#include "DataAsset/PlayerCharacterDataAsset.h"
 
 ABasePlayer::ABasePlayer(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -128,6 +129,11 @@ ABaseCharacter *ABasePlayer::GetGrabbedEnemy() const
 void ABasePlayer::ResetGrabbedEnemy()
 {
     GrabbedEnemy.Reset();
+}
+
+UPlayerCharacterDataAsset *ABasePlayer::GetConfig()
+{
+    return PlayerCharacterDataAsset;
 }
 
 UNyotaAbilitySystemComponent *ABasePlayer::GetNyotaAbilitySystemComponent() const

@@ -10,6 +10,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
 #include "DataAsset/PlayerCharacterDataAsset.h"
+
 void UInfoPanel::SetAvatar(UTexture2D* AvatarTexture)
 {
     Avatar->SetBrushFromTexture(AvatarTexture);
