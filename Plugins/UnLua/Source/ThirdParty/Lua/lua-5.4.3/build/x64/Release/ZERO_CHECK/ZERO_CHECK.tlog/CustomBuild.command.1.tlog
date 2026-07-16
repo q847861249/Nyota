@@ -1,0 +1,10 @@
+^E:\UNREAL_ENGINE5_PROJECTS\JOHNDEVELOPBRANCH\NYOTA\PLUGINS\UNLUA\SOURCE\THIRDPARTY\LUA\LUA-5.4.3\BUILD\CMAKEFILES\784609714E9AEBAA62244221FA5EECE8\GENERATE.STAMP.RULE
+setlocal
+E:\CMake\bin\cmake.exe -SE:/unreal_engine5_projects/JohnDevelopBranch/Nyota/Plugins/UnLua/Source/ThirdParty/Lua -BE:/unreal_engine5_projects/JohnDevelopBranch/Nyota/Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file E:/unreal_engine5_projects/JohnDevelopBranch/Nyota/Plugins/UnLua/Source/ThirdParty/Lua/lua-5.4.3/build/Lua.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

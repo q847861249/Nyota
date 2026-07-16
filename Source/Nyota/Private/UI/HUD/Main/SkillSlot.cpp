@@ -42,7 +42,7 @@ bool USkillSlot::GetAbilityCoolDown()
         AbilityRemainTime,
         AbilityDuration
     );
-    UE_LOG(LogTemp,Warning,TEXT("Ability:%s,RemainTime: %f"),*Spec->Ability->GetName(),AbilityRemainTime);
+    // UE_LOG(LogTemp,Warning,TEXT("Ability:%s,RemainTime: %f"),*Spec->Ability->GetName(),AbilityRemainTime);
     return true;
 }
 

@@ -61,6 +61,7 @@ void UGameFeatureAction_AddInputContextMapping::OnGameFeatureUnregistering()
     UnregisterInputMappingContexts();
 }
 
+#if WITH_EDITOR
 EDataValidationResult UGameFeatureAction_AddInputContextMapping::IsDataValid(
     class FDataValidationContext &Context
 ) const
@@ -84,6 +85,7 @@ EDataValidationResult UGameFeatureAction_AddInputContextMapping::IsDataValid(
 
     return Result;
 }
+#endif
 
 void UGameFeatureAction_AddInputContextMapping::RegisterInputMappingContexts()
 {
