@@ -37,21 +37,22 @@ void UGA_VortexGrip::StartVortexGrip()
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
+        // Set Thrown Force
         Player->PendingThrownForce = VortexGripForce;
-
-        UAbilityTask_PlayMontageAndWait *PlayMontage = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
-            this, FName("VortexGrip"), VortexGripMontage
-        );
-        PlayMontage->OnCompleted.AddDynamic(this, &ThisClass::OnAbilityEnd);
-        PlayMontage->OnInterrupted.AddDynamic(this, &ThisClass::OnAbilityEnd);
-        PlayMontage->OnCancelled.AddDynamic(this, &ThisClass::OnAbilityEnd);
-        PlayMontage->ReadyForActivation();
     }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Grabbed Target Is Null !!!"));
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
     }
+
+    // Play Animation Montage
+    UAbilityTask_PlayMontageAndWait *PlayMontage =
+        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("VortexGrip"), VortexGripMontage);
+    PlayMontage->OnCompleted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->OnInterrupted.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->OnCancelled.AddDynamic(this, &ThisClass::OnAbilityEnd);
+    PlayMontage->ReadyForActivation();
 }
 
 void UGA_VortexGrip::ApplyDamage(FGameplayEventData EventData)

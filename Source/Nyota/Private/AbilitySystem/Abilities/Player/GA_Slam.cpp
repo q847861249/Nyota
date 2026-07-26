@@ -38,19 +38,21 @@ void UGA_Slam::StartSlam()
     {
         UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
+        // Set Thrown Force
         Player->PendingThrownForce = SlamForce;
-
-        UAbilityTask_PlayMontageAndWait *PlayMontageTask =
-            UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
-        PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);
-        PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnSlamEnd);
-        PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnSlamEnd);
-        PlayMontageTask->ReadyForActivation();
     }
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Grabbed Target Is Null !!!"));
     }
+
+    // Play Animation Montage
+    UAbilityTask_PlayMontageAndWait *PlayMontageTask =
+        UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Slam"), SlamMontage);
+    PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnSlamEnd);
+    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnSlamEnd);
+    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnSlamEnd);
+    PlayMontageTask->ReadyForActivation();
 }
 
 void UGA_Slam::OnApplySlamDamage(FGameplayEventData EventData)
