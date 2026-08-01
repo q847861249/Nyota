@@ -24,4 +24,8 @@ public:
         const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
     ) override;
+
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    float ThrownForce;
 };

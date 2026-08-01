@@ -34,7 +34,14 @@ void UGA_PutDown::ActivateAbility(
 
     if (bReleasedTarget)
     {
-        WildBoar->OnBoarReleased();
+        // 放下，不添加冲力
+        // WildBoar->OnBoarReleased();
+
+        // 冲力抛出
+        WildBoar->OnThrown(
+            GetAvatarActorFromActorInfo()->GetActorForwardVector(),
+            Player->PendingThrownForce > 0.f ? Player->PendingThrownForce : ThrownForce
+        );
     }
 
     Player->PendingThrownForce = -1.f;

@@ -60,9 +60,6 @@ protected:
     float HitBoxRadius;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    float ThrownForce;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float GrabTimerRate = 5.f;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
