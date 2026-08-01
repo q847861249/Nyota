@@ -19,12 +19,14 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_ActivateOnGive, "Nyota.Ability.ActivateOnGive");
 UE_DEFINE_GAMEPLAY_TAG(Ability_WaterBall, "Nyota.Ability.WaterBall");
 UE_DEFINE_GAMEPLAY_TAG(Ability_WaterBubble, "Nyota.Ability.WaterBubble");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab, "Nyota.Ability.Grab");
+UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PutDown, "Nyota.Ability.Grab.PutDown");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PressureBlast, "Nyota.Ability.Grab.PressureBlast");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing, "Nyota.Ability.State.Grabbing")
+UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_PutDownWindow, "Nyota.Ability.State.Grabbing.PutDownWindow")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbing.Slam")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_VortexGrip, "Nyota.Ability.State.Grabbing.VortexGrip")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_PressureBlast, "Nyota.Ability.State.Grabbing.PressureBlast")
@@ -54,6 +56,7 @@ UE_DEFINE_GAMEPLAY_TAG(Event_Ability_WaterBubbleEnd, "Nyota.Event.Ability.WaterB
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_StartGrabTrace, "Nyota.Event.Ability.StartGrabTrace")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_StopGrabTrace, "Nyota.Event.Ability.StopGrabTrace")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_GrabEnd, "Nyota.Event.Ability.GrabEnd")
+UE_DEFINE_GAMEPLAY_TAG(Event_Ability_PutDownEnd, "Nyota.Event.Ability.PutDownEnd")
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_ApplyDamage, "Nyota.Event.Ability.ApplyDamage")
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_HitReact, "Nyota.Event.Enemy.HitReact")
 UE_DEFINE_GAMEPLAY_TAG(Event_Enemy_BoarLanded, "Nyota.Event.Enemy.BoarLanded")
