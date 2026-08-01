@@ -57,8 +57,7 @@ void UGA_Grab::EndAbility(
         World->GetTimerManager().ClearTimer(GrabTraceTimerHandle);
     }
 
-    UAbilitySystemComponent *AbilitySystemComponent =
-        ActorInfo ? ActorInfo->AbilitySystemComponent.Get() : nullptr;
+    UAbilitySystemComponent *AbilitySystemComponent = ActorInfo ? ActorInfo->AbilitySystemComponent.Get() : nullptr;
     RemovePutDownWindowTag(AbilitySystemComponent);
 
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
