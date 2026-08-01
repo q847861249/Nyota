@@ -38,9 +38,6 @@ public:
     void OnGrabEnd(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnGrabTimeout();
-
-    UFUNCTION()
     void OnPutDownTimeout();
 
     UFUNCTION()

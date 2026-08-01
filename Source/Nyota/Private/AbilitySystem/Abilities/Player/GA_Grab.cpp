@@ -21,8 +21,8 @@ void UGA_Grab::ActivateAbility(
     UAbilityTask_PlayMontageAndWait *PlayMontageTask =
         UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, FName("Grab"), GrabMontage);
     PlayMontageTask->OnCompleted.AddDynamic(this, &ThisClass::OnMontageCompleted);
-    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnGrabTimeout);
-    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnGrabTimeout);
+    PlayMontageTask->OnInterrupted.AddDynamic(this, &ThisClass::OnPutDownTimeout);
+    PlayMontageTask->OnCancelled.AddDynamic(this, &ThisClass::OnPutDownTimeout);
     PlayMontageTask->ReadyForActivation();
 
     UAbilityTask_WaitGameplayEvent *StartGrabTrace =
@@ -81,43 +81,7 @@ void UGA_Grab::OnMontageCompleted()
 
 void UGA_Grab::OnGrabEnd(FGameplayEventData EventData)
 {
-    OnGrabTimeout();
-}
-
-void UGA_Grab::OnGrabTimeout()
-{
-    UWorld *World = GetWorld();
-
-    if (!IsValid(World))
-    {
-        return;
-    }
-
-    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
-
-    if (!IsValid(Player))
-    {
-        return;
-    }
-
-    ABaseEnemyWildBoar *WildBoar = Cast<ABaseEnemyWildBoar>(Player->GetGrabbedEnemy());
-
-    if (!IsValid(WildBoar))
-    {
-        return;
-    }
-
-    WildBoar->OnThrown(
-        GetAvatarActorFromActorInfo()->GetActorForwardVector(),
-        Player->PendingThrownForce > 0.f ? Player->PendingThrownForce : ThrownForce
-    );
-
-    Player->PendingThrownForce = -1.f;
-    Player->ResetGrabbedEnemy();
-
-    World->GetTimerManager().ClearTimer(TimerHandle);
-
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+    OnPutDownTimeout();
 }
 
 void UGA_Grab::OnPutDownTimeout()
