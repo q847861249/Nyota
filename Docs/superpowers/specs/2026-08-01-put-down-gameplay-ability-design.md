@@ -37,7 +37,7 @@ If the player is valid but the grabbed target is not, the ability resets the sta
 
 ### `UGA_Grab`
 
-When `GrabHitResults()` successfully grabs a wild boar, `UGA_Grab` adds the PutDownWindow loose Gameplay Tag to the player's ASC and starts its existing five-second hold timer.
+When the valid-wild-boar branch of `PerformGrabTrace()` successfully grabs a target, `UGA_Grab` adds the PutDownWindow loose Gameplay Tag to the player's ASC and starts its existing five-second hold timer.
 
 The timer callback no longer invokes `OnGrabTimeout()`. It asks the ASC to activate the ability carrying `Nyota.Ability.Grab.PutDown`. Because the PutDownWindow Tag is still present at that point, normal GAS activation checks allow `UGA_PutDown` to run.
 
