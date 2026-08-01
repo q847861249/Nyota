@@ -72,7 +72,7 @@ void UNyotaInputComponent::BindAbilityActions(
             {
                 BindHandles.Add(BindActionValueLambda(
                     Action.InputAction,
-                    ETriggerEvent::Triggered,
+                    ETriggerEvent::Started,
                     [Object, PressedFunc, InputTag = Action.InputTag](const FInputActionValue &)
                     {
                         (Object->*PressedFunc)(InputTag);
