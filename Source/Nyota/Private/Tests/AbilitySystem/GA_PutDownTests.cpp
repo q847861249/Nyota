@@ -2,6 +2,8 @@
 
 #include "Misc/AutomationTest.h"
 
+#include "AbilitySystemComponent.h"
+#include "AbilitySystem/Abilities/Player/GA_Grab.h"
 #include "AbilitySystem/Abilities/Player/GA_PutDown.h"
 #include "GameplayTags/GameTags.h"
 
@@ -50,6 +52,45 @@ bool FPutDownAbilityContractTest::RunTest(const FString &Parameters)
     TestTrue(
         TEXT("Ability requires the put-down window"),
         AbilityCDO->ActivationRequiredTags.HasTagExact(Nyota::Ability_State_Grabbing_PutDownWindow)
+    );
+
+    return true;
+}
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(
+    FPutDownWindowLifecycleTest,
+    "Nyota.AbilitySystem.PutDown.WindowLifecycle",
+    EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter
+)
+
+bool FPutDownWindowLifecycleTest::RunTest(const FString &Parameters)
+{
+    UAbilitySystemComponent *AbilitySystemComponent = NewObject<UAbilitySystemComponent>();
+    UGA_Grab *GrabAbility = NewObject<UGA_Grab>();
+
+    GrabAbility->AddPutDownWindowTag(AbilitySystemComponent);
+    TestTrue(
+        TEXT("Opening the window adds its required tag"),
+        AbilitySystemComponent->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow)
+    );
+
+    GrabAbility->RemovePutDownWindowTag(AbilitySystemComponent);
+    TestFalse(
+        TEXT("Closing the window removes its required tag"),
+        AbilitySystemComponent->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow)
+    );
+
+    GrabAbility->RemovePutDownWindowTag(AbilitySystemComponent);
+    TestFalse(
+        TEXT("Repeated cleanup does not recreate or underflow the tag"),
+        AbilitySystemComponent->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow)
+    );
+
+    GrabAbility->AddPutDownWindowTag(AbilitySystemComponent);
+    GrabAbility->RemovePutDownWindowTag(nullptr);
+    TestFalse(
+        TEXT("Cleanup falls back to the ASC that opened the window"),
+        AbilitySystemComponent->HasMatchingGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow)
     );
 
     return true;

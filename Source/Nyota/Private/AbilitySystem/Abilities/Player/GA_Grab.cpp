@@ -3,6 +3,7 @@
 #include "AbilitySystem/Abilities/Player/GA_Grab.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "Character/BaseEnemyWildBoar.h"
@@ -38,6 +39,29 @@ void UGA_Grab::ActivateAbility(
         UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_GrabEnd);
     GrabEnd->EventReceived.AddDynamic(this, &ThisClass::OnGrabEnd);
     GrabEnd->ReadyForActivation();
+
+    UAbilityTask_WaitGameplayEvent *PutDownEnd =
+        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_PutDownEnd);
+    PutDownEnd->EventReceived.AddDynamic(this, &ThisClass::OnPutDownEnd);
+    PutDownEnd->ReadyForActivation();
+}
+
+void UGA_Grab::EndAbility(
+    const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
+    const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled
+)
+{
+    if (UWorld *World = GetWorld(); IsValid(World))
+    {
+        World->GetTimerManager().ClearTimer(TimerHandle);
+        World->GetTimerManager().ClearTimer(GrabTraceTimerHandle);
+    }
+
+    UAbilitySystemComponent *AbilitySystemComponent =
+        ActorInfo ? ActorInfo->AbilitySystemComponent.Get() : nullptr;
+    RemovePutDownWindowTag(AbilitySystemComponent);
+
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UGA_Grab::OnMontageCompleted()
@@ -95,6 +119,77 @@ void UGA_Grab::OnGrabTimeout()
     World->GetTimerManager().ClearTimer(TimerHandle);
 
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UGA_Grab::OnPutDownTimeout()
+{
+    UAbilitySystemComponent *AbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+    FGameplayTagContainer PutDownAbilityTags;
+    PutDownAbilityTags.AddTag(Nyota::Ability_Grab_PutDown);
+
+    if (!IsValid(AbilitySystemComponent) || !AbilitySystemComponent->TryActivateAbilitiesByTag(PutDownAbilityTags))
+    {
+        UE_LOG(LogTemp, Error, TEXT("UGA_Grab: Failed to activate UGA_PutDown at the end of the grab window."));
+        ReleaseGrabbedTargetAsFailSafe();
+    }
+}
+
+void UGA_Grab::OnPutDownEnd(FGameplayEventData EventData)
+{
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
+}
+
+void UGA_Grab::AddPutDownWindowTag(UAbilitySystemComponent *AbilitySystemComponent)
+{
+    if (!IsValid(AbilitySystemComponent) || bOwnsPutDownWindowTag)
+    {
+        return;
+    }
+
+    AbilitySystemComponent->AddLooseGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow);
+    PutDownWindowAbilitySystemComponent = AbilitySystemComponent;
+    bOwnsPutDownWindowTag = true;
+}
+
+void UGA_Grab::RemovePutDownWindowTag(UAbilitySystemComponent *AbilitySystemComponent)
+{
+    if (!bOwnsPutDownWindowTag)
+    {
+        return;
+    }
+
+    UAbilitySystemComponent *TaggedAbilitySystemComponent = PutDownWindowAbilitySystemComponent.Get();
+
+    if (!IsValid(TaggedAbilitySystemComponent))
+    {
+        TaggedAbilitySystemComponent = AbilitySystemComponent;
+    }
+
+    if (IsValid(TaggedAbilitySystemComponent))
+    {
+        TaggedAbilitySystemComponent->RemoveLooseGameplayTag(Nyota::Ability_State_Grabbing_PutDownWindow);
+    }
+
+    PutDownWindowAbilitySystemComponent.Reset();
+    bOwnsPutDownWindowTag = false;
+}
+
+void UGA_Grab::ReleaseGrabbedTargetAsFailSafe()
+{
+    ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
+
+    if (IsValid(Player))
+    {
+        if (ABaseEnemyWildBoar *WildBoar = Cast<ABaseEnemyWildBoar>(Player->GetGrabbedEnemy()); IsValid(WildBoar))
+        {
+            WildBoar->OnBoarReleased();
+        }
+
+        Player->PendingThrownForce = -1.f;
+        Player->ResetGrabbedEnemy();
+    }
+
+    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 }
 
 void UGA_Grab::OnStartGrabTrace(FGameplayEventData EventData)
@@ -228,8 +323,10 @@ void UGA_Grab::PerformGrabTrace()
         // 敌人 Attach 到玩家抓取位置 Socket
         GrabbedEnemy->OnGrabbed(Player);
 
+        AddPutDownWindowTag(GetAbilitySystemComponentFromActorInfo());
+
         // 抓取倒计时
-        GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::OnGrabTimeout, GrabTimerRate, false);
+        GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::OnPutDownTimeout, GrabTimerRate, false);
 
         // 停止检测
         OnStopGrabTrace({});
