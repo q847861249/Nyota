@@ -36,6 +36,6 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     TSubclassOf<UGameplayEffect> PressureBlastEffect;
 
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Nyota")
     float PressureBlastForce = 500.f;
 };
