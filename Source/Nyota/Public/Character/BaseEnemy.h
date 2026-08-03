@@ -21,8 +21,12 @@ public:
     virtual UAbilitySystemComponent *GetAbilitySystemComponent() const override;
 
     virtual UAttributeSet *GetAttributeSet() const override;
-
+protected:
+    void InitStartingAbilities();
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "AbilitySystem")
+	TArray<TSubclassOf<class UGameplayAbility>> StartingAbilities;
+
     UPROPERTY(VisibleAnywhere)
     TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
