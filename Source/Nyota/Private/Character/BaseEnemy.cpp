@@ -33,7 +33,7 @@ void ABaseEnemy::BeginPlay()
     {
         return;
     }
-
+    InitStartingAbilities();
     InitializeAttributes();
 
     UBaseAttributeSet *BaseAttributeSet = Cast<UBaseAttributeSet>(GetAttributeSet());
@@ -45,6 +45,21 @@ void ABaseEnemy::BeginPlay()
     GetAbilitySystemComponent()
         ->GetGameplayAttributeValueChangeDelegate(BaseAttributeSet->GetHealthAttribute())
         .AddUObject(this, &ThisClass::OnHealthChange);
+}
+
+void ABaseEnemy::InitStartingAbilities()
+{
+    if(!GetAbilitySystemComponent()) return;
+	if(StartingAbilities.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Starting Abilities set on %s"), *GetName());
+		return;
+	}
+	for(const auto& Ability: StartingAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability);
+		GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+	}
 }
 
 UAbilitySystemComponent *ABaseEnemy::GetAbilitySystemComponent() const

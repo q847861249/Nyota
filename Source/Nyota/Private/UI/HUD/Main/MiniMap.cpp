@@ -22,6 +22,7 @@ void UMiniMap::NativeTick(const FGeometry &MyGeometry, float InDeltaTime)
      * the result is taken as negative. 
      * */
     FVector WorldPos = CachedPlayerPawn->GetActorLocation();
+    //把三维坐标转化为2维
     FVector2D CurrentPlayerLocation(WorldPos.X, WorldPos.Y);
     FVector2D NewLocation = -(CurrentPlayerLocation - LeftTopLocation)/(RightButtomLocation - LeftTopLocation) * ImageSize;
     NewLocation.X += X_Location_offset;
@@ -30,32 +31,6 @@ void UMiniMap::NativeTick(const FGeometry &MyGeometry, float InDeltaTime)
     //Set the pointer rotation depend on player rotation
     FRotator PawnRotate = CachedPlayerPawn->GetActorRotation();
     PointerImage->SetRenderTransformAngle(PawnRotate.Yaw);
-
-    // APlayerCameraManager* CameraManager = GetOwningPlayer()->PlayerCameraManager;
-    // if (!CameraManager) return;
-
-    // float CameraYaw = CameraManager->GetCameraRotation().Yaw;
-
-    // // 旋转整张小地图背景
-    // MinimalMapImage->SetRenderTransformAngle(-CameraYaw);
-
-    // // MinimalMapImage->SetRenderTransformAngle(-CameraYaw + 90.0f);
-
-    // // 箭头通常保持固定朝上
-    // PointerImage->SetRenderTransformAngle(0.0f);
-
-    // APlayerCameraManager* CameraManager = GetOwningPlayer()->PlayerCameraManager;
-    // if (!CameraManager) return;
-
-    // float CameraYaw = CameraManager->GetCameraRotation().Yaw;
-
-    // // 旋转整张小地图背景
-    // MinimalMapImage->SetRenderTransformAngle(-CameraYaw);
-
-    // // MinimalMapImage->SetRenderTransformAngle(-CameraYaw + 90.0f);
-
-    // // 箭头通常保持固定朝上
-    // PointerImage->SetRenderTransformAngle(0.0f);
 
 }
 void UMiniMap::NativeConstruct()
