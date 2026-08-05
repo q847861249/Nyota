@@ -50,8 +50,10 @@ private:
 	UPROPERTY()
 	TObjectPtr<UPlayerAvatar> PlayerAvatar;
 
-	void RefreshLootPoint();
-	void RefreshPlayer();
+	void InitLootPoint();
+	void InitPlayer();
+	void RefreshLootPoint(const FVector2D& MapSize);
+	void RefreshPlayer(const FVector2D& MapSize);
 
 	FVector2D GetIconMapPosition(const FVector& TargetPosition,const FVector2D& MapSize);
 

@@ -8,6 +8,16 @@
 
 class ULootPointDataAsset;
 class ULootDataAsset;
+
+UENUM(BlueprintType)
+enum class ELootPointState : uint8
+{
+    CoolDown,
+    UpComing,
+    Active,
+    Remaining,
+	Completed
+};
 UCLASS()
 class NYOTA_API ALootPoint : public AActor
 {
@@ -16,7 +26,8 @@ class NYOTA_API ALootPoint : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ALootPoint();
-
+	void Init(float OutTime);
+	int32 GetUpComingRemainingTime();	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,9 +36,38 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	ELootPointState CurrentState = ELootPointState::CoolDown;
+
 private:
-	void Init();
+	void SetCoolDownState();
+	void SetUpComingState();
+	void SetActiveState();
+	void SetRemainingState();
+	void SetCompleteState();
+	void GenerateLoot();
 	void SpawnLootItem(ULootDataAsset* DataAsset);
+	
+	FTimerHandle PrepareTimerHandle;
+	FTimerHandle CoolDownTimerHandle;
+	FTimerHandle UpComingTimerHandle;
+	FTimerHandle ActiveTimerHandle;
+	FTimerHandle RemainingTimerHandle;
+	FTimerHandle CompletedTimerHandle;
+
+	UPROPERTY(EditAnywhere, Category="Debug")
+	FLinearColor CoolDownColor = FLinearColor::Gray;
+
+	UPROPERTY(EditAnywhere, Category="Debug")
+	FLinearColor UpComingColor = FLinearColor::Blue;
+
+	UPROPERTY(EditAnywhere, Category="Debug")
+	FLinearColor ActiveColor = FLinearColor::Red;
+
+	UPROPERTY(EditAnywhere, Category="Debug")
+	FLinearColor RemainingColor = FLinearColor::Yellow;
+
+	UPROPERTY(EditAnywhere, Category="Debug")
+	FLinearColor CompletedColor = FLinearColor::Green;
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<ULootPointDataAsset> LootConfig;
@@ -40,4 +80,16 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Magnification = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float UpComingTime = 10.f;
+
+	//外部传递游戏开始的时候调用Coudldown的准备间隔时间
+	float PrepareTime = 60.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float CoolDownTime = 60.f;
+
+	bool IsInit = false;
+
 };

@@ -12,6 +12,7 @@
 class UImage;
 class UTextBlock;
 class UTexture2D;
+enum class ELootPointState : uint8;
 UCLASS()
 class NYOTA_API ULootPointIcon : public UCommonUserWidget
 {
@@ -24,17 +25,20 @@ private:
 	TObjectPtr<UTextBlock> LootPointCountdownText;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> LootPointNotGenerate;
+	TObjectPtr<UTexture2D> LootPointCoolDownTexture;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> LootPointUpcomingUpdate;
+	TObjectPtr<UTexture2D> LootPointUpcomingUpdateTexture;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> LootPointComplete;
+	TObjectPtr<UTexture2D> LootPointActiveTexture;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> LootPointRemaining;
+	TObjectPtr<UTexture2D> LootPointCompletedTexture;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UTexture2D> LootPointEnd;
+	TObjectPtr<UTexture2D> LootPointRemainingTexture;
+public:
+	void SetTexture(ELootPointState CurrentState);
+	void SetCountdownText(float newTime);
 };

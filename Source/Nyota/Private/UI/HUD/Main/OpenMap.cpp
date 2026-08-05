@@ -17,8 +17,8 @@
 void UOpenMap::NativeOnActivated()
 {
     Super::NativeOnActivated();
-    RefreshLootPoint();
-    RefreshPlayer();
+    InitLootPoint();
+    InitPlayer();
 }
 void UOpenMap::NativeOnDeactivated()
 {
@@ -34,26 +34,26 @@ void UOpenMap::NativeTick(const FGeometry& MyGeometry,float InDeltaTime)
 {
     Super::NativeTick(MyGeometry, InDeltaTime);
     const FVector2D MapSize = LootPointPanel->GetCachedGeometry().GetLocalSize();
-    for (auto It = LootPointTMap.CreateIterator(); It; ++It)
-    {
-        ALootPoint* LootPoint = It.Key();
-        ULootPointIcon* Icon = It.Value();
-        UCanvasPanelSlot* IconSlot = Cast<UCanvasPanelSlot>(Icon->Slot);
-        const FVector2D Position = GetIconMapPosition(LootPoint->GetActorLocation(), MapSize);
-        IconSlot->SetPosition(Position);
-    }
-    if(!IsValid(PlayerAvatar)) return;
-    UCanvasPanelSlot* AvatarSlot = Cast<UCanvasPanelSlot>(PlayerAvatar->Slot);
-    if(!AvatarSlot) return;
-    const FVector2D AvatarPosition = GetIconMapPosition(GetOwningPlayerPawn()->GetActorLocation(), MapSize);
-    AvatarSlot->SetPosition(AvatarPosition);
+    RefreshLootPoint(MapSize);
+    RefreshPlayer(MapSize);
+    // for (auto It = LootPointTMap.CreateIterator(); It; ++It)
+    // {
+    //     ALootPoint* LootPoint = It.Key();
+    //     ULootPointIcon* Icon = It.Value();
+    //     UCanvasPanelSlot* IconSlot = Cast<UCanvasPanelSlot>(Icon->Slot);
+    //     const FVector2D Position = GetIconMapPosition(LootPoint->GetActorLocation(), MapSize);
+    //     IconSlot->SetPosition(Position);
+    // }
+    // if(!IsValid(PlayerAvatar)) return;
+    // UCanvasPanelSlot* AvatarSlot = Cast<UCanvasPanelSlot>(PlayerAvatar->Slot);
+    // if(!AvatarSlot) return;
+    // const FVector2D AvatarPosition = GetIconMapPosition(GetOwningPlayerPawn()->GetActorLocation(), MapSize);
+    // AvatarSlot->SetPosition(AvatarPosition);
 }
-void UOpenMap::RefreshLootPoint()
+void UOpenMap::InitLootPoint()
 {
     if(!IsValid(LootPointPanel)) return;
     if(!IsValid(LootPointIconClass)) return;
-    // LootPointPanel->ClearChildren();
-    // LootPointTMap.Empty();
     TArray<AActor*> LootPoinActors;
     UGameplayStatics::GetAllActorsOfClass(GetWorld(),ALootPoint::StaticClass(),LootPoinActors);
     for(AActor* Actor: LootPoinActors)
@@ -69,7 +69,7 @@ void UOpenMap::RefreshLootPoint()
         LootPointTMap.Add(LootPointActor, LootPointIcon);
     }
 }
-void UOpenMap::RefreshPlayer()
+void UOpenMap::InitPlayer()
 {
     if(!IsValid(LootPointPanel)) return;
     if(!IsValid(LootPointIconClass)) return;
@@ -106,4 +106,26 @@ FVector2D UOpenMap::GetIconMapPosition(const FVector& TargetPosition,const FVect
     FVector2D Target2DPos(TargetPosition.X,TargetPosition.Y);
     FVector2D MappingLocation = (Target2DPos - LeftTopLocation)/(RightButtomLocation - LeftTopLocation) * MapSize;
     return MappingLocation;
+}
+
+void UOpenMap::RefreshLootPoint(const FVector2D& MapSize)
+{
+    for (auto It = LootPointTMap.CreateIterator(); It; ++It)
+    {
+        ALootPoint* LootPoint = It.Key();
+        ULootPointIcon* Icon = It.Value();
+        UCanvasPanelSlot* IconSlot = Cast<UCanvasPanelSlot>(Icon->Slot);
+        const FVector2D Position = GetIconMapPosition(LootPoint->GetActorLocation(), MapSize);
+        IconSlot->SetPosition(Position);
+        Icon->SetTexture(LootPoint->CurrentState);
+        Icon->SetCountdownText(LootPoint->GetUpComingRemainingTime());
+    }
+}
+void UOpenMap::RefreshPlayer(const FVector2D& MapSize)
+{
+    if(!IsValid(PlayerAvatar)) return;
+    UCanvasPanelSlot* AvatarSlot = Cast<UCanvasPanelSlot>(PlayerAvatar->Slot);
+    if(!AvatarSlot) return;
+    const FVector2D AvatarPosition = GetIconMapPosition(GetOwningPlayerPawn()->GetActorLocation(), MapSize);
+    AvatarSlot->SetPosition(AvatarPosition);
 }
