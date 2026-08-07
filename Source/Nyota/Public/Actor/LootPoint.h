@@ -8,7 +8,7 @@
 
 class ULootPointDataAsset;
 class ULootDataAsset;
-
+class ALoot;
 UENUM(BlueprintType)
 enum class ELootPointState : uint8
 {
@@ -28,6 +28,7 @@ public:
 	ALootPoint();
 	void Init(float OutTime);
 	int32 GetUpComingRemainingTime();	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,8 +46,10 @@ private:
 	void SetRemainingState();
 	void SetCompleteState();
 	void GenerateLoot();
-	void SpawnLootItem(ULootDataAsset* DataAsset);
-	
+	bool SpawnLootItem(TSubclassOf<ALoot> LootClass);
+	UFUNCTION()
+	void SetCurrentValue(int32 SubtractValue);	
+
 	FTimerHandle PrepareTimerHandle;
 	FTimerHandle CoolDownTimerHandle;
 	FTimerHandle UpComingTimerHandle;
@@ -91,5 +94,9 @@ private:
 	float CoolDownTime = 60.f;
 
 	bool IsInit = false;
+
+	int32 TotalValue = 0;
+	int32 CurrentValue = 0;
+	
 
 };

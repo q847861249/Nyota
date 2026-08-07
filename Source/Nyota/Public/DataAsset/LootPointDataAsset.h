@@ -8,6 +8,7 @@
 #include "LootPointDataAsset.generated.h"
 
 class ULootDataAsset;
+class ALoot;
 USTRUCT(BlueprintType)
 struct FLootNumberRate
 {
@@ -41,7 +42,7 @@ struct FLootDistributed
     int32 Value; 
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    TArray<TObjectPtr<ULootDataAsset>> LootItem;  
+    TArray<TSubclassOf<ALoot>> LootItems;  
 };
 /**
  * 

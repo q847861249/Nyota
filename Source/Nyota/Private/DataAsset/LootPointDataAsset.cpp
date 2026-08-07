@@ -3,3 +3,4 @@
 
 #include "DataAsset/LootPointDataAsset.h"
 #include "DataAsset/LootDataAsset.h"
+#include "Actor/LootPoint.h"
