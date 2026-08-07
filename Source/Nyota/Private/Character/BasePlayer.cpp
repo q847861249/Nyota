@@ -110,10 +110,6 @@ UAttributeSet *ABasePlayer::GetAttributeSet() const
 void ABasePlayer::BeginPlay()
 {
     Super::BeginPlay();
-    if (GetCapsuleComponent())
-    {
-        GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ABasePlayer::OnOverlapBegin);
-    }
 }
 
 void ABasePlayer::SetGrabbedEnemy(ABaseCharacter *Character)
@@ -139,21 +135,6 @@ UPlayerCharacterDataAsset *ABasePlayer::GetConfig()
 UNyotaAbilitySystemComponent *ABasePlayer::GetNyotaAbilitySystemComponent() const
 {
     return Cast<UNyotaAbilitySystemComponent>(GetAbilitySystemComponent());
-}
-
-void ABasePlayer::OnOverlapBegin(
-    UPrimitiveComponent *OverlappedComponent, AActor *OtherActor, UPrimitiveComponent *OtherComp, int32 OtherBodyIndex,
-    bool bFromSweep, const FHitResult &SweepResult
-)
-{
-    // Check if the actor has specific tag
-    if (OtherActor && OtherActor->ActorHasTag(FName("Coin")))
-    {
-        FGameplayEventData Payload;
-        Payload.Instigator = this;
-        Payload.Target = OtherActor;
-        UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, Nyota::Event_Item_PickUp, Payload);
-    }
 }
 
 void ABasePlayer::OnAbilitySystemInitialized()

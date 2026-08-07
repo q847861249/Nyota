@@ -6,13 +6,12 @@
 #include "NavigationSystem.h"
 #include "NavMesh/NavMeshBoundsVolume.h"
 #include "DrawDebugHelpers.h"
-
+#include "Actor/Loot.h"
 // Sets default values
 ALootPoint::ALootPoint()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
@@ -70,44 +69,44 @@ void ALootPoint::Tick(float DeltaTime)
 		);
 	}
 }
+void ALootPoint::SetCurrentValue(int32 SubtractValue)
+{
+	CurrentValue -= (SubtractValue+1);
+	if(CurrentValue <= TotalValue/2 ) SetRemainingState();
+	if(CurrentValue == 0) SetCompleteState();
+}
 
 void ALootPoint::Init(float OutTime)
 {
 	IsInit = true;
 	PrepareTime = OutTime;
-	UE_LOG(LogTemp,Warning,TEXT("Prepare the LootPoint"));
 	GetWorld()->GetTimerManager().SetTimer(PrepareTimerHandle,this,&ALootPoint::SetCoolDownState,PrepareTime,false);
 }
 void ALootPoint::SetCoolDownState()
 {
 	CurrentState = ELootPointState::CoolDown;
-	UE_LOG(LogTemp,Warning,TEXT("Now,the state is CoolDown"));
 	GetWorld()->GetTimerManager().SetTimer(CoolDownTimerHandle,this,&ALootPoint::SetUpComingState,CoolDownTime,false);
 }
 void ALootPoint::SetUpComingState()
 {
 	CurrentState = ELootPointState::UpComing;
-	UE_LOG(LogTemp,Warning,TEXT("Now,the state is UpComing"));
 	GetWorld()->GetTimerManager().SetTimer(UpComingTimerHandle,this,&ALootPoint::SetActiveState,UpComingTime,false);
 }
 void ALootPoint::SetActiveState()
 {
 	CurrentState = ELootPointState::Active;
 	GenerateLoot();
-	UE_LOG(LogTemp,Warning,TEXT("Now,the state is Active"));
-	GetWorld()->GetTimerManager().SetTimer(ActiveTimerHandle,this,&ALootPoint::SetRemainingState,5.f,false);
 }
 void ALootPoint::SetRemainingState()
 {
 	CurrentState = ELootPointState::Remaining;
-	UE_LOG(LogTemp,Warning,TEXT("Now,the state is Remaining"));
-	GetWorld()->GetTimerManager().SetTimer(RemainingTimerHandle,this,&ALootPoint::SetCompleteState,5.f,false);
+
 }
 void ALootPoint::SetCompleteState()
 {
 	CurrentState = ELootPointState::Completed;
-	UE_LOG(LogTemp,Warning,TEXT("Now,the state is Complete"));
 	GetWorld()->GetTimerManager().SetTimer(CompletedTimerHandle,this,&ALootPoint::SetCoolDownState,5.f,false);
+	TotalValue = 0;
 }
 
 void ALootPoint::GenerateLoot()
@@ -134,7 +133,6 @@ void ALootPoint::GenerateLoot()
         int32 LootValue = 0;
         float ValueThreshold = 0.0f;
         float RandomValue = FMath::FRandRange(0.0f, 100.0f) * Magnification;
-        // float RandomValue = FMath::RandRange(0, LootArray->LootItem.Num() - 1);
         for(FLootValueRate& Entry:LootConfig->ValueTable)
         {
             ValueThreshold += Entry.Percent;
@@ -145,28 +143,30 @@ void ALootPoint::GenerateLoot()
             }
         }
         FLootDistributed LootArray = (LootConfig->LootTable)[LootValue];
-        int32 RandomIndex = FMath::RandRange(0, (LootArray.LootItem).Num() - 1);
-        ULootDataAsset* NewDataAsset = (LootArray.LootItem)[RandomIndex];
-        SpawnLootItem(NewDataAsset);
+        int32 RandomIndex = FMath::RandRange(0, (LootArray.LootItems).Num() - 1);
+		TSubclassOf<ALoot> LootClass = (LootArray.LootItems)[RandomIndex];
+		if(SpawnLootItem(LootClass))
+		{
+			TotalValue += LootValue + 1;
+		}
     }
+	CurrentValue = TotalValue;
 }
-void ALootPoint::SpawnLootItem(ULootDataAsset* DataAsset)
+bool ALootPoint::SpawnLootItem(TSubclassOf<ALoot> LootClass)
 {
-	if (!DataAsset || !DataAsset->LootActorClass) return;
 	UWorld* World = GetWorld();
-
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(World);
-	if (!NavSystem) return;
+	if (!NavSystem) return false;
 
 	const FVector LootPointLocation = GetActorLocation();
 	FNavLocation ProjectedCenter;
 	//把一个世界坐标投影到一个最近的可导航点上
 	const bool bProjected = NavSystem->ProjectPointToNavigation(LootPointLocation, ProjectedCenter, FVector(Range, Range, 5000.0f));
-	if(!bProjected ) return;
+	if(!bProjected ) return false;
 	//找到投影点附近一个随机的可导航点
 	FNavLocation RandomNavLocation;
 	const bool bFoundNavPoint = NavSystem->GetRandomPointInNavigableRadius( ProjectedCenter.Location,Range, RandomNavLocation );
-	if (!bFoundNavPoint) return;
+	if (!bFoundNavPoint) return false;
 
 	const FVector SpawnLocation = RandomNavLocation.Location + FVector(0.0f, 0.0f, 5.0f);
 	FRotator SpawnRotation = FRotator::ZeroRotator;
@@ -177,13 +177,16 @@ void ALootPoint::SpawnLootItem(ULootDataAsset* DataAsset)
 	SpawnParams.SpawnCollisionHandlingOverride =
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AActor* SpawnedActor = World->SpawnActor<AActor>(DataAsset->LootActorClass,SpawnLocation,SpawnRotation,SpawnParams);
-
+	AActor* SpawnedActor = World->SpawnActor<AActor>(LootClass,SpawnLocation,SpawnRotation,SpawnParams);
 	if (!SpawnedActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Loot Actor failed"));
+		return false;
 	}
-
+	ALoot* Loot = Cast<ALoot>(SpawnedActor);
+	if(!Loot) return false;
+    Loot->OnLootDestory.AddUObject(this,&ThisClass::SetCurrentValue);
+	return true;
 }
 int32 ALootPoint::GetUpComingRemainingTime()
 {
