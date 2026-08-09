@@ -31,7 +31,6 @@ protected:
     void PickUpLoot(AActor* Actor);
     void Channeling();
 public:
-    UFUNCTION(BlueprintCallable)
-    void PickUpCoin(AActor *PickUpItem);
+
   
 };
