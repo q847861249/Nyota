@@ -26,6 +26,7 @@ private:
     UPROPERTY(EditDefaultsOnly)
     TSubclassOf<UOpenMap> MapClass;
 
+    UPROPERTY()
     TObjectPtr<UOpenMap> MapWidget;
 
     void OpenMap();
