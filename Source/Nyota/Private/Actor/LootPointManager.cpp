@@ -23,9 +23,7 @@ void ALootPointManager::BeginPlay()
 	{
 		ALootPoint* LootPointActor = Cast<ALootPoint>(Actor);
 		if(!IsValid(LootPointActor)) continue;
-		UE_LOG(LogTemp,Warning,TEXT("发现LootPoint,正在初始化"));
 		int32 currentValue = FMath::RandRange(1, RandowSeed * 2);
-		UE_LOG(LogTemp,Warning,TEXT("the value is %d"),currentValue);
 		LootPointActor->Init(currentValue);
 	}
 	
