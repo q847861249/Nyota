@@ -7,6 +7,7 @@
 #include "GA_Grab.generated.h"
 
 class ABaseEnemyWildBoar;
+class UAbilitySystemComponent;
 /**
  *
  */
@@ -15,10 +16,19 @@ class NYOTA_API UGA_Grab : public UNyotaGameplayAbility
 {
     GENERATED_BODY()
 
+#if WITH_DEV_AUTOMATION_TESTS
+    friend class FPutDownWindowLifecycleTest;
+#endif
+
 public:
     virtual void ActivateAbility(
         const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
+    ) override;
+
+    virtual void EndAbility(
+        const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
+        const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled
     ) override;
 
     UFUNCTION()
@@ -28,7 +38,10 @@ public:
     void OnGrabEnd(FGameplayEventData EventData);
 
     UFUNCTION()
-    void OnGrabTimeout();
+    void OnPutDownTimeout();
+
+    UFUNCTION()
+    void OnPutDownEnd(FGameplayEventData EventData);
 
     UFUNCTION()
     void OnStartGrabTrace(FGameplayEventData EventData);
@@ -45,9 +58,6 @@ protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float HitBoxRadius;
-
-    UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    float ThrownForce;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float GrabTimerRate = 5.f;
@@ -71,4 +81,15 @@ protected:
     FVector PrevRightHandLocation;
 
     FTimerHandle GrabTraceTimerHandle;
+
+private:
+    void AddPutDownWindowTag(UAbilitySystemComponent *AbilitySystemComponent);
+
+    void RemovePutDownWindowTag(UAbilitySystemComponent *AbilitySystemComponent);
+
+    void ReleaseGrabbedTargetAsFailSafe();
+
+    TWeakObjectPtr<UAbilitySystemComponent> PutDownWindowAbilitySystemComponent;
+
+    bool bOwnsPutDownWindowTag = false;
 };

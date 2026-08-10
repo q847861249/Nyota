@@ -21,29 +21,28 @@ void UGA_PressureBlast::ActivateAbility(
 
 void UGA_PressureBlast::Execute()
 {
+    UAbilityTask_WaitGameplayEvent *ApplyDamage =
+        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
+    ApplyDamage->EventReceived.AddDynamic(this, &ThisClass::OnApplyDamage);
+    ApplyDamage->ReadyForActivation();
+
     ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo());
     if (!IsValid(Player))
     {
         return;
     }
 
-    if (!IsValid(Player->GetGrabbedEnemy()))
+    if (IsValid(Player->GetGrabbedEnemy()))
     {
-        // UE_LOG(LogNyota, Warning, TEXT("UGA_PressureBlast: No grabbed enemy, ending ability."));
+        UE_LOG(LogTemp, Warning, TEXT("Grabbed Target: %s"), *Player->GetGrabbedEnemy()->GetName());
 
-        Terminate();
-
-        return;
+        // Set Thrown Force
+        Player->PendingThrownForce = PressureBlastForce;
     }
-
-    UE_LOG(LogNyota, Warning, TEXT("UGA_PressureBlast: Pressure Blast on %s"), *Player->GetGrabbedEnemy()->GetName());
-
-    Player->PendingThrownForce = PressureBlastForce;
-
-    UAbilityTask_WaitGameplayEvent *ApplyDamage =
-        UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, Nyota::Event_Ability_ApplyDamage);
-    ApplyDamage->EventReceived.AddDynamic(this, &ThisClass::OnApplyDamage);
-    ApplyDamage->ReadyForActivation();
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Grabbed Target Is Null !!!"));
+    }
 
     UAbilityTask_PlayMontageAndWait *PlayMontage = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
         this, FName("PressureBlast"), PressureBlastMontage
