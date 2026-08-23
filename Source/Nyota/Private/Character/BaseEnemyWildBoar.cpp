@@ -68,9 +68,8 @@ void ABaseEnemyWildBoar::OnThrown(FVector Direction, float Force)
     // 切换到飞行状态
     GetCharacterMovement()->SetMovementMode(MOVE_Falling);
 
-    // 施加力
-    FVector LaunchVelocity = Direction * Force;
-    LaunchVelocity.Z += ThrownZOffset;
+    // 施加力（与 GetThrownLaunchVelocity 同一套计算，供技能复用，保证水球与敌人弧线一致）
+    FVector LaunchVelocity = GetThrownLaunchVelocity(Direction, Force);
     LaunchCharacter(LaunchVelocity, true, true);
 
     // 恢复 AI
@@ -101,4 +100,11 @@ void ABaseEnemyWildBoar::OnBoarLanded(const FHitResult &Hit)
 
 void ABaseEnemyWildBoar::OnSlammed(int32 SlamCount)
 {
+}
+
+FVector ABaseEnemyWildBoar::GetThrownLaunchVelocity(const FVector &Direction, float Force) const
+{
+    FVector LaunchVelocity = Direction * Force;
+    LaunchVelocity.Z += ThrownZOffset;
+    return LaunchVelocity;
 }

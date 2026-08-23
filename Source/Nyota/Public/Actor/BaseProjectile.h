@@ -24,6 +24,13 @@ public:
 
     virtual void Tick(float DeltaTime) override;
 
+    /**
+     * @brief 按指定初速度与重力发射投射物（重力 0 = 直线，1 = 与角色一致的抛物线）
+     * @param LaunchVelocity 初始速度
+     * @param GravityScale 重力缩放
+     */
+    void Launch(const FVector &LaunchVelocity, float GravityScale);
+
     UPROPERTY(BlueprintAssignable)
     FOnProjectileHit OnProjectileHit;
 
