@@ -88,3 +88,4 @@ Plugins/Puerts/ThirdParty/v8_9.4.146.24
 *.code-workspace
 .DS_Store
 Plugins/Developer/RiderLink
+.cursor/
