@@ -24,6 +24,12 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PressureBlast, "Nyota.Ability.Grab.PressureBlast");
 
+UE_DEFINE_GAMEPLAY_TAG(Ability_Charge, "Nyota.Ability.Charge");
+UE_DEFINE_GAMEPLAY_TAG(Ability_Charge_LightAttack, "Nyota.Ability.Charge.LightAttack");
+
+UE_DEFINE_GAMEPLAY_TAG(Ability_MudShield, "Nyota.Ability.MudShield");
+UE_DEFINE_GAMEPLAY_TAG(Ability_Slam, "Nyota.Ability.Slam");
+
 UE_DEFINE_GAMEPLAY_TAG(UI_OpenMap, "Nyota.UI.OpenMap");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")
@@ -32,6 +38,16 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_PutDownWindow, "Nyota.Ability.Stat
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_Slam, "Nyota.Ability.State.Grabbing.Slam")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_VortexGrip, "Nyota.Ability.State.Grabbing.VortexGrip")
 UE_DEFINE_GAMEPLAY_TAG(Ability_State_Grabbing_PressureBlast, "Nyota.Ability.State.Grabbing.PressureBlast")
+
+UE_DEFINE_GAMEPLAY_TAG(Ability_State_Charging, "Nyota.Ability.State.Charging")
+UE_DEFINE_GAMEPLAY_TAG(Ability_State_Charging_Bulldozer, "Nyota.Ability.State.Bulldozer")
+
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Blocked_Movement, "Nyota.Status.Blocked.Movement", "屏蔽移动：冻结 MovementMode，解除时恢复。");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Blocked_AI, "Nyota.Status.Blocked.AI", "屏蔽 AI：停掉 AIController Tick，行为树整体冻结。");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Blocked_Ability, "Nyota.Status.Blocked.Ability", "屏蔽技能：技能输入在 ASC 入口被拦截。");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Immune_Control, "Nyota.Status.Immune.Control", "控制免疫：施加控制类状态前检查此 Tag。");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Slowed, "Nyota.Status.Slowed", "减速：移动速度按 SlowSpeedMultiplier 降低，计数归零恢复。");
+UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Shielded, "Nyota.Status.Shielded", "护盾：泥土护盾增益期间持有，供查询当前存在护盾。");
 
 UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Behavior_SurvivesDeath, "Nyota.Ability.Behavior.SurvivesDeath", "An ability with this type tag should not be canceled due to death.");
 
@@ -48,6 +64,9 @@ UE_DEFINE_GAMEPLAY_TAG(Passive_Cooldown, "Nyota.Ability.Passive_Cooldown");
 UE_DEFINE_GAMEPLAY_TAG(Q_Cooldown, "Nyota.Ability.Q_Cooldown");
 UE_DEFINE_GAMEPLAY_TAG(E_Cooldown, "Nyota.Ability.E_Cooldown");
 UE_DEFINE_GAMEPLAY_TAG(R_Cooldown, "Nyota.Ability.R_Cooldown");
+
+// Data
+UE_DEFINE_GAMEPLAY_TAG(Data_DamageReduction, "Nyota.Data.DamageReduction");
 
 // Event
 UE_DEFINE_GAMEPLAY_TAG(Event_Ability_AttackStart, "Nyota.Event.Ability.AttackStart")

@@ -169,8 +169,8 @@ void UNyotaAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &I
 
 void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
-    // 检查是否需要拦截所有技能输入（如过场、死亡、对话等状态）
-    if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked))
+    // 检查是否需要拦截所有技能输入（如过场、死亡、对话等状态，以及眩晕/沉默等屏蔽技能的受控状态）
+    if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked) || HasMatchingGameplayTag(Nyota::Status_Blocked_Ability))
     {
         ClearAbilityInput();
 

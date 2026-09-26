@@ -89,3 +89,6 @@ Plugins/Puerts/ThirdParty/v8_9.4.146.24
 .DS_Store
 Plugins/Developer/RiderLink
 .cursor/
+
+# 设计参考文档（中文文件名会让 UBT 的 GitSourceFileWorkingSet 解析 git status 时崩溃，故不入库）
+Docs/

@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "Abilities/GameplayAbility.h"
 #include "Character/NyotaPawnExtensionComponent.h"
+#include "Character/NyotaStatusComponent.h"
 #include "Containers/Ticker.h"
 #include "Input/NyotaInputComponent.h"
 #include "GameplayTagContainer.h"
@@ -12,6 +13,9 @@
 ABaseCharacter::ABaseCharacter(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
     PrimaryActorTick.bCanEverTick = false;
+
+    // 受控状态组件默认创建：玩家与敌人共享同一套"Tag→冻结"反应，新增状态不改本类
+    StatusComponent = ObjectInitializer.CreateDefaultSubobject<UNyotaStatusComponent>(this, TEXT("StatusComponent"));
 }
 
 UAbilitySystemComponent *ABaseCharacter::GetAbilitySystemComponent() const

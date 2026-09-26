@@ -78,7 +78,7 @@ void UGA_LightAttack::OnMontageCompleted()
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, false);
 }
 
-void UGA_LightAttack::ApplyDamage(const TArray<AActor *> &DamageActors)
+void UGA_LightAttack::ApplyDamage_Implementation(const TArray<AActor *> &DamageActors)
 {
     UAbilitySystemComponent *ASC = GetAbilitySystemComponentFromActorInfo();
     if (!IsValid(ASC))

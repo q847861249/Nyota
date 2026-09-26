@@ -13,6 +13,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FASCInitialized, UAbilitySystemComponent *, ASC, UAttributeSet *, AS);
 
 class UGameplayEffect;
+class UNyotaStatusComponent;
 
 UCLASS(Config = Game)
 class NYOTA_API ABaseCharacter : public AModularCharacter, public IAbilitySystemInterface
@@ -53,6 +54,10 @@ protected:
 private:
     UPROPERTY(EditDefaultsOnly, Category = "Crash | Effects")
     TSubclassOf<UGameplayEffect> InitializeAttributesEffect;
+
+    /** 受控状态组件：监听屏蔽维度 Tag 并执行冻结反应，角色类本身不关心具体有哪些状态。 */
+    UPROPERTY(VisibleAnywhere, Category = "Nyota | Status")
+    TObjectPtr<UNyotaStatusComponent> StatusComponent;
 
     UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
     bool bAlive = true;

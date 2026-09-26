@@ -7,7 +7,7 @@
 #include "GA_LightAttack.generated.h"
 
 /**
- *
+ * @brief 普通轻攻击。
  */
 UCLASS()
 class NYOTA_API UGA_LightAttack : public UNyotaGameplayAbility
@@ -29,7 +29,7 @@ public:
     UFUNCTION()
     void OnMontageCompleted();
 
-    UFUNCTION()
+    UFUNCTION(BlueprintNativeEvent)
     void ApplyDamage(const TArray<AActor *> &DamageActors);
 
     UFUNCTION()
