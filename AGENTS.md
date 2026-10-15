@@ -8,7 +8,7 @@
 
 ## Unreal Engine MCP（默认启用）
 
-- 项目 MCP 配置：`.cursor/mcp.json`（`unreal-engine` → `http://127.0.0.1:8080/mcp`）。
+- 项目 MCP 配置：`.mcp.json`（`unreal-engine` → `http://127.0.0.1:8080/mcp`）。
 - 处理蓝图、关卡、资产、编辑器验证时，**优先通过 UE MCP**；会话开始先用 `GetDynamicTools` 确认已连接。
 - MCP 未连接时：告知用户打开 UE 编辑器并启动 MCP 服务，再回退 C++ 或手动蓝图方案。
 
