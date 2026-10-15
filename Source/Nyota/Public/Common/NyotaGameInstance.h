@@ -2,42 +2,16 @@
 
 #pragma once
 
-#include "JsEnv.h"
-
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "NyotaGameInstance.generated.h"
 
 /**
- *
+ * @brief 提供项目游戏实例的原生基类，承接跨关卡的全局逻辑。
+ * @details 保留该类型以兼容现有游戏实例蓝图，生命周期由 UGameInstance 管理。
  */
 UCLASS()
 class NYOTA_API UNyotaGameInstance : public UGameInstance
 {
     GENERATED_BODY()
-
-public:
-    virtual void Init() override;
-
-    virtual void OnStart() override;
-
-    virtual void Shutdown() override;
-
-    void EnableJsEnv();
-
-protected:
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Puerts")
-    bool bEnableDebugger = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Puerts")
-    bool bWaitDebugger = false;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Puerts")
-    int DebuggerPort = 8889;
-
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Puerts")
-    FString ModuleName = "Main";
-
-private:
-    TSharedPtr<puerts::FJsEnv> GameScript;
 };
