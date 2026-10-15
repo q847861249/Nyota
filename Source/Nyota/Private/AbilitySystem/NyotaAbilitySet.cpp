@@ -145,8 +145,8 @@ void UNyotaAbilitySet::GiveToAbilitySystem(
 
         FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityToGrant.AbilityLevel);
         AbilitySpec.SourceObject = SourceObject;
-        // 将配置的 InputTag 写入 DynamicAbilityTags，供输入系统匹配技能
-        AbilitySpec.DynamicAbilityTags.AddTag(AbilityToGrant.InputTag);
+        /** 输入标签随本次授予的规格保存，使用 UE 5.8 的动态来源标签接口供输入系统匹配。 */
+        AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityToGrant.InputTag);
 
         const FGameplayAbilitySpecHandle AbilitySpecHandle = NyotaASC->GiveAbility(AbilitySpec);
 

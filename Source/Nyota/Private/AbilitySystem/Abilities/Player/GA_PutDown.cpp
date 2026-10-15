@@ -9,7 +9,10 @@
 
 UGA_PutDown::UGA_PutDown(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    AbilityTags.AddTag(Nyota::Ability_Grab_PutDown);
+    /** 保留继承的标签，在构造阶段设置供抓取技能触发放下动作的标识。 */
+    FGameplayTagContainer DefaultTags = GetAssetTags();
+    DefaultTags.AddTag(Nyota::Ability_Grab_PutDown);
+    SetAssetTags(DefaultTags);
     ActivationRequiredTags.AddTag(Nyota::Ability_State_Grabbing_PutDownWindow);
 }
 

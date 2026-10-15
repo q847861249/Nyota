@@ -47,7 +47,8 @@ bool FPutDownAbilityContractTest::RunTest(const FString &Parameters)
     TestNotNull(TEXT("Put-down ability CDO"), AbilityCDO);
     TestTrue(
         TEXT("Ability identifies itself by exact tag"),
-        AbilityCDO->AbilityTags.HasTagExact(Nyota::Ability_Grab_PutDown)
+        /** 验证新版只读接口仍能提供抓取派生逻辑依赖的原生技能标签。 */
+        AbilityCDO->GetAssetTags().HasTagExact(Nyota::Ability_Grab_PutDown)
     );
     TestTrue(
         TEXT("Ability requires the put-down window"),

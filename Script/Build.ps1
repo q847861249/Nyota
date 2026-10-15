@@ -1,3 +1,4 @@
+<# @brief 根据项目的引擎关联构建目标；支持显式指定引擎目录以兼容未注册的安装。 #>
 param(
     [ValidateSet("Game", "Editor", "Client", "Server")]
     [string]$Target = "Game",
@@ -9,7 +10,10 @@ param(
     [string]$Platform = "Win64",
 
     [switch]$Clean,
-    [switch]$Run
+    [switch]$Run,
+
+    <# @brief 可选的引擎根目录；为空时按项目版本查找注册表、Launcher 清单和常用路径。 #>
+    [string]$EnginePath
 )
 
 $ErrorActionPreference = "Stop"
@@ -35,37 +39,60 @@ Write-Host "  Project Root : $ProjectRoot"
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-# --- Find Unreal Engine ---
-$UERegPath = "HKLM:\SOFTWARE\EpicGames\Unreal Engine\5.4"
-$UERegPathWOW = "HKLM:\SOFTWARE\WOW6432Node\EpicGames\Unreal Engine\5.4"
+<# @brief 以项目版本为准查找引擎，避免升级后构建脚本仍调用旧版 UBT。 #>
+$EngineAssociation = (Get-Content -LiteralPath $ProjectFile.FullName -Raw | ConvertFrom-Json).EngineAssociation
+<# @brief 按优先级收集候选目录，后续验证文件与版本，跳过已失效的注册表记录。 #>
+$EngineCandidates = @()
 $UEInstallDir = $null
 
-try { $UEInstallDir = (Get-ItemProperty -Path $UERegPath -ErrorAction Stop).InstalledDirectory }
-catch {
-    try { $UEInstallDir = (Get-ItemProperty -Path $UERegPathWOW -ErrorAction Stop).InstalledDirectory }
-    catch { }
+if ($EnginePath) {
+    $EngineCandidates += $EnginePath
+}
+else {
+    foreach ($RegistryPath in @(
+        "HKLM:\SOFTWARE\EpicGames\Unreal Engine\$EngineAssociation",
+        "HKLM:\SOFTWARE\WOW6432Node\EpicGames\Unreal Engine\$EngineAssociation"
+    )) {
+        $EngineCandidates += (Get-ItemProperty -Path $RegistryPath -ErrorAction SilentlyContinue).InstalledDirectory
+    }
+
+    <# @brief Launcher 清单也能识别已安装但尚未写入引擎注册表的版本。 #>
+    $LauncherManifest = Join-Path $env:ProgramData 'Epic\UnrealEngineLauncher\LauncherInstalled.dat'
+    if (Test-Path -LiteralPath $LauncherManifest) {
+        $Installations = (Get-Content -LiteralPath $LauncherManifest -Raw | ConvertFrom-Json).InstallationList
+        $EngineCandidates += $Installations |
+            Where-Object { $_.AppName -eq "UE_$EngineAssociation" } |
+            ForEach-Object { $_.InstallLocation }
+    }
+
+    $EngineCandidates += @(
+        "D:\UE\UE_$EngineAssociation",
+        "C:\UE\UE_$EngineAssociation",
+        "C:\Program Files\Epic Games\UE_$EngineAssociation",
+        "D:\Program Files\Epic Games\UE_$EngineAssociation",
+        "D:\Programs\Unreal\UE_$EngineAssociation"
+    )
 }
 
-if (-not $UEInstallDir) {
-    $CustomPaths = @(
-        "D:\UE\UE_5.4",
-        "C:\UE\UE_5.4",
-        "C:\Program Files\Epic Games\UE_5.4",
-        "D:\Program Files\Epic Games\UE_5.4"
-    )
-    foreach ($p in $CustomPaths) {
-        if (Test-Path "$p\Engine\Binaries\Win64\UnrealBuildTool.exe") {
-            $UEInstallDir = $p
-            break
-        }
+foreach ($Candidate in ($EngineCandidates | Where-Object { $_ } | Select-Object -Unique)) {
+    if (-not (Test-Path -LiteralPath "$Candidate\Engine\Build\BatchFiles\Build.bat") -or
+        -not (Test-Path -LiteralPath "$Candidate\Engine\Build\Build.version")) {
+        continue
+    }
+
+    <# @brief 防止显式路径或残留安装记录将当前项目交给不同主次版本的引擎。 #>
+    $InstalledVersion = Get-Content -LiteralPath "$Candidate\Engine\Build\Build.version" -Raw | ConvertFrom-Json
+    if ("$($InstalledVersion.MajorVersion).$($InstalledVersion.MinorVersion)" -eq $EngineAssociation) {
+        $UEInstallDir = (Resolve-Path -LiteralPath $Candidate).Path
+        break
     }
 }
 
 if (-not $UEInstallDir) {
     Write-Error @"
-Unreal Engine 5.4 not found.
-Please set the engine path manually by editing this script,
-or install UE 5.4 via the Epic Games Launcher.
+Unreal Engine $EngineAssociation not found.
+Use -EnginePath to specify a matching installation,
+or install UE $EngineAssociation via the Epic Games Launcher.
 "@
     exit 1
 }

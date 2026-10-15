@@ -23,7 +23,10 @@ namespace
 
 UGA_BoarSlam::UGA_BoarSlam(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    AbilityTags.AddTag(Nyota::Ability_Slam);
+    /** 保留父类默认标签，在构造阶段设置砸地技能标识，供取消和查询逻辑使用。 */
+    FGameplayTagContainer DefaultTags = GetAssetTags();
+    DefaultTags.AddTag(Nyota::Ability_Slam);
+    SetAssetTags(DefaultTags);
 
     // 激活时自动取消冲锋技能（冲锋中未撞人按技能三 → 取消冲锋并派生跳跃砸地）；
     // 引擎在 PreActivate 里应用该取消（先于 ActivateAbility），派生判定也放在 PreActivate，见其注释

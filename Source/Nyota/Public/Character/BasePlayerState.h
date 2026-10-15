@@ -13,15 +13,14 @@ class UNyotaPawnData;
 class UNyotaAbilitySystemComponent;
 class UAttributeSet;
 
-/**
- *
- */
+/** @brief 在玩家生命周期内持有 GAS 和角色配置，并向 Pawn 同步技能初始化状态。 */
 UCLASS(Config = Game)
 class NYOTA_API ABasePlayerState : public AModularPlayerState, public IAbilitySystemInterface
 {
     GENERATED_BODY()
 
 public:
+    /** @brief 构造技能系统和属性集，并设置玩家状态的网络更新频率。 */
     ABasePlayerState(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     //~AActor interface

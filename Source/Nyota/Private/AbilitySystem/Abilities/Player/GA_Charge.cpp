@@ -19,8 +19,10 @@ namespace
 
 UGA_Charge::UGA_Charge(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    // 派生普攻通过该 Tag 查找正在运行的冲锋实例，因此必须在 C++ 侧固定写入
-    AbilityTags.AddTag(Nyota::Ability_Charge);
+    /** 保留父类默认标签，并在构造阶段写入供派生普攻查找的冲锋标识。 */
+    FGameplayTagContainer DefaultTags = GetAssetTags();
+    DefaultTags.AddTag(Nyota::Ability_Charge);
+    SetAssetTags(DefaultTags);
 
     // 可用性表：冲锋/推土机中技能一不可用（不能重复冲锋）
     ActivationBlockedTags.AddTag(Nyota::Ability_State_Charging);

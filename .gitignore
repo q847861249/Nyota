@@ -35,6 +35,8 @@
 *.xcodeproj
 *.xcworkspace
 *.sln
+# @brief UE 5.8 / Visual Studio 2026 生成的新版解决方案由引擎重建。
+*.slnx
 *.suo
 *.opensdf
 *.sdf
@@ -78,6 +80,8 @@ DerivedDataCache/*
 .idea
 .vs
 .vscode
+# @brief UE 5.8 生成 VS Code 工作区时附带的搜索过滤文件。
+.ignore
 
 # Other
 *.code-workspace

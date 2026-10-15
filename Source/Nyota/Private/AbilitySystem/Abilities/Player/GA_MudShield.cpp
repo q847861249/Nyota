@@ -10,8 +10,10 @@
 
 UGA_MudShield::UGA_MudShield(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    // 供蓝图/查找使用的能力标识
-    AbilityTags.AddTag(Nyota::Ability_MudShield);
+    /** 保留继承的默认标签，通过新版接口设置蓝图和技能查询使用的护盾标识。 */
+    FGameplayTagContainer DefaultTags = GetAssetTags();
+    DefaultTags.AddTag(Nyota::Ability_MudShield);
+    SetAssetTags(DefaultTags);
 
     // 可用性表：冲锋/推土机中不可释放（冲锋中普攻与技能二均不可用，撞人后走派生普攻）
     ActivationBlockedTags.AddTag(Nyota::Ability_State_Charging);

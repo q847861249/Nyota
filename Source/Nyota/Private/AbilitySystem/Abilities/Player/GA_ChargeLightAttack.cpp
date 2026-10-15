@@ -9,7 +9,10 @@
 
 UGA_ChargeLightAttack::UGA_ChargeLightAttack(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    AbilityTags.AddTag(Nyota::Ability_Charge_LightAttack);
+    /** 构造时保留继承的标签，再通过 UE 5.8 的接口设置派生普攻标识。 */
+    FGameplayTagContainer DefaultTags = GetAssetTags();
+    DefaultTags.AddTag(Nyota::Ability_Charge_LightAttack);
+    SetAssetTags(DefaultTags);
 
     // 只有处于推土机状态（冲锋撞到人）才允许激活，对应设计中的"派生窗口：推人时可派生普攻"
     ActivationRequiredTags.AddTag(Nyota::Ability_State_Charging_Bulldozer);
@@ -64,7 +67,7 @@ UGA_Charge *UGA_ChargeLightAttack::FindActiveChargeAbility() const
             continue;
         }
 
-        if (!Spec.Ability->AbilityTags.HasTagExact(Nyota::Ability_Charge))
+        if (!Spec.Ability->GetAssetTags().HasTagExact(Nyota::Ability_Charge))
         {
             continue;
         }

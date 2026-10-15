@@ -28,6 +28,7 @@ class NYOTA_API UGA_BoarSlam : public UNyotaGameplayAbility
     GENERATED_BODY()
 
 public:
+    /** @brief 在构造阶段设置砸地标识、冲锋取消规则和释放期间的输入屏蔽标签。 */
     UGA_BoarSlam(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     /**

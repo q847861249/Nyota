@@ -10,8 +10,11 @@
 #include "InputMappingContext.h"
 #include "Character/NyotaHeroComponent.h"
 #include "Components/GameFrameworkComponentManager.h"
-#include "DataInterface/NiagaraDataInterfaceActorComponent.h"
-#include "Slate/SGameLayerManager.h"
+/** 显式包含输入映射实际使用的引擎类型，避免依赖旧版 Niagara 头文件的间接包含。 */
+#include "Engine/Engine.h"
+#include "Engine/GameInstance.h"
+#include "Engine/LocalPlayer.h"
+#include "GameFramework/PlayerController.h"
 #include "System/NyotaAssetManager.h"
 #include "UserSettings/EnhancedInputUserSettings.h"
 #include UE_INLINE_GENERATED_CPP_BY_NAME(GameFeatureAction_AddInputContextMapping)

@@ -77,7 +77,7 @@ public:
     /**
      * @brief 通过 GameplayTag 精确匹配查找可激活的技能实例
      *
-     * 遍历所有可激活技能，匹配其 AbilityTags 中是否包含指定的 Tag。
+     * 遍历所有可激活技能，通过 GetAssetTags 匹配默认资产标签中是否包含指定的 Tag。
      *
      * @param AbilityTag 要匹配的 Tag
      * @return 匹配到的技能实例指针，未找到返回 nullptr
@@ -90,7 +90,7 @@ public:
     /**
      * @brief 输入 Tag 按下时的入口
      *
-     * 遍历所有技能，将 DynamicAbilityTags 中包含该输入 Tag 的技能的 Handle
+     * 遍历所有技能，将动态来源标签中包含该输入 Tag 的技能的 Handle
      * 加入按下缓存和按住缓存。通常由输入处理组件在按键按下时调用。
      *
      * @param InputTag 被按下的输入 Tag
@@ -100,7 +100,7 @@ public:
     /**
      * @brief 输入 Tag 释放时的入口
      *
-     * 遍历所有技能，将 DynamicAbilityTags 中包含该输入 Tag 的技能的 Handle
+     * 遍历所有技能，将动态来源标签中包含该输入 Tag 的技能的 Handle
      * 加入释放缓存，同时从按住缓存中移除。通常由输入处理组件在按键释放时调用。
      *
      * @param InputTag 被释放的输入 Tag
@@ -179,7 +179,7 @@ private:
     /**
      * @brief 检查并激活"授予即激活"的技能
      *
-     * 检查技能的 AbilityTags 中是否包含 Ability_ActivateOnGive Tag，
+     * 检查技能的默认资产标签中是否包含 Ability_ActivateOnGive Tag，
      * 如果有则立即调用 TryActivateAbility。用于被动技能、光环等场景。
      *
      * @param AbilitySpec 要检查的技能规格

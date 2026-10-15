@@ -26,6 +26,7 @@ class NYOTA_API UGA_Charge : public UNyotaGameplayAbility
     GENERATED_BODY()
 
 public:
+    /** @brief 在构造阶段设置冲锋默认资产标签和阻塞条件，供派生技能稳定识别。 */
     UGA_Charge(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void ActivateAbility(

@@ -7,7 +7,7 @@
 
 #include "GA_PutDown.generated.h"
 
-/** Gently releases the player's currently grabbed target. */
+/** @brief 执行抓取后的放下或抛出派生动作，并通知抓取技能清理状态。 */
 UCLASS()
 class NYOTA_API UGA_PutDown : public UNyotaGameplayAbility
 {
@@ -18,6 +18,7 @@ class NYOTA_API UGA_PutDown : public UNyotaGameplayAbility
 #endif
 
 public:
+    /** @brief 在构造阶段设置放下技能标识，并要求抓取技能已开启派生窗口。 */
     UGA_PutDown(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void ActivateAbility(

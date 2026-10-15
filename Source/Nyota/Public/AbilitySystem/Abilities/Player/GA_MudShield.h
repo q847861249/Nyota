@@ -27,6 +27,7 @@ class NYOTA_API UGA_MudShield : public UNyotaGameplayAbility
     GENERATED_BODY()
 
 public:
+    /** @brief 在构造阶段设置护盾技能标识，并限制冲锋状态下的激活。 */
     UGA_MudShield(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void ActivateAbility(

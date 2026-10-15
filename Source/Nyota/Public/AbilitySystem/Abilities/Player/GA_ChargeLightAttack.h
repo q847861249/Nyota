@@ -21,6 +21,7 @@ class NYOTA_API UGA_ChargeLightAttack : public UNyotaGameplayAbility
     GENERATED_BODY()
 
 public:
+    /** @brief 在构造阶段设置派生普攻标识及推土机状态前置条件。 */
     UGA_ChargeLightAttack(const FObjectInitializer &ObjectInitializer = FObjectInitializer::Get());
 
     virtual void ActivateAbility(
