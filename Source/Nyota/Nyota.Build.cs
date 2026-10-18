@@ -2,8 +2,10 @@
 
 using UnrealBuildTool;
 
+/** @brief 声明游戏模块的编译依赖，使原生玩法代码能够访问所需的引擎功能。 */
 public class Nyota : ModuleRules
 {
+	/** @brief 在 UBT 构建目标时配置预编译头及模块链接依赖。 */
 	public Nyota(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
@@ -11,7 +13,7 @@ public class Nyota : ModuleRules
 		PublicDependencyModuleNames.AddRange(new[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "NetCore", "Niagara", "UMG", "AIModule",
-			"NavigationSystem", "ModularGameplay", "GameFeatures", "Puerts", "JsEnv", "ModularGameplayActors", "GameplayAbilities"
+			"NavigationSystem", "ModularGameplay", "GameFeatures", "ModularGameplayActors", "GameplayAbilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new[]

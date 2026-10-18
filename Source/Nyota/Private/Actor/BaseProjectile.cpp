@@ -54,6 +54,12 @@ void ABaseProjectile::BeginPlay()
     }
 }
 
+void ABaseProjectile::Launch(const FVector &LaunchVelocity, float GravityScale)
+{
+    ProjectileMovementComponent->Velocity = LaunchVelocity;
+    ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
+}
+
 void ABaseProjectile::OnHit(
     UPrimitiveComponent *HitComp, AActor *OtherActor, UPrimitiveComponent *OtherComp, FVector NormalImpulse,
     const FHitResult &Hit

@@ -20,6 +20,9 @@ public:
         const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo *ActorInfo,
         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData *TriggerEventData
     ) override;
+    
+    UFUNCTION()
+    void Execute();
 
     UFUNCTION()
     void OnMontageCompleted();

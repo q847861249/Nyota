@@ -23,6 +23,12 @@ void UGA_WaterBall::ActivateAbility(
         return;
     }
 
+    Execute();
+}
+
+void UGA_WaterBall::Execute()
+{
+
     UAbilityTask_PlayMontageAndWait *PlayMontageTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
         this, FName("ShootWaterBall"), ShootWaterBallMontage
     );

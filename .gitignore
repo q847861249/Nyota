@@ -35,6 +35,8 @@
 *.xcodeproj
 *.xcworkspace
 *.sln
+# @brief UE 5.8 / Visual Studio 2026 生成的新版解决方案由引擎重建。
+*.slnx
 *.suo
 *.opensdf
 *.sdf
@@ -78,13 +80,14 @@ DerivedDataCache/*
 .idea
 .vs
 .vscode
-
-# Puerts
-Plugins/Puerts/Source/CSharpParamDefaultValueMetas/obj
-Plugins/Puerts/Source/CSharpParamDefaultValueMetas/CSharpParamDefaultValueMetas.ubtplugin.csproj.props
-Plugins/Puerts/ThirdParty/v8_9.4.146.24
+# @brief UE 5.8 生成 VS Code 工作区时附带的搜索过滤文件。
+.ignore
 
 # Other
 *.code-workspace
 .DS_Store
 Plugins/Developer/RiderLink
+.cursor/
+
+# 设计参考文档（中文文件名会让 UBT 的 GitSourceFileWorkingSet 解析 git status 时崩溃，故不入库）
+Docs/

@@ -65,8 +65,9 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     float GrabTraceRadius = 15.f;
 
+    /** 抓取扫掠检测的间隔，单位：秒；默认每 0.01 秒采样一次手部轨迹。 */
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
-    float GrabTraceRate = 0.01;
+    float GrabTraceRate = 0.01f;
 
     UPROPERTY(EditDefaultsOnly, Category = "Nyota")
     FName LeftHandSocketName;

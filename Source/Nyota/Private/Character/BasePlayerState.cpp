@@ -16,7 +16,8 @@ const FName ABasePlayerState::NAME_NyotaAbilityReady("NyotaAbilitiesReady");
 
 ABasePlayerState::ABasePlayerState(const FObjectInitializer &ObjectInitializer) : Super(ObjectInitializer)
 {
-    NetUpdateFrequency = 100.0f;
+    /** 使用新版 Actor 接口保持每秒 100 次的网络更新频率，及时同步玩家技能状态。 */
+    SetNetUpdateFrequency(100.0f);
 
     AbilitySystemComponent = CreateDefaultSubobject<UNyotaAbilitySystemComponent>("AbilitySystemComponent");
     AbilitySystemComponent->SetIsReplicated(true);

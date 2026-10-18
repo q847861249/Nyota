@@ -114,10 +114,10 @@ UGameplayAbility *UNyotaAbilitySystemComponent::GetActivatableAbilitySpecByTag(c
         return nullptr;
     }
 
-    // 遍历所有可激活技能，精确匹配 AbilityTags 中的 Tag
+    /** 通过只读资产标签接口查找技能，兼容 UE 5.8 对技能默认标签的封装。 */
     for (const FGameplayAbilitySpec &AbilitySpec : MatchingGameplayAbilities)
     {
-        for (const FGameplayTag &Tag : AbilitySpec.Ability->AbilityTags)
+        for (const FGameplayTag &Tag : AbilitySpec.Ability->GetAssetTags())
         {
             if (!Tag.MatchesTagExact(AbilityTag))
             {
@@ -138,10 +138,10 @@ void UNyotaAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag &In
         return;
     }
 
-    // 匹配所有 DynamicAbilityTags 中包含该输入 Tag 的技能，将其加入按下和按住缓存
+    /** 输入映射记录在技能规格的动态来源标签中，按下时同时维护按住状态。 */
     for (const FGameplayAbilitySpec &AbilitySpec : ActivatableAbilities.Items)
     {
-        if (AbilitySpec.Ability && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+        if (AbilitySpec.Ability && AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
         {
             InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
             InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
@@ -156,10 +156,10 @@ void UNyotaAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &I
         return;
     }
 
-    // 匹配所有 DynamicAbilityTags 中包含该输入 Tag 的技能，标记为释放并从按住缓存中移除
+    /** 使用与按下事件一致的动态来源标签匹配规则，确保释放时能清除按住状态。 */
     for (const FGameplayAbilitySpec &AbilitySpec : ActivatableAbilities.Items)
     {
-        if (AbilitySpec.Ability && AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+        if (AbilitySpec.Ability && AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))
         {
             InputReleasedSpecHandles.AddUnique(AbilitySpec.Handle);
             InputHeldSpecHandles.Remove(AbilitySpec.Handle);
@@ -169,8 +169,8 @@ void UNyotaAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag &I
 
 void UNyotaAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGamePaused)
 {
-    // 检查是否需要拦截所有技能输入（如过场、死亡、对话等状态）
-    if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked))
+    // 检查是否需要拦截所有技能输入（如过场、死亡、对话等状态，以及眩晕/沉默等屏蔽技能的受控状态）
+    if (HasMatchingGameplayTag(Nyota::Ability_InputBlocked) || HasMatchingGameplayTag(Nyota::Status_Blocked_Ability))
     {
         ClearAbilityInput();
 
@@ -349,11 +349,10 @@ void UNyotaAbilitySystemComponent::HandleAutoActivateAbility(const FGameplayAbil
         return;
     }
 
-    UE_LOG(LogTemp, Log, TEXT("Tags: %s"), *AbilitySpec.Ability->AbilityTags.ToString());
+    UE_LOG(LogTemp, Log, TEXT("Tags: %s"), *AbilitySpec.Ability->GetAssetTags().ToString());
 
-    // 检查技能的 AbilityTags 中是否包含 Ability_ActivateOnGive，
-    // 如果有则立即激活（用于被动技能、"获得即生效"的技能）
-    for (const FGameplayTag &Tag : AbilitySpec.Ability->AbilityTags)
+    /** 从技能默认资产标签判断是否属于获得即生效的被动技能。 */
+    for (const FGameplayTag &Tag : AbilitySpec.Ability->GetAssetTags())
     {
         if (!Tag.MatchesTagExact(Nyota::Ability_ActivateOnGive))
         {

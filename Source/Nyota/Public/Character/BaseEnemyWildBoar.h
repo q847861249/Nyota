@@ -34,6 +34,14 @@ public:
     void OnThrown(FVector Direction, float Force);
 
     /**
+     * @brief 计算抛出敌人的初始速度（方向 × 力 + 上抛偏移）
+     * @param Direction 丢出方向
+     * @param Force 丢出的力
+     * @return 初始速度向量
+     */
+    FVector GetThrownLaunchVelocity(const FVector &Direction, float Force) const;
+
+    /**
      * @brief 落地
      * @param Hit
      */
