@@ -23,7 +23,7 @@ UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PutDown, "Nyota.Ability.Grab.PutDown");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_Slam, "Nyota.Ability.Grab.Slam");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_VortexGrip, "Nyota.Ability.Grab.VortexGrip");
 UE_DEFINE_GAMEPLAY_TAG(Ability_Grab_PressureBlast, "Nyota.Ability.Grab.PressureBlast");
-
+UE_DEFINE_GAMEPLAY_TAG(Ability_Jump, "Nyota.Ability.Jump");
 UE_DEFINE_GAMEPLAY_TAG(UI_OpenMap, "Nyota.UI.OpenMap");
 
 UE_DEFINE_GAMEPLAY_TAG(Ability_State, "Nyota.Ability.State")

@@ -26,6 +26,8 @@ protected:
 	void SetupSpeed();
 	
 	void SetupDirection();
+
+	void SetupTurn();
 	
 	UPROPERTY()
 	ABaseCharacter* CurrentCharacter;
@@ -37,4 +39,8 @@ protected:
 	FVector MovementVelocity;
 	UPROPERTY(BlueprintReadWrite)
 	float GroundSpeed;
+	UPROPERTY(BlueprintReadOnly)
+	float YawOffset;
+
+
 };

@@ -5,6 +5,7 @@
 
 #include "Character/BaseCharacter.h"
 #include "KismetAnimationLibrary.h"
+#include "Camera/CameraComponent.h"
 
 void UBaseAnimInstance::NativeInitializeAnimation()
 {
@@ -39,6 +40,8 @@ void UBaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	SetupSpeed();
 	
 	SetupDirection();
+
+	SetupTurn();
 }
 
 void UBaseAnimInstance::SetupSpeed()
@@ -63,4 +66,26 @@ void UBaseAnimInstance::SetupDirection()
 	
 	const FRotator ActorRotation = CurrentCharacter->GetActorRotation();
 	MoveDirection = UKismetAnimationLibrary::CalculateDirection(MovementVelocity, ActorRotation);
+}
+
+void UBaseAnimInstance::SetupTurn()
+{
+    if (!CurrentCharacter) return;
+
+    UCameraComponent* Camera = CurrentCharacter->FindComponentByClass<UCameraComponent>();
+    if (!Camera) return;
+
+    FVector CameraForward = Camera->GetForwardVector();
+
+    CameraForward.Z = 0.f;
+
+    if (CameraForward.IsNearlyZero()) return;
+
+    CameraForward.Normalize();
+
+    const float CameraYaw = CameraForward.Rotation().Yaw;
+    const float ActorYaw = CurrentCharacter->GetActorRotation().Yaw;
+
+    YawOffset = FMath::FindDeltaAngleDegrees(ActorYaw,CameraYaw);
+	// UE_LOG(LogTemp,Warning,TEXT("YawOffset:%f"),YawOffset);
 }

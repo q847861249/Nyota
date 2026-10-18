@@ -315,9 +315,9 @@ void UNyotaHeroComponent::TickComponent(
         return;
     }
 
-    FRotator CurrentRotation = Pawn->GetActorRotation();
-    FRotator NewRotation = FMath::RInterpTo(CurrentRotation, FRotator(0, TargetYaw, 0), DeltaTime, RotationInterpSpeed);
-    Pawn->SetActorRotation(NewRotation);
+    // FRotator CurrentRotation = Pawn->GetActorRotation();
+    // FRotator NewRotation = FMath::RInterpTo(CurrentRotation, FRotator(0, TargetYaw, 0), DeltaTime, RotationInterpSpeed);
+    // Pawn->SetActorRotation(NewRotation);
 }
 
 bool UNyotaHeroComponent::IsReadyToBindInputs() const
@@ -563,36 +563,36 @@ void UNyotaHeroComponent::Input_Move(const FInputActionValue &InputActionValue)
     bool bHasHorizontal = !FMath::IsNearlyZero(Axis.X);
     bool bHasVertical = !FMath::IsNearlyZero(Axis.Y);
 
-    if (GetPlayerType() == EPlayerType::Crab)
-    {
-        if (bHasHorizontal && bHasVertical)
-        {
-            if (Axis.Y > 0.f && Axis.X < 0.f) // W+A
-            {
-                SetTargetYaw(YawOffset_ForwardLeft);
-            }
-            else if (Axis.Y > 0.f && Axis.X > 0.f) // W+D
-            {
-                SetTargetYaw(YawOffset_ForwardRight);
-            }
-            else if (Axis.Y < 0.f && Axis.X < 0.f) // S+A
-            {
-                SetTargetYaw(YawOffset_BackLeft);
-            }
-            else if (Axis.Y < 0.f && Axis.X > 0.f) // S+D
-            {
-                SetTargetYaw(YawOffset_BackRight);
-            }
-        }
-        else if (bHasHorizontal)
-        {
-            SetTargetYaw(YawOffset_Side); // 逆时针90°，屁股朝摄像机
-        }
-        else
-        {
-            SetTargetYaw(YawOffset_Forward); // 回到默认，右钳朝摄像机
-        }
-    }
+    // if (GetPlayerType() == EPlayerType::Crab)
+    // {
+    //     if (bHasHorizontal && bHasVertical)
+    //     {
+    //         if (Axis.Y > 0.f && Axis.X < 0.f) // W+A
+    //         {
+    //             SetTargetYaw(YawOffset_ForwardLeft);
+    //         }
+    //         else if (Axis.Y > 0.f && Axis.X > 0.f) // W+D
+    //         {
+    //             SetTargetYaw(YawOffset_ForwardRight);
+    //         }
+    //         else if (Axis.Y < 0.f && Axis.X < 0.f) // S+A
+    //         {
+    //             SetTargetYaw(YawOffset_BackLeft);
+    //         }
+    //         else if (Axis.Y < 0.f && Axis.X > 0.f) // S+D
+    //         {
+    //             SetTargetYaw(YawOffset_BackRight);
+    //         }
+    //     }
+    //     else if (bHasHorizontal)
+    //     {
+    //         SetTargetYaw(YawOffset_Side); // 逆时针90°，屁股朝摄像机
+    //     }
+    //     else
+    //     {
+    //         SetTargetYaw(YawOffset_Forward); // 回到默认，右钳朝摄像机
+    //     }
+    // }
 
     Pawn->AddMovementInput(ForwardDirection, Axis.Y);
     Pawn->AddMovementInput(RightDirection, Axis.X);

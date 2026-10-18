@@ -130,3 +130,12 @@ FVector ABaseCharacter::GetForwardDirection() const
 
     return GetActorForwardVector();
 }
+
+void ABaseCharacter::FinishTurn()
+{
+    AController* CurrentController = GetController();
+    if (!CurrentController) return;
+    UE_LOG(LogTemp,Warning,TEXT("执行到"));
+    const float TargetYaw = CurrentController->GetControlRotation().Yaw;
+    SetActorRotation(FRotator(0.f,TargetYaw,0.f));
+}
