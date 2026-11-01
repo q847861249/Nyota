@@ -3,6 +3,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/BasePlayer.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Character/BaseEnemyWildBoar.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
@@ -114,7 +116,23 @@ void ABasePlayer::BeginPlay()
 
 void ABasePlayer::SetGrabbedEnemy(ABaseCharacter *Character)
 {
+    ResetGrabbedEnemy();
     GrabbedEnemy = Character;
+    if (IsValid(Character) && GetPlayerType() == EPlayerType::Crab)
+    {
+        UCharacterMovementComponent *Movement = GetCharacterMovement();
+        bSavedOrientToMovement = Movement->bOrientRotationToMovement;
+        bSavedControllerDesiredRotation = Movement->bUseControllerDesiredRotation;
+        bSavedControllerYaw = bUseControllerRotationYaw;
+        GrabMovementRotation = FRotator(0.f, GetActorRotation().Yaw, 0.f);
+        bGrabMovementActive = true;
+        Movement->bOrientRotationToMovement = false;
+        Movement->bUseControllerDesiredRotation = false;
+        bUseControllerRotationYaw = false;
+        /** 清除进入抓取前的输入和惯性，避免第一步沿旧方向斜滑。 */
+        ConsumeMovementInputVector();
+        Movement->StopMovementImmediately();
+    }
 }
 
 ABaseCharacter *ABasePlayer::GetGrabbedEnemy() const
@@ -125,6 +143,33 @@ ABaseCharacter *ABasePlayer::GetGrabbedEnemy() const
 void ABasePlayer::ResetGrabbedEnemy()
 {
     GrabbedEnemy.Reset();
+    if (bGrabMovementActive)
+    {
+        UCharacterMovementComponent *Movement = GetCharacterMovement();
+        Movement->bOrientRotationToMovement = bSavedOrientToMovement;
+        Movement->bUseControllerDesiredRotation = bSavedControllerDesiredRotation;
+        bUseControllerRotationYaw = bSavedControllerYaw;
+        bGrabMovementActive = false;
+    }
+}
+
+void ABasePlayer::RefreshGrabMovement()
+{
+    if (!bGrabMovementActive)
+    {
+        return;
+    }
+    /** 附着和存活检查覆盖目标销毁、意外脱离以及玩家死亡。 */
+    ABaseCharacter *Target = GetGrabbedEnemy();
+    if (!IsValid(Target) || Target->GetAttachParentActor() != this || !IsAlive() || !Target->IsAlive())
+    {
+        if (ABaseEnemyWildBoar *Boar = Cast<ABaseEnemyWildBoar>(Target);
+            IsValid(Boar) && Boar->GetAttachParentActor() == this)
+        {
+            Boar->OnBoarReleased();
+        }
+        ResetGrabbedEnemy();
+    }
 }
 
 UPlayerCharacterDataAsset *ABasePlayer::GetConfig()

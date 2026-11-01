@@ -36,11 +36,22 @@ public:
 
     virtual void BeginPlay() override;
 
+    /** @brief 目标确认附着后记录抓取对象，并进入固定朝向移动。 */
     void SetGrabbedEnemy(ABaseCharacter *Character);
 
     ABaseCharacter *GetGrabbedEnemy() const;
 
+    /** @brief 清除抓取对象并恢复抓取前的转向设置，可重复调用。 */
     void ResetGrabbedEnemy();
+
+    /** @brief 检查目标失效、脱离或玩家死亡，并清理遗留抓取状态。 */
+    void RefreshGrabMovement();
+
+    /** @brief 是否正在使用抓取四向移动。 */
+    bool IsGrabMovementActive() const { return bGrabMovementActive; }
+
+    /** @brief 返回成功抓取时的水平朝向，作为固定的移动坐标系。 */
+    FRotator GetGrabMovementRotation() const { return GrabMovementRotation; }
 
     UPlayerCharacterDataAsset *GetConfig();
 
@@ -81,7 +92,16 @@ private:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | Tag")
     FGameplayTag Skill_3_Tag;
 
+    /** 当前抓取目标；弱引用允许目标销毁后自动失效。 */
     TWeakObjectPtr<ABaseCharacter> GrabbedEnemy;
+    /** 是否已保存并覆盖抓取期间的转向设置。 */
+    bool bGrabMovementActive = false;
+    /** 成功抓取时的水平朝向，单位为度。 */
+    FRotator GrabMovementRotation = FRotator::ZeroRotator;
+    /** 抓取前的移动方向转向、控制器期望转向及控制器偏航设置。 */
+    bool bSavedOrientToMovement = false;
+    bool bSavedControllerDesiredRotation = false;
+    bool bSavedControllerYaw = false;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Nyota | Character", meta = (AllowPrivateAccess = "true"))
     TObjectPtr<UNyotaPawnExtensionComponent> PawnExtensionComponent;

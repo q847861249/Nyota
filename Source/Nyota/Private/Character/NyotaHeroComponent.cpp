@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Character/NyotaHeroComponent.h"
+#include "Character/BasePlayer.h"
+#include "Character/GrabMovementInput.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "GameplayTagContainer.h"
@@ -315,6 +318,16 @@ void UNyotaHeroComponent::TickComponent(
         return;
     }
 
+    if (ABasePlayer *Player = Cast<ABasePlayer>(Pawn))
+    {
+        Player->RefreshGrabMovement();
+        if (!Player->IsGrabMovementActive())
+        {
+            GrabMoveAxis = 0;
+            LastGrabMoveDirection = FVector::ZeroVector;
+        }
+    }
+
     // FRotator CurrentRotation = Pawn->GetActorRotation();
     // FRotator NewRotation = FMath::RInterpTo(CurrentRotation, FRotator(0, TargetYaw, 0), DeltaTime, RotationInterpSpeed);
     // Pawn->SetActorRotation(NewRotation);
@@ -453,6 +466,12 @@ void UNyotaHeroComponent::InitializePlayerInput(UInputComponent *PlayerInputComp
                         InputConfig, Nyota::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, false
                     );
                     NyotaIC->BindNativeAction(
+                        InputConfig, Nyota::InputTag_Move, ETriggerEvent::Completed, this, &ThisClass::Input_MoveStopped, false
+                    );
+                    NyotaIC->BindNativeAction(
+                        InputConfig, Nyota::InputTag_Move, ETriggerEvent::Canceled, this, &ThisClass::Input_MoveStopped, false
+                    );
+                    NyotaIC->BindNativeAction(
                         InputConfig,
                         Nyota::InputTag_Look_Mouse,
                         ETriggerEvent::Triggered,
@@ -541,61 +560,55 @@ void UNyotaHeroComponent::Input_AbilityInputTagReleased(const FGameplayTag &Inpu
 void UNyotaHeroComponent::Input_Move(const FInputActionValue &InputActionValue)
 {
     APawn *Pawn = GetPawn<APawn>();
-    AController *Controller = Pawn->GetController();
-
-    if (!Controller)
+    if (!Pawn || !Pawn->GetController())
     {
         return;
     }
 
+    /** 增强输入已完成按键映射；X 为左右，Y 为前后。 */
     const FVector2D Axis = InputActionValue.Get<FVector2D>();
-    const FRotator ControlRotation = Controller->GetControlRotation();
-    const FRotator YawRotation(0, ControlRotation.Yaw, 0);
-    const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-    const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+    ABasePlayer *Player = Cast<ABasePlayer>(Pawn);
+    if (Player)
+    {
+        Player->RefreshGrabMovement();
+    }
+    if (Player && Player->IsGrabMovementActive())
+    {
+        GrabMoveAxis = NyotaGrabMovement::SelectAxis(Axis, GrabMoveAxis);
+        if (GrabMoveAxis == 0)
+        {
+            LastGrabMoveDirection = FVector::ZeroVector;
+            return;
+        }
+        /** 固定抓取时坐标系，转动相机不改变移动方向。 */
+        const FRotationMatrix Basis(Player->GetGrabMovementRotation());
+        const float Value = GrabMoveAxis == 1 ? Axis.X : Axis.Y;
+        const FVector Direction = Basis.GetUnitAxis(GrabMoveAxis == 1 ? EAxis::Y : EAxis::X) * FMath::Sign(Value);
+        if (!Direction.Equals(LastGrabMoveDirection))
+        {
+            /** 换轴或反向时消除水平惯性，同时保留重力产生的竖直速度。 */
+            UCharacterMovementComponent *Movement = Player->GetCharacterMovement();
+            Movement->Velocity.X = 0.f;
+            Movement->Velocity.Y = 0.f;
+            Pawn->ConsumeMovementInputVector();
+        }
+        LastGrabMoveDirection = Direction;
+        Pawn->AddMovementInput(Direction, FMath::Min(FMath::Abs(Value), 1.f));
+        return;
+    }
 
-    auto SetTargetYaw = [&](float Offset) {
-        // 防止 ControlRotation.Yaw - 135.f 和 + 135.f 在角度接近 ±180°
-        // 边界时可能会出现角度翻转，导致螃蟹突然反向旋转一大圈。
-        TargetYaw = FRotator::NormalizeAxis(ControlRotation.Yaw + Offset);
-    };
+    GrabMoveAxis = 0;
+    LastGrabMoveDirection = FVector::ZeroVector;
+    /** 未抓取时继续使用相机水平朝向，保留正常的八方向移动。 */
+    const FRotator YawRotation(0.f, Pawn->GetController()->GetControlRotation().Yaw, 0.f);
+    Pawn->AddMovementInput(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X), Axis.Y);
+    Pawn->AddMovementInput(FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y), Axis.X);
+}
 
-    bool bHasHorizontal = !FMath::IsNearlyZero(Axis.X);
-    bool bHasVertical = !FMath::IsNearlyZero(Axis.Y);
-
-    // if (GetPlayerType() == EPlayerType::Crab)
-    // {
-    //     if (bHasHorizontal && bHasVertical)
-    //     {
-    //         if (Axis.Y > 0.f && Axis.X < 0.f) // W+A
-    //         {
-    //             SetTargetYaw(YawOffset_ForwardLeft);
-    //         }
-    //         else if (Axis.Y > 0.f && Axis.X > 0.f) // W+D
-    //         {
-    //             SetTargetYaw(YawOffset_ForwardRight);
-    //         }
-    //         else if (Axis.Y < 0.f && Axis.X < 0.f) // S+A
-    //         {
-    //             SetTargetYaw(YawOffset_BackLeft);
-    //         }
-    //         else if (Axis.Y < 0.f && Axis.X > 0.f) // S+D
-    //         {
-    //             SetTargetYaw(YawOffset_BackRight);
-    //         }
-    //     }
-    //     else if (bHasHorizontal)
-    //     {
-    //         SetTargetYaw(YawOffset_Side); // 逆时针90°，屁股朝摄像机
-    //     }
-    //     else
-    //     {
-    //         SetTargetYaw(YawOffset_Forward); // 回到默认，右钳朝摄像机
-    //     }
-    // }
-
-    Pawn->AddMovementInput(ForwardDirection, Axis.Y);
-    Pawn->AddMovementInput(RightDirection, Axis.X);
+void UNyotaHeroComponent::Input_MoveStopped(const FInputActionValue &InputActionValue)
+{
+    GrabMoveAxis = 0;
+    LastGrabMoveDirection = FVector::ZeroVector;
 }
 
 void UNyotaHeroComponent::Input_LookMouse(const FInputActionValue &InputActionValue)
