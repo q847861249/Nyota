@@ -67,7 +67,16 @@ protected:
 
     void Input_AbilityInputTagReleased(const FGameplayTag &InputTag);
 
+    /** @brief 普通移动跟随视角；抓取时固定坐标系并只接受一个输入轴。 */
     void Input_Move(const FInputActionValue &InputActionValue);
+
+    /** @brief 输入结束时清除方向优先级，让下一次按键重新选择方向。 */
+    void Input_MoveStopped(const FInputActionValue &InputActionValue);
+
+    /** 当前优先输入轴：0 无输入，1 左右，2 前后。 */
+    int32 GrabMoveAxis = 0;
+    /** 上次抓取移动方向，用于换向时清除横向惯性。 */
+    FVector LastGrabMoveDirection = FVector::ZeroVector;
 
     void Input_LookMouse(const FInputActionValue &InputActionValue);
 

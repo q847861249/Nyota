@@ -60,6 +60,18 @@ void UGA_Grab::EndAbility(
     UAbilitySystemComponent *AbilitySystemComponent = ActorInfo ? ActorInfo->AbilitySystemComponent.Get() : nullptr;
     RemovePutDownWindowTag(AbilitySystemComponent);
 
+    /** 技能结束统一清理持有目标；正常放下已清空引用，因此重复清理安全。 */
+    if (ABasePlayer *Player = Cast<ABasePlayer>(GetAvatarActorFromActorInfo()))
+    {
+        if (ABaseEnemyWildBoar *Boar = Cast<ABaseEnemyWildBoar>(Player->GetGrabbedEnemy());
+            IsValid(Boar) && Boar->GetAttachParentActor() == Player)
+        {
+            Boar->OnBoarReleased();
+        }
+        Player->ResetGrabbedEnemy();
+        Player->PendingThrownForce = -1.f;
+    }
+
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
@@ -280,11 +292,14 @@ void UGA_Grab::PerformGrabTrace()
 
     if (IsValid(GrabbedEnemy))
     {
-        // 抓取到敌人缓存到 Player 中
-        Player->SetGrabbedEnemy(GrabbedEnemy);
-
-        // 敌人 Attach 到玩家抓取位置 Socket
+        /** 先完成附着，再记录抓取成功并启用四向移动，抓空时不会限制移动。 */
         GrabbedEnemy->OnGrabbed(Player);
+        if (GrabbedEnemy->GetAttachParentActor() != Player)
+        {
+            GrabbedEnemy->OnBoarReleased();
+            return;
+        }
+        Player->SetGrabbedEnemy(GrabbedEnemy);
 
         AddPutDownWindowTag(GetAbilitySystemComponentFromActorInfo());
 

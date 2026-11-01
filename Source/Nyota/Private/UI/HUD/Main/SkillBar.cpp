@@ -11,6 +11,7 @@
 #include "Components/TextBlock.h"
 #include "AbilitySystemComponent.h"
 #include "Components/HorizontalBox.h"
+#include "Components/HorizontalBoxSlot.h"
 #include "UI/HUD/Main/SkillSlot.h"
 void USkillBar::Init(ABasePlayer* BasePlayer)
 {
@@ -32,7 +33,14 @@ void USkillBar::Init(ABasePlayer* BasePlayer)
         if(!SkillSlot) continue;
         SkillSlot->Init(ASC,SkillData);
         SkillSlot->Icon->SetToolTip(Tooltip);
-        AbilityUIBar->AddChild(SkillSlot);
+        // AbilityUIBar->AddChild(SkillSlot);
+        UHorizontalBoxSlot* BoxSlot =
+            AbilityUIBar->AddChildToHorizontalBox(SkillSlot);
+
+        if (BoxSlot)
+        {
+            BoxSlot->SetPadding(FMargin(10.f));
+        }
     }
 
 }

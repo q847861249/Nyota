@@ -40,6 +40,9 @@ public:
     EPlayerType GetPlayerType() const;
 
     FVector GetForwardDirection() const;
+    
+    UFUNCTION(BlueprintCallable)
+    void FinishTurn();
 
     UPROPERTY(BlueprintAssignable)
     FASCInitialized OnASCInitialized;

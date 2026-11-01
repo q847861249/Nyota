@@ -24,6 +24,8 @@ UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_PutDown);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_Slam);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_VortexGrip);
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Grab_PressureBlast);
+/** 跳跃技能标签，保留本地角色跳跃能力的标识。 */
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Jump);
 
 // 野猪冲锋（技能一）及其派生普攻
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Charge);
