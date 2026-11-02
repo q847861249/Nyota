@@ -36,7 +36,7 @@ public:
 
     virtual void BeginPlay() override;
 
-    /** @brief 目标确认附着后记录抓取对象，并进入固定朝向移动。 */
+    /** @brief 记录抓取对象并进入固定朝向移动，供后续附着回调读取目标。 */
     void SetGrabbedEnemy(ABaseCharacter *Character);
 
     ABaseCharacter *GetGrabbedEnemy() const;
@@ -44,7 +44,7 @@ public:
     /** @brief 清除抓取对象并恢复抓取前的转向设置，可重复调用。 */
     void ResetGrabbedEnemy();
 
-    /** @brief 检查目标失效、脱离或玩家死亡，并清理遗留抓取状态。 */
+    /** @brief 目标引用失效时恢复移动设置，不干预技能释放和附着流程。 */
     void RefreshGrabMovement();
 
     /** @brief 是否正在使用抓取四向移动。 */
