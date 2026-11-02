@@ -4,7 +4,6 @@
 
 #include "Character/BasePlayer.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Character/BaseEnemyWildBoar.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
@@ -159,15 +158,9 @@ void ABasePlayer::RefreshGrabMovement()
     {
         return;
     }
-    /** 附着和存活检查覆盖目标销毁、意外脱离以及玩家死亡。 */
-    ABaseCharacter *Target = GetGrabbedEnemy();
-    if (!IsValid(Target) || Target->GetAttachParentActor() != this || !IsAlive() || !Target->IsAlive())
+    /** 只恢复移动设置；释放、脱离及抓取时限由原有技能流程负责。 */
+    if (!GrabbedEnemy.IsValid())
     {
-        if (ABaseEnemyWildBoar *Boar = Cast<ABaseEnemyWildBoar>(Target);
-            IsValid(Boar) && Boar->GetAttachParentActor() == this)
-        {
-            Boar->OnBoarReleased();
-        }
         ResetGrabbedEnemy();
     }
 }
