@@ -90,6 +90,15 @@ protected:
     float BulldozeForwardOffset = 120.f;
 
     /**
+     * @brief 命中敌人进入推土机状态后的最长持续时间，单位：秒。
+     * @details 从进入推土机状态开始计时，到点自动解除推人并结束冲锋，相当于"推力耗尽"，
+     *          避免玩家一直顶着敌人无限推进去。该路径不施眩晕，属于正常收尾。
+     *          小于等于 0 表示不限制时长（只受 MaxChargeDuration 约束）。
+     */
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | Charge")
+    float BulldozeDuration = 3.f;
+
+    /**
      * @brief 判定为"墙/障碍"所需的最小法线夹角，单位：度。
      * @details 命中法线与竖直向上的夹角超过该值才算撞墙（墙体法线接近水平≈90°，地面≈0°），
      *          避免冲锋扫掠擦到地面/缓坡时误触发撞墙停下。
@@ -158,6 +167,12 @@ private:
     /** 解除推土机绑定并恢复敌人行动。 */
     void ReleaseBulldozedEnemy();
 
+    /**
+     * @brief 推土机持续时间到点的回调：松开敌人并结束冲锋。
+     * @details 走 FinishCharge 的主动结束路径，不触发撞墙眩晕惩罚，也不施加额外控制。
+     */
+    void HandleBulldozeDurationExpired();
+
     /** 冲锋状态 Tag 的持有者（ASC），用于 EndAbility 时兜底清理。 */
     UPROPERTY(Transient)
     TObjectPtr<UAbilitySystemComponent> TaggedAbilitySystemComponent;
@@ -171,6 +186,9 @@ private:
 
     /** 冲锋总时长计时器。 */
     FTimerHandle MaxDurationTimerHandle;
+
+    /** 推土机状态计时器；离开推土机状态或技能结束时清掉，防止残留回调。 */
+    FTimerHandle BulldozeTimerHandle;
 
     /** 是否已经撞墙结算过，避免一次冲锋内重复触发。 */
     bool bWallImpacted = false;

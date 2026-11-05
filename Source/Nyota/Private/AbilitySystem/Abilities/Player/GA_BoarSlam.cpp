@@ -91,14 +91,15 @@ void UGA_BoarSlam::ActivateAbility(
             return;
         }
 
-        // 派生模式：用 JumpForce RootMotionSource 原地跳跃（Distance=0 只走抛物线高度），
+        // 派生模式：用 JumpForce RootMotionSource 向前上方跳跃——沿角色朝向水平位移
+        // JumpDistance，同时走 Height 抛物线（Distance=0 时退化为原地垂直跳），
         // 替代 LaunchCharacter——位移全程由 RootMotion 驱动，与蒙太奇节奏对齐且随技能取消
         TSharedPtr<FRootMotionSource_JumpForce> JumpForce = MakeShared<FRootMotionSource_JumpForce>();
         JumpForce->InstanceName = JumpRootMotionName;
         JumpForce->AccumulateMode = ERootMotionAccumulateMode::Override;
         JumpForce->Priority = RootMotionPriority;
         JumpForce->Duration = JumpDuration;
-        JumpForce->Distance = 0.f;
+        JumpForce->Distance = JumpDistance;
         JumpForce->Height = JumpHeight;
         JumpForce->Rotation = Character->GetActorRotation();
         JumpForce->FinishVelocityParams.Mode = ERootMotionFinishVelocityMode::SetVelocity;

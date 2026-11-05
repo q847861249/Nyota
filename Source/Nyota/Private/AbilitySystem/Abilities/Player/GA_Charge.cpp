@@ -35,7 +35,7 @@ void UGA_Charge::ActivateAbility(
 {
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    StartCharging();
+    //StartCharging();
 }
 
 void UGA_Charge::StartCharging()
@@ -285,7 +285,37 @@ void UGA_Charge::EnterBulldozeState(ABaseCharacter *Enemy)
         TaggedAbilitySystemComponent->AddLooseGameplayTag(Nyota::Ability_State_Charging_Bulldozer);
     }
 
+    // 推土机持续时间：从撞人这一刻开始计时，到点由 HandleBulldozeDurationExpired 松开敌人并结束冲锋。
+    // BulldozeDuration <= 0 视为不限制，只受 MaxChargeDuration 兜底
+    if (BulldozeDuration > 0.f && IsValid(GetWorld()))
+    {
+        GetWorld()->GetTimerManager().SetTimer(
+            BulldozeTimerHandle,
+            FTimerDelegate::CreateWeakLambda(
+                this,
+                [this]() {
+                    HandleBulldozeDurationExpired();
+                }
+            ),
+            BulldozeDuration,
+            false
+        );
+    }
+
     OnBulldozeStart_Visual();
+}
+
+void UGA_Charge::HandleBulldozeDurationExpired()
+{
+    // 计时到点时敌人已被顶飞或撞墙释放，说明推土机状态已结束，无需再处理
+    if (!IsValid(BulldozedEnemy.Get()))
+    {
+        return;
+    }
+
+    // 先松开敌人（恢复移动/AI/碰撞），再走正常的主动结束路径收尾，不施加眩晕惩罚
+    ReleaseBulldozedEnemy();
+    FinishCharge();
 }
 
 void UGA_Charge::HandleWallImpact()
@@ -326,6 +356,12 @@ void UGA_Charge::HandleWallImpact()
 
 void UGA_Charge::ReleaseBulldozedEnemy()
 {
+    // 先停掉推土机计时：无论敌人是否还有效，退出推土机状态后都不该再触发到点回调
+    if (IsValid(GetWorld()))
+    {
+        GetWorld()->GetTimerManager().ClearTimer(BulldozeTimerHandle);
+    }
+
     ABaseCharacter *Bulldozed = BulldozedEnemy.Get();
 
     if (!IsValid(Bulldozed))

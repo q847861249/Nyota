@@ -15,7 +15,8 @@ class UGameplayEffect;
  *          - 普通释放：原地砸地无位移，触发 OnSlamLand_Visual 播放蒙太奇；
  *            砸地通知帧调 ApplySlamAoe() 结算范围减速（可选伤害 GE），蒙太奇结束调 FinishSlam() 收尾；
  *          - 冲锋中派生（未撞人时按技能三）：激活时通过 CancelAbilitiesWithTag 自动取消冲锋技能，
- *            并由 C++ 发起 JumpForce RootMotionSource 原地跳跃（替代 LaunchCharacter），
+ *            并由 C++ 发起 JumpForce RootMotionSource 向前上方跳跃（水平 JumpDistance + 抛物线
+ *            JumpHeight，替代 LaunchCharacter），
  *            触发 OnJump_Visual 播放跳跃砸地蒙太奇；砸地帧调 ApplySlamAoe() 结算小范围击退
  *            （同样用 JumpForce 把敌人沿中心向外抛物线击飞），蒙太奇结束调 FinishSlam() 收尾。
  *          可用性（对应设计表）：推土机状态不可激活（已撞人）；释放期间通过 ActivationOwnedTags
@@ -81,9 +82,13 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | BoarSlam")
     float DerivedKnockbackRadius = 200.f;
 
-    /** 派生跳跃的抛物线顶点高度（原地起跳落回原位），单位：cm。 */
+    /** 派生跳跃的抛物线顶点高度，单位：cm。 */
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | BoarSlam")
     float JumpHeight = 400.f;
+
+    /** 派生跳跃沿角色朝向的水平总距离（0 = 原地垂直跳），单位：cm。 */
+    UPROPERTY(EditDefaultsOnly, Category = "Nyota | BoarSlam")
+    float JumpDistance = 300.f;
 
     /** 派生跳跃的总时长（起跳到落回地面），单位：秒。蒙太奇节奏需与之对齐。 */
     UPROPERTY(EditDefaultsOnly, Category = "Nyota | BoarSlam")
